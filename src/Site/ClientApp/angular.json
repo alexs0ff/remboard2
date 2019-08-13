@@ -147,5 +147,10 @@
       }
     }
   },
-  "defaultProject": "Remboard"
+  "defaultProject": "Remboard",
+  "schematics": {
+    "@schematics/angular:component": {
+      "styleext": "scss"
+    }
+  }
 }
