@@ -1,5 +1,4 @@
 /* You can add global styles to this file, and also import other style files */
-
 mat-sidenav-container, mat-sidenav-content, mat-sidenav {
   height: 100%;
 }
@@ -47,6 +46,7 @@ a:active {
   width: 85%;
 }
 */
-body {
+html,body {
   margin: 0;
+  height:100%;
 }
