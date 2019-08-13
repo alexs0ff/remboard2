@@ -3,20 +3,20 @@
   <mat-sidenav #sidenav role="navigation">
     <mat-nav-list>
       <a mat-list-item [routerLink]="'/accounts'">
-        <mat-icon class="icon">input</mat-icon>
-        <span class="label">Login</span>
+        <mat-icon class="nav-icon">input</mat-icon>
+        <span class="nav-label"> Login</span>
         </a>
       <a mat-list-item [routerLink]="'/create-account'">
-        <mat-icon class="icon">home</mat-icon>
-        <span class="label">Home</span>
+        <mat-icon class="nav-icon">home</mat-icon>
+        <span class="nav-label"> Home</span>
       </a>
       <a mat-list-item [routerLink]="'/contacts'">
-         <mat-icon class="icon">dashboard</mat-icon>
-        <span class="label">Dashboard</span>
+         <mat-icon class="nav-icon">dashboard</mat-icon>
+        <span class="nav-label"> Dashboard</span>
       </a>
       <a mat-list-item [routerLink]="'/create-contact'">
-        <mat-icon class="icon">input</mat-icon>
-        <span class="label">LogOut</span>
+        <mat-icon class="nav-icon">input</mat-icon>
+        <span class="nav-label"> LogOut</span>
         </a>
       <a mat-list-item (click)="sidenav.toggle()">Close</a>
 
@@ -24,8 +24,7 @@
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar color="primary">
-      <!--<div fxHide.gt-xs> скрывать по размеру экрана-->
-      <div>
+      <div fxHide.gt-xs>
         <button mat-icon-button (click)="sidenav.toggle()">
           <mat-icon>menu</mat-icon>
         </button>
@@ -52,7 +51,8 @@
         </ul>
       </div>
     </mat-toolbar>
-    <div style="height: auto">
+    <div>
+      <app-component-nav></app-component-nav>
 
       <router-outlet></router-outlet>
     </div>
