@@ -7,6 +7,11 @@ import { trigger, animate, state, style, transition } from '@angular/animations'
   template: `
 <div class="docs-component-viewer-nav">
   <div class="docs-component-viewer-nav-content">
+    <mat-form-field class="docs-component-viewer-navigation-pane-search">
+      <mat-label>Поиск</mat-label>
+      <input matInput placeholder="Пункт меню">
+      <mat-icon matSuffix>search</mat-icon>      
+    </mat-form-field>
     <nav *ngFor="let category of items; let last = last;">      
       <button cdkAccordionItem #panel="cdkAccordionItem" (click)="panel.toggle()" expanded="true"
               class="docs-nav-content-btn"
