@@ -12,7 +12,11 @@ import { FetchDataComponent } from './fetch-data/fetch-data.component';
 
 import { UiCommonModule } from './ui-common/ui-common.module';
 import { ComponentSidenavModule } from "./menu/component-sidenav/component-sidenav";
-import { NavigationPaneModule } from "./menu/navigation-pane/navigation-pane.module";
+import { StoreModule } from '@ngrx/store';
+import { reducers, metaReducers } from './reducers';
+import { MenuModule } from "./menu/menu.module";
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -32,7 +36,15 @@ import { NavigationPaneModule } from "./menu/navigation-pane/navigation-pane.mod
       { path: 'fetch-data', component: FetchDataComponent },
     ]),
     UiCommonModule,
-    NavigationPaneModule
+    MenuModule,
+    StoreModule.forRoot(reducers, {
+      metaReducers,
+      runtimeChecks: {
+        strictStateImmutability: true,
+        strictActionImmutability: true
+      }
+    }),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
   ],
   providers: [],
   bootstrap: [AppComponent]

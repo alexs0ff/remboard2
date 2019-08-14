@@ -24,6 +24,8 @@
     "@angular/platform-browser-dynamic": "8.2.2",
     "@angular/platform-server": "8.2.2",
     "@angular/router": "8.2.2",
+    "@ngrx/store": "^8.2.0",
+    "@ngrx/store-devtools": "^8.2.0",
     "@nguniversal/module-map-ngfactory-loader": "7.1.0",
     "aspnet-prerendering": "^3.0.1",
     "bootstrap": "^4.3.1",

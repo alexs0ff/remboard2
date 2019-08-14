@@ -11,7 +11,7 @@ export interface NavigationGroup {
 }
 
 
-const menuItems: NavigationGroup[] = [
+export const navigationPaneItems: NavigationGroup[] = [
   {
     name: "Управление",
     items: [
@@ -60,13 +60,3 @@ const menuItems: NavigationGroup[] = [
   }
 
 ];
-
-
-@Injectable({
-  providedIn:'root'
-})
-export class NavigationService {
-  getGroups(): NavigationGroup[] {
-    return menuItems;
-  }
-}

@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { MatToolbarModule, MatIconModule, MatSidenavModule, MatListModule, MatButtonModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { CdkAccordionModule } from '@angular/cdk/accordion';
+import { MatInputModule } from '@angular/material/input';
 
 const commonUi = [
   CommonModule,
@@ -12,7 +14,9 @@ const commonUi = [
   MatListModule,
   MatButtonModule,
   BrowserAnimationsModule,
-  FlexLayoutModule
+  FlexLayoutModule,
+  CdkAccordionModule,
+  MatInputModule
   ];
 
 @NgModule({

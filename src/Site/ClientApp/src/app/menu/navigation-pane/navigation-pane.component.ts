@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { NavigationService, NavigationGroup } from "./navigation-pane.model";
+import { NavigationGroup } from "./navigation-pane.model";
 import { trigger, animate, state, style, transition } from '@angular/animations';
+import { Store,select } from "@ngrx/store";
+import { Observable } from "rxjs";
+import { selectNavigationPaneItems } from "../menu.selectors";
 
 @Component({
   selector: 'navigation-pane',
@@ -12,7 +15,7 @@ import { trigger, animate, state, style, transition } from '@angular/animations'
       <input matInput placeholder="Пункт меню">
       <mat-icon matSuffix>search</mat-icon>      
     </mat-form-field>
-    <nav *ngFor="let category of items; let last = last;">      
+    <nav *ngFor="let category of items$ | async; let last = last;">      
       <button cdkAccordionItem #panel="cdkAccordionItem" (click)="panel.toggle()" expanded="true"
               class="docs-nav-content-btn"
               [attr.aria-label]="category.name + ', section toggle'"              
@@ -44,10 +47,10 @@ import { trigger, animate, state, style, transition } from '@angular/animations'
 })
 export class NavigationPaneComponent implements OnInit {
 
-  public  items: NavigationGroup[];
+  public  items$: Observable<NavigationGroup[]>;
 
-  constructor(private navigationService: NavigationService) {
-    this.items = navigationService.getGroups();
+  constructor(private store: Store<{}>) {
+    this.items$ = store.pipe(select(selectNavigationPaneItems));
   }
 
   ngOnInit() {
