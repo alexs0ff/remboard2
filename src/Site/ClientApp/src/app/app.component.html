@@ -51,10 +51,13 @@
         </ul>
       </div>
     </mat-toolbar>
-    <div>
-      <app-component-nav></app-component-nav>
-
-      <router-outlet></router-outlet>
+    <div fxLayout="row">
+      <div>
+        <navigation-pane></navigation-pane>
+      </div>
+      <div>
+        <router-outlet></router-outlet>
+      </div>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

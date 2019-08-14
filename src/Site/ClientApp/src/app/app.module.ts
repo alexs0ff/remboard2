@@ -11,6 +11,8 @@ import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 
 import { UiCommonModule } from './ui-common/ui-common.module';
+import { ComponentSidenavModule } from "./menu/component-sidenav/component-sidenav";
+import { NavigationPaneModule } from "./menu/navigation-pane/navigation-pane.module";
 
 @NgModule({
   declarations: [
@@ -29,7 +31,8 @@ import { UiCommonModule } from './ui-common/ui-common.module';
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
     ]),
-    UiCommonModule
+    UiCommonModule,
+    NavigationPaneModule
   ],
   providers: [],
   bootstrap: [AppComponent]

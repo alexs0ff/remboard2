@@ -13,6 +13,7 @@ import {trigger, animate, state, style, transition} from '@angular/animations';
 import {CdkAccordionModule} from '@angular/cdk/accordion';
 import {BreakpointObserver} from '@angular/cdk/layout';
 import { DocumentationItems } from "../menu.model";
+import { NavigationPaneComponent } from "../navigation-pane/navigation-pane.component";
 
 const SMALL_WIDTH_BREAKPOINT = 720;
 
@@ -63,14 +64,15 @@ export class ComponentNav implements OnInit, OnDestroy {
   private _onDestroy = new Subject<void>();
 
   constructor(public docItems: DocumentationItems,
-              private _router: Router) { }
+    private _router: Router) {
+  }
 
   ngOnInit() {
-    this._router.events.pipe(
-      startWith(null),
-      switchMap(() => this.params),
-      takeUntil(this._onDestroy)
-    ).subscribe(p => this.setExpansions(p));
+    //this._router.events.pipe(
+    //  startWith(null),
+    //  switchMap(() => this.params),
+    //  takeUntil(this._onDestroy)
+    //).subscribe(p => this.setExpansions(p));
   }
 
   ngOnDestroy() {
@@ -127,8 +129,8 @@ export class ComponentNav implements OnInit, OnDestroy {
     MatIconModule,
     CdkAccordionModule
   ],
-  exports: [ComponentSidenav],
-  declarations: [ComponentSidenav, ComponentNav],
+  exports: [ComponentSidenav, ComponentNav],
+  declarations: [ComponentSidenav, ComponentNav, NavigationPaneComponent],
   providers: [DocumentationItems],
 })
 export class ComponentSidenavModule {}
