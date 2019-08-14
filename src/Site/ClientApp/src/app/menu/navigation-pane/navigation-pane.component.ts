@@ -58,7 +58,7 @@ import { navigationPaneSearch } from "../menu.actions";
 })
 export class NavigationPaneComponent implements OnInit {
 
-  searchForm = this.builder.group({ search:['some'] });
+  searchForm = this.builder.group({ search:[''] });
 
   public  items$: Observable<NavigationGroup[]>;
 
@@ -67,7 +67,13 @@ export class NavigationPaneComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.store.dispatch(navigationPaneSearch({ searchText:''}));
+    this.searchForm.valueChanges.pipe(
+      debounceTime(200),
+      map(e => e.search),
+      distinctUntilChanged()).subscribe(v => {
+      this.store.dispatch(navigationPaneSearch({ searchText: v }));
+    });
+    //this.store.dispatch(navigationPaneSearch({ searchText:''}));
     //this.items$ =
     //this.searchForm.valueChanges.pipe(
     //  debounceTime(200),

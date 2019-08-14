@@ -9,7 +9,7 @@ import { NavigationPaneComponent } from "./navigation-pane/navigation-pane.compo
 import { UiCommonModule } from "../ui-common/ui-common.module";
 import { selectNavigationPaneVisible } from "./menu.selectors";
 import { navigationPaneToggle, navigationPaneSearch } from "./menu.actions";
-import { MenuFilterService, MenuEffects } from "./menu.effects";
+import { MenuEffects } from "./menu.effects";
 import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
@@ -18,7 +18,6 @@ import { EffectsModule } from '@ngrx/effects';
     UiCommonModule,
     RouterModule,
     StoreModule.forFeature(MenuReducer.featureKey, MenuReducer.reducer),
-    EffectsModule.forFeature([MenuEffects])
   ],
   exports: [NavigationPaneComponent],
   declarations: [NavigationPaneComponent]
