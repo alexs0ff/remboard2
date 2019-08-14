@@ -5,6 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { MatInputModule } from '@angular/material/input';
+import { ReactiveFormsModule } from '@angular/forms';
 
 const commonUi = [
   CommonModule,
@@ -16,7 +17,8 @@ const commonUi = [
   BrowserAnimationsModule,
   FlexLayoutModule,
   CdkAccordionModule,
-  MatInputModule
+  MatInputModule,
+  ReactiveFormsModule
   ];
 
 @NgModule({

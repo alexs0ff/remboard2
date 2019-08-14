@@ -5,6 +5,7 @@ import { navigationPaneItems, NavigationGroup } from "./navigation-pane/navigati
 
 export interface MenuState {
   navigationPane: boolean;
+  searchText:string;
   menuItems: NavigationGroup[];
 }
 
@@ -14,12 +15,14 @@ export interface MenuModuleState {
 
 export const featureKey = "menu";
 
-export const initialState: MenuState = { navigationPane: true, menuItems: navigationPaneItems};
+export const initialState: MenuState = { navigationPane: true, menuItems: navigationPaneItems, searchText:""};
 
 
 const menuReducer = createReducer(
   initialState,
-  on(MenuActions.navigationPaneToggle, (state: MenuState) => ({ ...state, navigationPane: !state.navigationPane }))
+  on(MenuActions.navigationPaneToggle, (state: MenuState) => ({ ...state, navigationPane: !state.navigationPane })),
+  on(MenuActions.setMenuItems, (state: MenuState, { menuItems }) => ({ ...state,menuItems:menuItems})),
+  on(MenuActions.navigationPaneSearch, (state: MenuState, { searchText }) => ({ ...state, searchText: searchText})),
 );
 
 export function reducer(state: MenuState | undefined, action: Action) {
