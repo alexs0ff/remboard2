@@ -8,7 +8,7 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   login(credentials: AuthCredentials): Observable<string> {
-    return of("hashtoken");
+    return this.http.post<string>("api/login", credentials);
   }
 
 }

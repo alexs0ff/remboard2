@@ -31,8 +31,7 @@ namespace Remboard.Auth
         }
         [AllowAnonymous]
         [HttpPost]
-        [Consumes("application/x-www-form-urlencoded")]
-        public async Task<IActionResult> Login([FromForm]UserModel login)
+        public async Task<IActionResult> Login([FromBody]UserModel login)
         {
             IActionResult response = Unauthorized();
             var user = await AuthenticateUser(login);
@@ -84,7 +83,7 @@ namespace Remboard.Auth
 
         private async Task<IdentityUser> AuthenticateUser(UserModel login)
         {
-            var fu = await _userManager.FindByNameAsync(login.Username);
+            var fu = await _userManager.FindByNameAsync(login.Login);
 
             if (fu != null && await _userManager.CheckPasswordAsync(fu, password: login.Password))
             {

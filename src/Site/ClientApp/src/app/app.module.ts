@@ -19,6 +19,7 @@ import { environment } from '../environments/environment';
 import { EffectsModule } from '@ngrx/effects';
 import { MenuEffects } from "./menu/menu.effects";
 import { AuthModule, AuthEffects } from './auth/auth.module';
+import { httpInterceptorProviders } from "./http/interceptors";
 
 @NgModule({
   declarations: [
@@ -49,7 +50,7 @@ import { AuthModule, AuthEffects } from './auth/auth.module';
     EffectsModule.forRoot([MenuEffects, AuthEffects]),
     AuthModule
   ],
-  providers: [],
+  providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
