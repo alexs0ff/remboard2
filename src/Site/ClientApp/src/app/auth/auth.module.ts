@@ -6,6 +6,7 @@ import { LoginButtonComponent } from './login-button/login-button.component';
 import { StoreModule } from '@ngrx/store';
 
 import * as AuthReducer from "./auth.reducer"
+import { LoginDialogService } from "./login-dialog/login-dialog.service";
 
 @NgModule({
   declarations: [LoginDialogComponent, LoginButtonComponent],
@@ -15,6 +16,7 @@ import * as AuthReducer from "./auth.reducer"
     StoreModule.forFeature(AuthReducer.featureKey, AuthReducer.reducer),
   ],
   exports: [LoginButtonComponent],
-  entryComponents: [LoginDialogComponent]
+  entryComponents: [LoginDialogComponent],
+  providers: [LoginDialogService]
 })
 export class AuthModule { }

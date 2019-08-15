@@ -7,6 +7,9 @@ import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 
 const commonUi = [
   CommonModule,
@@ -20,7 +23,10 @@ const commonUi = [
   CdkAccordionModule,
   MatInputModule,
   ReactiveFormsModule,
-  MatDialogModule
+  MatDialogModule,
+  MatCardModule,
+  MatProgressSpinnerModule
+
   ];
 
 @NgModule({
