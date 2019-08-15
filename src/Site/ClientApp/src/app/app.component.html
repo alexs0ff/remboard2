@@ -34,22 +34,7 @@
           Remboard App
         </span>
       </div>
-      <div fxFlex fxLayout fxLayoutAlign="flex-end" fxHide.xs>
-        <ul fxLayout class="navigation-items">
-          <li>
-            <button mat-button [routerLink]="'/home'"><mat-icon>input</mat-icon> Accounts</button>
-          </li>
-          <li>
-            <button mat-button [routerLink]="'/home'"><mat-icon>mic</mat-icon> Accounts</button>
-          </li>
-          <li>
-            <button mat-button (click)="toggleNavigationPane()"><mat-icon>dashboard</mat-icon> Dashboard</button>
-          </li>
-          <li>
-            <button mat-button [routerLink]="'/home'"><mat-icon>input</mat-icon> LogOut</button>
-          </li>
-        </ul>
-      </div>
+      <top-menu fxFlex fxLayout fxLayoutAlign="flex-end" fxHide.xs></top-menu>
     </mat-toolbar>
     <div fxLayout="row">
       <div *ngIf="navigationPaneVisible$ | async">

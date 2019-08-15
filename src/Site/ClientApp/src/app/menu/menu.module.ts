@@ -11,6 +11,7 @@ import { selectNavigationPaneVisible } from "./menu.selectors";
 import { navigationPaneToggle, navigationPaneSearch } from "./menu.actions";
 import { MenuEffects } from "./menu.effects";
 import { EffectsModule } from '@ngrx/effects';
+import { TopMenuComponent } from './top-menu/top-menu.component';
 
 @NgModule({
   imports: [
@@ -19,8 +20,8 @@ import { EffectsModule } from '@ngrx/effects';
     RouterModule,
     StoreModule.forFeature(MenuReducer.featureKey, MenuReducer.reducer),
   ],
-  exports: [NavigationPaneComponent],
-  declarations: [NavigationPaneComponent]
+  exports: [NavigationPaneComponent, TopMenuComponent],
+  declarations: [NavigationPaneComponent, TopMenuComponent]
 
 })
 class MenuModule { }

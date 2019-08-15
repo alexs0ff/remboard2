@@ -19,6 +19,7 @@ import { environment } from '../environments/environment';
 import { EffectsModule } from '@ngrx/effects';
 import { AppEffects } from './app.effects';
 import { MenuEffects } from "./menu/menu.effects";
+import { AuthModule } from './auth/auth.module';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { MenuEffects } from "./menu/menu.effects";
       }
     }),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
-    EffectsModule.forRoot([MenuEffects])
+    EffectsModule.forRoot([MenuEffects]),
+    AuthModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -6,6 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material/dialog';
 
 const commonUi = [
   CommonModule,
@@ -18,7 +19,8 @@ const commonUi = [
   FlexLayoutModule,
   CdkAccordionModule,
   MatInputModule,
-  ReactiveFormsModule
+  ReactiveFormsModule,
+  MatDialogModule
   ];
 
 @NgModule({
