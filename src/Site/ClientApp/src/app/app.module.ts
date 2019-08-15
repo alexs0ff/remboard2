@@ -17,9 +17,8 @@ import { MenuModule } from "./menu/menu.module";
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { EffectsModule } from '@ngrx/effects';
-import { AppEffects } from './app.effects';
 import { MenuEffects } from "./menu/menu.effects";
-import { AuthModule } from './auth/auth.module';
+import { AuthModule, AuthEffects } from './auth/auth.module';
 
 @NgModule({
   declarations: [
@@ -47,7 +46,7 @@ import { AuthModule } from './auth/auth.module';
       }
     }),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
-    EffectsModule.forRoot([MenuEffects]),
+    EffectsModule.forRoot([MenuEffects, AuthEffects]),
     AuthModule
   ],
   providers: [],

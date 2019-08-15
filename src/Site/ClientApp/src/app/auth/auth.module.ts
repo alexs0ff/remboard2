@@ -7,6 +7,10 @@ import { StoreModule } from '@ngrx/store';
 
 import * as AuthReducer from "./auth.reducer"
 import { LoginDialogService } from "./login-dialog/login-dialog.service";
+import { HttpClientModule } from '@angular/common/http';
+import { AuthService } from "./auth.service";
+import { TokenService } from "./token.service";
+import { AuthEffects } from "./auth.effects";
 
 @NgModule({
   declarations: [LoginDialogComponent, LoginButtonComponent],
@@ -14,9 +18,12 @@ import { LoginDialogService } from "./login-dialog/login-dialog.service";
     CommonModule,
     UiCommonModule,
     StoreModule.forFeature(AuthReducer.featureKey, AuthReducer.reducer),
+    HttpClientModule,
   ],
   exports: [LoginButtonComponent],
   entryComponents: [LoginDialogComponent],
-  providers: [LoginDialogService]
+  providers: [LoginDialogService, AuthService]
 })
-export class AuthModule { }
+class AuthModule { }
+
+export { AuthModule, AuthEffects, TokenService};

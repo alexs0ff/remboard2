@@ -12,6 +12,6 @@
   <mat-spinner [style.display]="showSpinner ? 'block' : 'none'"></mat-spinner>
 </mat-dialog-content>
 <mat-dialog-actions fxLayout fxLayoutAlign="flex-end">
-  <button mat-button mat-dialog-close>Отмена</button>
-  <button mat-raised-button color="primary" [mat-dialog-close]="true">Войти</button>
+  <button mat-button [mat-dialog-close]="false">Отмена</button>
+  <button mat-raised-button color="primary" [mat-dialog-close]="loginForm.value">Войти</button>
 </mat-dialog-actions>
