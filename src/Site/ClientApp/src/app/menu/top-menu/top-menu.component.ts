@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from "rxjs";
+import { Store,select } from "@ngrx/store";
+import { navigationPaneToggle } from "../menu.actions";
+
 
 @Component({
   selector: 'top-menu',
@@ -6,10 +10,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./top-menu.component.scss']
 })
 export class TopMenuComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
+  
+  constructor(private store: Store<{}>) {
+    
   }
 
+  ngOnInit(): void {
+
+  }
+
+  toggleNavigationPane() {
+    this.store.dispatch(navigationPaneToggle());
+  }
 }

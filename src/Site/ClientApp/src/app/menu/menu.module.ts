@@ -12,6 +12,7 @@ import { navigationPaneToggle, navigationPaneSearch } from "./menu.actions";
 import { MenuEffects } from "./menu.effects";
 import { EffectsModule } from '@ngrx/effects';
 import { TopMenuComponent } from './top-menu/top-menu.component';
+import { AuthModule } from "../auth/auth.module";
 
 @NgModule({
   imports: [
@@ -19,6 +20,7 @@ import { TopMenuComponent } from './top-menu/top-menu.component';
     UiCommonModule,
     RouterModule,
     StoreModule.forFeature(MenuReducer.featureKey, MenuReducer.reducer),
+    AuthModule,
   ],
   exports: [NavigationPaneComponent, TopMenuComponent],
   declarations: [NavigationPaneComponent, TopMenuComponent]

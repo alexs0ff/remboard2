@@ -15,8 +15,4 @@ export class AppComponent {
   constructor(private store: Store<{}>) {
     this.navigationPaneVisible$ = store.pipe(select(selectNavigationPaneVisible));
   }
-
-  toggleNavigationPane() {
-    this.store.dispatch(navigationPaneToggle());
-  }
 }

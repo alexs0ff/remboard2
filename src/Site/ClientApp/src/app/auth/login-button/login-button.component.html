@@ -1,0 +1,7 @@
+<button mat-button *ngIf="isAuthenticated$ | async" (click)="startLogOut()">
+  <mat-icon>input</mat-icon> Выйти
+</button>
+
+<button mat-button *ngIf="!(isAuthenticated$ | async)" (click)="startLogIn()">
+  <mat-icon>input</mat-icon> Войти
+</button>
