@@ -4,6 +4,6 @@ import { HttpRetryInterceptor } from "./http-client-retry.interceptor";
 
 /** Http interceptor providers in outside-in order */
 export const httpInterceptorProviders = [
-  { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },//responses processing in reverse order
   { provide: HTTP_INTERCEPTORS, useClass: HttpRetryInterceptor, multi: true },
+  { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },//responses processing in reverse order
 ];

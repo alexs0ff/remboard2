@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Actions, ofType, createEffect } from '@ngrx/effects';
 import { map, exhaustMap, switchMap, catchError, concatMap, withLatestFrom, tap } from 'rxjs/operators';
-import { EMPTY } from 'rxjs';
-import { authStartLogin, authSignedIn, authLogOut } from "./auth.actions";
+import { EMPTY,of } from 'rxjs';
+import { authStartLogin, authSignedIn, authLogOut, authLoginError } from "./auth.actions";
 import { AuthService } from "./auth.service";
 import { TokenService } from "./token.service";
 
@@ -32,7 +32,7 @@ export class AuthEffects {
     exhaustMap((e) => this.authService.login(e.credentials)
         .pipe(
           map(token => authSignedIn({ token:token })),
-          catchError(() => EMPTY)
+          catchError((error) => of(authLoginError()))
         ))
     )
   );

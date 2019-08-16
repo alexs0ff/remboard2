@@ -27,14 +27,17 @@ export class HttpErrorInterceptor implements HttpInterceptor {
           // A client-side or network error occurred. Handle it accordingly.
           console.error('An error occurred:', error.error.message);
           this.messageFlowService.showMessage("", error.error.message);
-          
+
         } else {
-          // The backend returned an unsuccessful response code.
-          // The response body may contain clues as to what went wrong,
-          console.error(`Backend returned code ${error.status}, body was: ${error.error}`);
-          this.messageFlowService.showMessage(String(error.status),"Сетевая ошибка",error.error);
+          //Auth error
+          if (error.status == 401) {
+            return EMPTY;
+          } else {
+            console.error(`Backend returned code ${error.status}, body was: ${error.error}`);
+            this.messageFlowService.showMessage(String(error.status), "Сетевая ошибка", error.error);
+          }
         }
-        return EMPTY;
+        return throwError(error);
       })
     );
   }

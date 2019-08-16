@@ -17,9 +17,9 @@ export class LoginDialogService {
     const dialogRef = this.dialog.open(LoginDialogComponent, {
     });
 
-    dialogRef.afterClosed().pipe(filter(g => g !== false)).subscribe((login: AuthCredentials) => {
-      this.store.dispatch(authStartLogin({ credentials:login}));
-    });
+    /*dialogRef.afterClosed().pipe(filter(g => g !== false)).subscribe((login: AuthCredentials) => {
+      
+    });**/
 
   }
 }

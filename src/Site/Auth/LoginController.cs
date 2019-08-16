@@ -13,7 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Remboard.Auth
 {
-    [Route("api/[controller]")]
+    //[Route("api/[controller]")]
     [ApiController]
     public class LoginController : Controller
     {
@@ -31,7 +31,8 @@ namespace Remboard.Auth
         }
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody]UserModel login)
+        [Route("api/login")]
+        public async Task<IActionResult> Post([FromBody]UserModel login)
         {
             IActionResult response = Unauthorized();
             var user = await AuthenticateUser(login);
