@@ -9,6 +9,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 
 const commonUi = [
@@ -25,8 +27,9 @@ const commonUi = [
   ReactiveFormsModule,
   MatDialogModule,
   MatCardModule,
-  MatProgressSpinnerModule
-
+  MatProgressSpinnerModule,
+  MatSnackBarModule,
+  MatExpansionModule
   ];
 
 @NgModule({

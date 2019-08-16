@@ -1,0 +1,27 @@
+<mat-card>
+  <mat-card-header>
+    <div mat-card-avatar><mat-icon color="warn">error</mat-icon></div>
+    <mat-card-title>Ошибка</mat-card-title>
+    <mat-card-subtitle>{{data.code}}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    {{data.message}}
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Детали
+        </mat-panel-title>
+        <mat-panel-description>
+          Откройте для просмотра
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <p>{{data.details}}</p>
+
+    </mat-expansion-panel>
+
+  </mat-card-content>
+  <mat-card-actions  fxLayout="row" fxLayoutAlign="end center">
+    <button mat-button (click)="closeBar()">Закрыть</button>
+  </mat-card-actions>
+</mat-card>

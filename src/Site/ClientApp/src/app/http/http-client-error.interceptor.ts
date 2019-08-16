@@ -11,10 +11,14 @@ import {
 
 import { Observable, EMPTY, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
+import { MessageFlowService } from "../message-flow/message-flow.service";
 
 //from https://stackoverflow.com/a/53379715
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
+
+  constructor(private messageFlowService:MessageFlowService) {}
+
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     
     return next.handle(request).pipe(
@@ -22,10 +26,13 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         if (error.error instanceof Error) {
           // A client-side or network error occurred. Handle it accordingly.
           console.error('An error occurred:', error.error.message);
+          this.messageFlowService.showMessage("", error.error.message);
+          
         } else {
           // The backend returned an unsuccessful response code.
           // The response body may contain clues as to what went wrong,
           console.error(`Backend returned code ${error.status}, body was: ${error.error}`);
+          this.messageFlowService.showMessage(String(error.status),"Сетевая ошибка",error.error);
         }
         return EMPTY;
       })

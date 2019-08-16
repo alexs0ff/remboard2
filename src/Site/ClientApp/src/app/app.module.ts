@@ -20,6 +20,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { MenuEffects } from "./menu/menu.effects";
 import { AuthModule, AuthEffects } from './auth/auth.module';
 import { httpInterceptorProviders } from "./http/interceptors";
+import { MessageFlowModule } from "./message-flow/message-flow.module";
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { httpInterceptorProviders } from "./http/interceptors";
     }),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
     EffectsModule.forRoot([MenuEffects, AuthEffects]),
-    AuthModule
+    AuthModule,
+    MessageFlowModule
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
