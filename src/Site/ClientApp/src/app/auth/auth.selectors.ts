@@ -3,7 +3,9 @@ import { AuthState, AuthModuleState, AuthModuleState as IAuthModuleState } from 
 
 export const getIsAuthenticated = (state: AuthState) => state.isAuthenticated;
 export const getLoginSending = (state: AuthState) => state.loginSending;
+export const getLoginMessage = (state: AuthState) => state.loginErrorMessage;
 export const getAuth = (moduleState: IAuthModuleState) => moduleState.auth;
+
 
 export const selectIsAuthenticated = createSelector(
   getAuth,
@@ -12,3 +14,7 @@ export const selectIsAuthenticated = createSelector(
 export const selectLoginSending = createSelector(
   getAuth,
   getLoginSending);
+
+export const selectLoginMessage = createSelector(
+  getAuth,
+  getLoginMessage);

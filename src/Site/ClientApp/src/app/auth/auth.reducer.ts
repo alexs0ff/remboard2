@@ -6,7 +6,7 @@ import authLogOut = AuthActions.authLogOut;
 export interface AuthState {
   isAuthenticated: boolean;
   loginSending:boolean;
-
+  loginErrorMessage:string;
 }
 
 export interface AuthModuleState {
@@ -15,13 +15,13 @@ export interface AuthModuleState {
 
 export const featureKey = "auth";
 
-export const initialState: AuthState = { isAuthenticated: false, loginSending:false};
+export const initialState: AuthState = { isAuthenticated: false, loginSending:false,loginErrorMessage:null};
 
 
 const authReducer = createReducer(
   initialState,
-  on(AuthActions.authStartLogin, (state: AuthState) => ({ ...state, loginSending:true })),
-  on(AuthActions.authLoginError, (state: AuthState) => ({ ...state, loginSending:false })),
+  on(AuthActions.authStartLogin, (state: AuthState) => ({ ...state, loginSending: true, loginErrorMessage:null })),
+  on(AuthActions.authLoginError, (state: AuthState, { message }) => ({ ...state, loginSending: false, loginErrorMessage:message })),
   on(AuthActions.authSignedIn, (state: AuthState) => ({ ...state, isAuthenticated: true, loginSending:false })),
   on(authLogOut, (state: AuthState) => ({ ...state, isAuthenticated: false}))
 );

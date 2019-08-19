@@ -32,7 +32,14 @@ export class AuthEffects {
     exhaustMap((e) => this.authService.login(e.credentials)
         .pipe(
           map(token => authSignedIn({ token:token })),
-          catchError((error) => of(authLoginError()))
+          catchError((error) => {
+
+            let message: string = "Неизвестна ошибка, повторите позже";
+            if (error.status===401) {
+              message = "Ошибочный логин или пароль";
+            }
+            return of(authLoginError({ message: message}));
+          })
         ))
     )
   );
