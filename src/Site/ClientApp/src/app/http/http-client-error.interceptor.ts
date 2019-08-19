@@ -9,7 +9,7 @@ import {
 } from '@angular/common/http';
 
 
-import { Observable, EMPTY, throwError } from 'rxjs';
+import { Observable, EMPTY, throwError,of } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { MessageFlowService } from "../message-flow/message-flow.service";
 
@@ -31,7 +31,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         } else {
           //Auth error
           if (error.status == 401) {
-            return EMPTY;
+             //401 handled in auth module
           } else {
             console.error(`Backend returned code ${error.status}, body was: ${error.error}`);
             this.messageFlowService.showMessage(String(error.status), "Сетевая ошибка", error.error);
