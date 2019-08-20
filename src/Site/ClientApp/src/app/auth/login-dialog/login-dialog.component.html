@@ -2,15 +2,14 @@
 <mat-dialog-content>
   <form [formGroup]="loginForm">
     <mat-form-field>
-      <input matInput placeholder="Username" name="username" formControlName="login">
-      <mat-hint>Errors appear instantly!</mat-hint>
+      <input matInput placeholder="Пользователь" name="username" formControlName="login">
+      <mat-hint>Логин пользователя</mat-hint>
       <mat-error>
-        async error
+        {{loginErrorMessage$ | async}}
       </mat-error>
     </mat-form-field>
     <mat-form-field>
-      <input matInput placeholder="Password" type="password" formControlName="password">
-    
+      <input matInput placeholder="Пароль" type="password" formControlName="password">
     </mat-form-field>
   </form>
 </mat-dialog-content>

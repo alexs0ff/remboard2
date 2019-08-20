@@ -8,6 +8,7 @@ import { authStartLogin } from "../auth.actions";
 import { AuthCredentials } from "../auth.models";
 import { selectIsAuthenticated, selectLoginSending,selectLoginMessage } from "../auth.selectors";
 import { LoginErrorValidator } from "./login-error.validator";
+import { storeMessageValidator } from "../../ui-common/ui-common.module";
 
 @Component({
   selector: 'app-login-dialog',
@@ -16,8 +17,8 @@ import { LoginErrorValidator } from "./login-error.validator";
   providers: [LoginErrorValidator]
 })
 export class LoginDialogComponent implements OnInit, OnDestroy {
-  loginForm = this.builder.group({ login: ['', { validators: [Validators.required], asyncValidators: [this.loginErrorValidator.validate.bind(this.loginErrorValidator)] }], password: ['', Validators.required] });
-
+  loginForm:FormGroup;
+ 
   private lifeTimeObject: Subject<boolean> = new Subject<boolean>();
 
   requestIsSending$: Observable<boolean>;
@@ -26,8 +27,7 @@ export class LoginDialogComponent implements OnInit, OnDestroy {
 
   constructor(private builder: FormBuilder,
     private store: Store<{}>,
-    matDialogRef: MatDialogRef<LoginDialogComponent>,
-    private loginErrorValidator: LoginErrorValidator
+    matDialogRef: MatDialogRef<LoginDialogComponent>
   ) {
 
     store.pipe(select(selectIsAuthenticated), filter(p => p === true), takeUntil(this.lifeTimeObject)).subscribe(result => {
@@ -36,6 +36,15 @@ export class LoginDialogComponent implements OnInit, OnDestroy {
 
     this.requestIsSending$ = this.store.pipe(select(selectLoginSending));
     this.loginErrorMessage$ = this.store.pipe(select(selectLoginMessage));
+
+    this.loginForm = this.builder.group({
+      login: ['',
+        {
+          validators: [Validators.required],
+          asyncValidators: [storeMessageValidator(this.store.pipe(select(selectLoginMessage)), { "loginError": true })]
+        }],
+        password: ['', Validators.required]
+    });
   }
 
   ngOnInit() {

@@ -34,10 +34,19 @@ export class AuthEffects {
           map(token => authSignedIn({ token:token })),
           catchError((error) => {
 
-            let message: string = "Неизвестна ошибка, повторите позже";
-            if (error.status===401) {
-              message = "Ошибочный логин или пароль";
+            let message: string = "Неизвестна ошибка";
+
+            switch (error.status) {
+              case 401:
+                message = "Ошибочный логин или пароль";
+                break;
+              case 404:
+                message = "Сервер остановлен";
+                break;
+            default:
             }
+            
+
             return of(authLoginError({ message: message}));
           })
         ))

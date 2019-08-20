@@ -11,7 +11,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatExpansionModule } from '@angular/material/expansion';
-
+import { storeMessageValidator } from './store.message.validator'
 
 const commonUi = [
   CommonModule,
@@ -37,4 +37,6 @@ const commonUi = [
   imports: commonUi,
   exports: commonUi
 })
-export class UiCommonModule { }
+class UiCommonModule { }
+
+export { UiCommonModule, storeMessageValidator}

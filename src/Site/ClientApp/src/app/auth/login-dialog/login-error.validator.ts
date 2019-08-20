@@ -19,7 +19,9 @@ export class LoginErrorValidator implements AsyncValidator {
   validate(control: AbstractControl): Promise<{ [index: string]: any; }> | Observable<{ [index: string]: any; }> | null {
     
     //return of(control.value).pipe(map(message => (message != null && message.length > 2 ? { "loginError": true } : {})),tap(m => { console.log("ddd", m); }));
-    return timer(500, 500).pipe(withLatestFrom(this.store.pipe(select(selectLoginMessage))),
+
+    const exp:Observable<string> = this.store.pipe(select(selectLoginMessage));
+    return timer(500, 500).pipe(withLatestFrom(exp),
       map(
         ([first, second]) => second), pairwise(), filter(i=>i[0]!==i[1] && i[1]!=null),take(1),tap(m => { console.log("1", m); }),
       map(message => (message != null ? { "loginError": true } : {})),
@@ -28,6 +30,7 @@ export class LoginErrorValidator implements AsyncValidator {
     //return this.store.pipe(select(selectLoginMessage), pairwise(), tap(m => { console.log("1", m); }), map(message => (message != null ? { "loginError": true } : {})), tap(m => { console.log("ddd", m); }));
     //return this.store.pipe(select(selectLoginMessage), takeUntil(this.store.pipe(select(selectLoginMessage),take(1))), map(message => (message != null ? { "loginError": true } : {})), tap(m => { console.log("ddd", m); }));
     //return this.store.pipe(select(selectLoginMessage), take(1), map(message => (message != null ? { "loginError": true } : {})), tap(m => { console.log("ddd", m); }));
+    //return this.store.pipe(select(selectLoginMessage), map(message => (message != null ? { "loginError": true } : {})), tap(m => { console.log("ddd", m); }));
 
 
   }

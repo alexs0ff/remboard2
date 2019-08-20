@@ -1,4 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Observable, timer, throwError,of } from 'rxjs';
+import { mergeMap, finalize, catchError, retryWhen } from 'rxjs/operators';
+import { Injectable } from '@angular/core'
+
 import {
   HttpInterceptor,
   HttpRequest,
@@ -8,27 +11,43 @@ import {
   HttpResponse
 } from '@angular/common/http';
 
+//from https://www.learnrxjs.io/operators/error_handling/retrywhen.html
+const genericRetryStrategy = (
+  {
+    maxRetryAttempts = 3,
+    scalingDuration = 1000,
+    excludedStatusCodes = []
+  }: {
+    maxRetryAttempts?: number;
+    scalingDuration?: number;
+    excludedStatusCodes?: number[];
+  } = {}
+) => (attempts: Observable<any>) => {
+  return attempts.pipe(
+    mergeMap((error, i) => {
+      const retryAttempt = i + 1;
+      // if maximum number of retries have been met
+      // or response is a status code we don't wish to retry, throw error
+      if (retryAttempt > maxRetryAttempts || excludedStatusCodes.find(e => e === error.status)) {
+        return throwError(error);
+      }
+      console.log(`Attempt ${retryAttempt}: retrying in ${retryAttempt * scalingDuration}ms`);
+      // retry after 1s, 2s, etc...
+      return timer(retryAttempt * scalingDuration);
+    }),
+    finalize(() => console.log('stop retrying'))
+  );
+};
 
-import { Observable,throwError,of } from 'rxjs';
-import { retry, catchError, retryWhen, switchMap, scan, takeWhile, delay, concat } from 'rxjs/operators';
 
-//from https://stackoverflow.com/questions/47261758/angular-httpclient-request-with-retry-and-delay-is-sending-an-extra-request-then
-@Injectable()
+Injectable()
 export class HttpRetryInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     
-    return next.handle(request).pipe(retryWhen(errors => errors.pipe(
-      switchMap((error) => {
-        if (error.status !== 401) {
-          return of(error.status);
-        }
-        return throwError({ message: error.error.message || 'Notification.Core.loginError' });
-      }),
-      scan(acc => acc + 1, 0),
-      takeWhile(acc => acc < 3),
-      delay(1000),
-      concat(throwError({ message: 'Notification.Core.networkError' }))
-    )));
-    //return next.handle(request).pipe(retry(3));
+    return next.handle(request).pipe(retryWhen( genericRetryStrategy({
+      scalingDuration: 500,
+      excludedStatusCodes: [401]
+    })));
   }
 }
+
