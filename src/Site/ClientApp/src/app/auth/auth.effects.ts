@@ -31,7 +31,10 @@ export class AuthEffects {
     ofType(authStartLogin),
     exhaustMap((e) => this.authService.login(e.credentials)
         .pipe(
-          map(token => authSignedIn({ token:token })),
+          map(token => {
+            const userInfo = this.tokenService.toUser(token.access_token);
+            return authSignedIn({ token: token.access_token, user: userInfo });
+          }),
           catchError((error) => {
 
             let message: string = "Неизвестна ошибка";

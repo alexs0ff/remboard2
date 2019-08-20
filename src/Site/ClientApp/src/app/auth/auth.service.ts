@@ -8,8 +8,8 @@ import { AuthCredentials } from "./auth.models";
 export class AuthService {
   constructor(private http: HttpClient) { }
 
-  login(credentials: AuthCredentials): Observable<string> {
-    return this.http.post<string>("api/login", credentials);
+  login(credentials: AuthCredentials): Observable<{ access_token: string }> {
+    return this.http.post<{ access_token:string }>("api/login", credentials);
   }
 
 }

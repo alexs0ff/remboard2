@@ -10,7 +10,9 @@ export class AppInitService {
 
   init() {
     if (this.tokenService.tokenExists()) {
-      this.store.dispatch(authSignedIn({token:this.tokenService.getToken()}));
+      const token = this.tokenService.getToken();
+      const parsedUser = this.tokenService.toUser(token);
+      this.store.dispatch(authSignedIn({ token: token, user: parsedUser}));
     }
   }
 }

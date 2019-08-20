@@ -70,7 +70,8 @@ namespace Remboard.Auth
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimsIdentity.DefaultNameClaimType, userInfo.UserName),
-                    //new Claim(ClaimsIdentity.DefaultRoleClaimType, person.Role)
+                    //new Claim(ClaimsIdentity.DefaultRoleClaimType, "admin1"),
+                    //new Claim(ClaimsIdentity.DefaultRoleClaimType, "testrole2")
                 };
                 ClaimsIdentity claimsIdentity =
                     new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
