@@ -1,5 +1,6 @@
 using System.Text;
 using Autofac;
+using Common.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -13,6 +14,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using Remboard.Auth;
+using Remboard.Infrastructure;
+using Users;
 
 namespace Remboard
 {
@@ -33,10 +36,14 @@ namespace Remboard
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
             });
+            string connection = Configuration.GetConnectionString("RemboardDb");
 
             services.AddDbContext<IdentityDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("RemboardDb")));
+                    connection));
+
+            services.AddDbContext<RemboardContext>
+                (options => options.UseSqlServer(connection));
 
             services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<IdentityDbContext>();
 
@@ -69,13 +76,7 @@ namespace Remboard
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            // Add any Autofac modules or registrations.
-            // This is called AFTER ConfigureServices so things you
-            // register here OVERRIDE things registered in ConfigureServices.
-            //
-            // You must have the call to `UseServiceProviderFactory(new AutofacServiceProviderFactory())`
-            // when building the host or this won't be called.
-            //builder.RegisterModule(new AutofacModule());
+            new FeatureRegistry().PopulateServices(builder);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
