@@ -4,13 +4,13 @@ using System.Text;
 using Autofac;
 using Common.Features;
 
-namespace Users
+namespace Common
 {
-    public class UsersModule: FeatureModule
-    { 
+    public class CommonModule: FeatureModule
+    {
         protected override void RegisterServices(ContainerBuilder builder)
         {
-            builder.RegisterType<ModelFeature>().As<IModelFeature>();
+            
         }
     }
 }

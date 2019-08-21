@@ -4,9 +4,8 @@ using System.Text;
 
 namespace Common.Features
 {
-    public enum RegistrationKind
+    public class BaseEntityGuidKey:BaseEntity<Guid>
     {
-        Services,
-        Models
+
     }
 }
