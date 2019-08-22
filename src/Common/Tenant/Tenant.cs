@@ -7,11 +7,6 @@ namespace Common.Tenant
 {
     public class Tenant: BaseEntityGuidKey
     {
-        public Tenant() : base(false)
-        {
-
-        }
-
         /// <summary>
         /// Задает или получает email регистрации.
         /// </summary>
@@ -38,7 +33,7 @@ namespace Common.Tenant
         public string Address { get; set; }
 
         /// <summary>
-        /// Задает или получает логин пользователя.
+        /// Задает или получает логин пользователя создавшего организацию.
         /// </summary>
         public string UserLogin { get; set; }
 

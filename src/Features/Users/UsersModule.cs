@@ -17,6 +17,7 @@ namespace Users
         public void OnContextFeatureCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new UserEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new ProjectRoleConfiguration());
         }
     }
 }

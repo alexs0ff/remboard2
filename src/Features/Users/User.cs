@@ -12,7 +12,7 @@ namespace Users
         /// <summary>
         /// Задает или получает роль в проекте.
         /// </summary>
-        public int? ProjectRoleID { get; set; }
+        public long ProjectRoleID { get; set; }
 
         /// <summary>
         /// Задает или получает логин пользователя.

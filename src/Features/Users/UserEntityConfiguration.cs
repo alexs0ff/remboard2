@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Common.Extensions;
 using Common.Features;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Users
@@ -17,6 +19,11 @@ namespace Users
             builder.Property(p => p.LastName).IsRequired();
             builder.Property(p => p.MiddleName);
             builder.Property(p => p.Phone);
+
+            builder.HasOne<ProjectRole>().WithMany().HasForeignKey(nameof(User.ProjectRoleID));
+
+            builder.HasIndex(p => p.LoginName).AddUniqueWithoutDeleted();
+            builder.HasIndex(p => p.Email).AddUniqueWithoutDeleted();
         }
     }
 }

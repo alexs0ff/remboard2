@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Common.Extensions;
 using Common.Features;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -19,6 +20,7 @@ namespace Common.Tenant
             builder.Property(p => p.Address);
             builder.Property(p => p.UserLogin).IsRequired();
             builder.Property(p => p.Number).UseIdentityColumn();
+            builder.HasIndex(p => p.RegistredEmail).AddUniqueWithoutDeleted();
         }
     }
 }
