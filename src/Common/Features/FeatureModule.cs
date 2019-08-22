@@ -12,6 +12,13 @@ namespace Common.Features
         protected override void Load(ContainerBuilder builder)
         {
             RegisterServices(builder);
+
+            if (this is IConfigureModelFeature cmf)
+            {
+                builder.RegisterInstance(cmf).As<IConfigureModelFeature>();
+            }
         }
+
+        
     }
 }

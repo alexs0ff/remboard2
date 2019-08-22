@@ -8,9 +8,9 @@ namespace Common.Data
 {
     public class RemboardContext: DbContext
     {
-        private readonly IEnumerable<IModelFeature> _features;
+        private readonly IEnumerable<IConfigureModelFeature> _features;
 
-        public RemboardContext(DbContextOptions<RemboardContext> options,IEnumerable<IModelFeature> features)
+        public RemboardContext(DbContextOptions<RemboardContext> options,IEnumerable<IConfigureModelFeature> features)
             : base(options)
         {
             _features = features;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Common.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -15,6 +16,10 @@ namespace Common.Features
             builder.Property(p => p.IsDeleted);
             builder.Property(p => p.DateCreated).HasDefaultValueSql("GETDATE()");
 
+            if (typeof(TEntity).HasImplementation<ITenantedEntity>())
+            {
+                builder.HasOne<Tenant.Tenant>().WithMany().HasForeignKey(nameof(ITenantedEntity.TenantId));
+            }
         }
     }
 }

@@ -3,14 +3,20 @@ using System.Collections.Generic;
 using System.Text;
 using Autofac;
 using Common.Features;
+using Microsoft.EntityFrameworkCore;
 
 namespace Users
 {
-    public class UsersModule: FeatureModule
+    public class UsersModule: FeatureModule, IConfigureModelFeature
     { 
         protected override void RegisterServices(ContainerBuilder builder)
         {
-            builder.RegisterType<ModelFeature>().As<IModelFeature>();
+            
+        }
+
+        public void OnContextFeatureCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new UserEntityConfiguration());
         }
     }
 }

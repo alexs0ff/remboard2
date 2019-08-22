@@ -14,10 +14,10 @@ namespace Common.Tenant
             base.Configure(builder);
             builder.Property(p => p.RegistredEmail).IsRequired();
             builder.Property(p => p.IsActive);
-            builder.Property(p => p.LegalName);
+            builder.Property(p => p.LegalName).IsRequired();
             builder.Property(p => p.Trademark);
             builder.Property(p => p.Address);
-            builder.Property(p => p.UserLogin);
+            builder.Property(p => p.UserLogin).IsRequired();
             builder.Property(p => p.Number).UseIdentityColumn();
         }
     }

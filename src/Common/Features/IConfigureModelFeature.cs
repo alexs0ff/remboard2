@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Common.Features
 {
-    public interface IModelFeature
+    public interface IConfigureModelFeature
     {
         void OnContextFeatureCreating(ModelBuilder modelBuilder);
     }
