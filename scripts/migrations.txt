@@ -1,0 +1,4 @@
+-c=RemboardContext
+
+dotnet ef migrations add AddedUsersFeature -c=RemboardContext
+dotnet ef migrations add AddedUsersFeature -c=RemboardContext -p=DatabaseProjects/Database.Base -s=Site/Remboard.csproj
