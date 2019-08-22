@@ -1,32 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using Autofac;
+using Common;
 using Common.Data;
 using Common.Extensions;
 using Common.Features;
+using Users;
 
 namespace Database.Base
 {
+    //TODO move databaseprojects to featurecomposer projects
     public class BaseContextBuilder: IContextBuilder
     {
         private static Lazy<List<IConfigureModelFeature>> _features = new Lazy<List<IConfigureModelFeature>>(() =>
         {
-            //todo: separate to database.common
-            var builder = new ContainerBuilder();
-            var refAssembyNames = typeof(RemboardContextFactory).Assembly
-                .GetReferencedAssemblies();
-
-            foreach (var refAssembyName in refAssembyNames)
+            return new List<IConfigureModelFeature>
             {
-                var loadedAssembly = Assembly.Load(refAssembyName);
-                builder.RegisterAssemblyTypes(loadedAssembly).Where(t => t.HasImplementation<IConfigureModelFeature>())
-                    .As<IConfigureModelFeature>();
-            }
-
-            var list = new List<IConfigureModelFeature>(builder.Build().Resolve<IEnumerable<IConfigureModelFeature>>());
-            return list;
+                new UsersModule(),
+                new CommonModule()
+            };
         });
 
         public IEnumerable<IConfigureModelFeature> GetFeatures()
