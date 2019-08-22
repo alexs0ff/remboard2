@@ -12,7 +12,7 @@ namespace Common.Extensions
                 return false;
             }
 
-            return derivedType.GetTypeInfo().IsAssignableFrom(typeof(TType).GetTypeInfo());
+            return typeof(TType).GetTypeInfo().IsAssignableFrom(derivedType.GetTypeInfo());
         }
     }
 }

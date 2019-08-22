@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using System.Text;
 using Autofac;
@@ -21,20 +23,9 @@ namespace Database.Base
             var optionsBuilder = new DbContextOptionsBuilder<RemboardContext>();
             //try configure from here https://garywoodfine.com/configuration-api-net-core-console-application/
             optionsBuilder.UseSqlServer("Data Source=.\\SQLEXPRESS;Initial Catalog=Remboard2;Integrated Security=True;MultipleActiveResultSets=true",m=>m.MigrationsAssembly(typeof(RemboardContextFactory).Assembly.FullName));
-
-            var builder = new ContainerBuilder();
-            var refAssembyNames = typeof(RemboardContextFactory).Assembly
-                .GetReferencedAssemblies();
-
-            foreach (var refAssembyName in refAssembyNames)
-            {
-                var loadedAssembly = Assembly.Load(refAssembyName);
-                builder.RegisterAssemblyTypes(loadedAssembly).Where(t => t.HasImplementation<IConfigureModelFeature>())
-                    .As<IConfigureModelFeature>();
-            }
-
-            builder.RegisterInstance(optionsBuilder.Options);
-            return builder.Build().Resolve<RemboardContext>();
+            
+            
+            return new RemboardContext(optionsBuilder.Options,new BaseContextBuilder());
         }
     }
 }
