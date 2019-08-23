@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Common.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -27,7 +28,7 @@ namespace Common.Features
             {
                 var name = Enum.GetName(typeof(TEnum), value);
                 //todo: https://stackoverflow.com/a/9276348
-                list.Add(new TEntity(){Code = name,Name = name,Id = value});
+                list.Add(new TEntity(){Code = name,Name = EnumExtensions.GetDescription<TEnum>(value), Id = value});
             }
 
             builder.HasData(list);
