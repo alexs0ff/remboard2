@@ -9,4 +9,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.0-preview8.19405.11" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Composers\" />
+  </ItemGroup>
+
 </Project>

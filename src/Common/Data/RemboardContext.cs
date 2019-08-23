@@ -8,18 +8,18 @@ namespace Common.Data
 {
     public class RemboardContext: DbContext
     {
-        private readonly IContextBuilder _contextBuilder;
+        private readonly IEnumerable<IConfigureModelFeature> _features;
 
-        public RemboardContext(DbContextOptions<RemboardContext> options,IContextBuilder contextBuilder)
+        public RemboardContext(DbContextOptions<RemboardContext> options, IEnumerable<IConfigureModelFeature> features)
             : base(options)
         {
-            _contextBuilder = contextBuilder;
+            _features = features;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
            
-            foreach (var feature in _contextBuilder.GetFeatures())
+            foreach (var feature in _features)
             {
                 feature.OnContextFeatureCreating(modelBuilder);
             }

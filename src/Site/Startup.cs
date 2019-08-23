@@ -76,7 +76,7 @@ namespace Remboard
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            new FeatureRegistry().PopulateServices(builder);
+            //new FeatureRegistry().PopulateServices(builder);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

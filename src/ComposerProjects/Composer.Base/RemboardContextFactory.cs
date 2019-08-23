@@ -26,10 +26,9 @@ namespace Database.Base
             optionsBuilder.UseSqlServer("Data Source=.\\SQLEXPRESS;Initial Catalog=Remboard2;Integrated Security=True;MultipleActiveResultSets=true",m=>m.MigrationsAssembly(typeof(RemboardContextFactory).Assembly.FullName));
             
             var container = new ContainerBuilder();
-            container.AddComposer<FeaturesComposer>();
 
             container.RegisterInstance(optionsBuilder.Options);
-            container.RegisterType<RemboardContext>();
+            container.RegisterModule<ComposerModule>();
 
             return container.Build().Resolve<RemboardContext>();
         }
