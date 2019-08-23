@@ -26,6 +26,7 @@ namespace Common.Features
             foreach (long value in values)
             {
                 var name = Enum.GetName(typeof(TEnum), value);
+                //todo: https://stackoverflow.com/a/9276348
                 list.Add(new TEntity(){Code = name,Name = name,Id = value});
             }
 

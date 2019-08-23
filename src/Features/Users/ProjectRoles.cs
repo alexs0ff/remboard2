@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Users
 {
-    public enum ProjectRoles
+    public enum ProjectRoles:long
     {
         [Description("Администратор")]
         Admin=1,
