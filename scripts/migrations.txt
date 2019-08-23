@@ -4,3 +4,4 @@ dotnet ef migrations add AddedUsersFeature -c=RemboardContext
 dotnet ef migrations add AddedUsersFeature -c=RemboardContext -p=DatabaseProjects/Database.Base -s=Site/Remboard.csproj
 dotnet ef migrations add AddedUsersFeature -c=RemboardContext --project DatabaseProjects/Database.Base/Database.Base.csproj --startup-project=Site/Remboard.csproj
 dotnet ef migrations add AddedUsersFeature -c=RemboardContext --startup-project=DatabaseProjects/Database.Base/Database.Base.csproj
+dotnet ef migrations add AddedUsersFeature -c=RemboardContext --startup-project=ComposerProjects/Composer.Base/Composer.Base.csproj

@@ -12,6 +12,7 @@ using Common.Features;
 using Composer.Base;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 using Users;
 
 namespace Database.Base
@@ -23,14 +24,24 @@ namespace Database.Base
         {
             var optionsBuilder = new DbContextOptionsBuilder<RemboardContext>();
             //try configure from here https://garywoodfine.com/configuration-api-net-core-console-application/
-            optionsBuilder.UseSqlServer("Data Source=.\\SQLEXPRESS;Initial Catalog=Remboard2;Integrated Security=True;MultipleActiveResultSets=true",m=>m.MigrationsAssembly(typeof(RemboardContextFactory).Assembly.FullName));
+            optionsBuilder.UseSqlServer(GetConnectionString(), m=>m.MigrationsAssembly(typeof(RemboardContextFactory).Assembly.FullName));
             
             var container = new ContainerBuilder();
 
             container.RegisterInstance(optionsBuilder.Options);
             container.RegisterModule<ComposerModule>();
+            container.RegisterType<RemboardContext>();
 
             return container.Build().Resolve<RemboardContext>();
+        }
+
+        private string GetConnectionString()
+        {
+            IConfiguration config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", true, true)
+                .Build();
+
+            return config["ConnectionStrings:RemboardDb"];
         }
     }
 }
