@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Users.Api;
 
 namespace Remboard.Auth
 {
@@ -21,13 +22,14 @@ namespace Remboard.Auth
 
         private readonly UserManager<IdentityUser> _userManager;
 
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly IUserService _userService;
 
-        public LoginController(IConfiguration config, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+
+        public LoginController(IConfiguration config, UserManager<IdentityUser> userManager, IUserService userService)
         {
             _config = config;
             _userManager = userManager;
-            _signInManager = signInManager;
+            _userService = userService;
         }
         [AllowAnonymous]
         [HttpPost]
@@ -39,7 +41,7 @@ namespace Remboard.Auth
 
             if (user != null)
             {
-                var tokenString = GenerateJSONWebToken(user);
+                var tokenString = await GenerateJSONWebToken(user);
                 response = Ok(new { access_token = tokenString });
             }
 
@@ -47,12 +49,12 @@ namespace Remboard.Auth
             return response;
         }
 
-        private string GenerateJSONWebToken(IdentityUser userInfo)
+        private async Task<string> GenerateJSONWebToken(IdentityUser userInfo)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            var claimsIdentity = GetIdentity(userInfo);
+            var claimsIdentity = await GetIdentity(userInfo);
 
             var token = new JwtSecurityToken(_config["Jwt:Issuer"],
                 _config["Jwt:Issuer"],
@@ -63,16 +65,23 @@ namespace Remboard.Auth
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        private ClaimsIdentity GetIdentity(IdentityUser userInfo)
+        private async Task<ClaimsIdentity> GetIdentity(IdentityUser userInfo)
         {
             if (userInfo != null)
             {
+                var user = await _userService.GetUserByLogin(userInfo.UserName);
+
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimsIdentity.DefaultNameClaimType, userInfo.UserName),
                     //new Claim(ClaimsIdentity.DefaultRoleClaimType, "admin1"),
                     //new Claim(ClaimsIdentity.DefaultRoleClaimType, "testrole2")
                 };
+
+                if (user!=null)
+                {
+                    claims.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType,user.ProjectRoleId.ToString()));
+                }
                 ClaimsIdentity claimsIdentity =
                     new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
                         ClaimsIdentity.DefaultRoleClaimType);

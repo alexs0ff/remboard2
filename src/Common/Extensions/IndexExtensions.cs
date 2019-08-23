@@ -10,7 +10,7 @@ namespace Common.Extensions
     {
         public static IndexBuilder<TEntity> AddUniqueWithoutDeleted<TEntity>(this IndexBuilder<TEntity> builder)
         {
-            return builder.IsUnique().HasFilter("IsDeleted Is NOT NULL");
+            return builder.IsUnique().HasFilter("IsDeleted = 0");
         }
     }
 }
