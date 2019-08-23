@@ -9,6 +9,7 @@ using Common;
 using Common.Data;
 using Common.Extensions;
 using Common.Features;
+using Composer.Base;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Users;
@@ -24,8 +25,13 @@ namespace Database.Base
             //try configure from here https://garywoodfine.com/configuration-api-net-core-console-application/
             optionsBuilder.UseSqlServer("Data Source=.\\SQLEXPRESS;Initial Catalog=Remboard2;Integrated Security=True;MultipleActiveResultSets=true",m=>m.MigrationsAssembly(typeof(RemboardContextFactory).Assembly.FullName));
             
-            
-            return new RemboardContext(optionsBuilder.Options,new BaseContextBuilder());
+            var container = new ContainerBuilder();
+            container.AddComposer<FeaturesComposer>();
+
+            container.RegisterInstance(optionsBuilder.Options);
+            container.RegisterType<RemboardContext>();
+
+            return container.Build().Resolve<RemboardContext>();
         }
     }
 }

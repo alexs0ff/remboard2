@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Autofac;
+﻿using Autofac;
 using Common;
 using Common.Composers;
 using Common.Features;
 using Users;
 
-namespace Remboard.Infrastructure
+namespace Composer.Base
 {
-    public class FeatureReg2istry: IFeaturesComposer
+    public class FeaturesComposer: IFeaturesComposer
     {
         private FeatureModule[] GetFeatures()
         {
-            //TODO add features here
+            //TODO add base features here
             return new FeatureModule[]
             {
                 new CommonModule(),
