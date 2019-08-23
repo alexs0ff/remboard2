@@ -23,7 +23,7 @@ namespace Users
             
             
 
-            builder.HasOne<ProjectRole>().WithMany().HasForeignKey("ProjectRoleId").IsRequired();
+            builder.HasOne<ProjectRole>().WithMany().HasForeignKey(p=>p.ProjectRoleId).IsRequired();
 
             builder.HasIndex(p => p.LoginName).AddUniqueWithoutDeleted();
             builder.HasIndex(p => p.Email).AddUniqueWithoutDeleted();

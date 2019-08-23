@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Composer.Base.Migrations
 {
     [DbContext(typeof(RemboardContext))]
-    [Migration("20190823143100_AddedUsersFeature2")]
-    partial class AddedUsersFeature2
+    [Migration("20190823143554_AddedUsersFeature")]
+    partial class AddedUsersFeature
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -140,9 +140,6 @@ namespace Composer.Base.Migrations
 
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("ProjectRole")
-                        .HasColumnType("bigint");
 
                     b.Property<long>("ProjectRoleId")
                         .HasColumnType("bigint");

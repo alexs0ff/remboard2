@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Composer.Base.Migrations
 {
-    public partial class AddedUsersFeature2 : Migration
+    public partial class AddedUsersFeature : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -56,14 +56,13 @@ namespace Composer.Base.Migrations
                     DateModified = table.Column<DateTime>(nullable: true),
                     RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
                     TenantId = table.Column<Guid>(nullable: false),
-                    ProjectRole = table.Column<long>(nullable: false),
+                    ProjectRoleId = table.Column<long>(nullable: false),
                     LoginName = table.Column<string>(nullable: false),
                     FirstName = table.Column<string>(nullable: false),
                     LastName = table.Column<string>(nullable: false),
                     MiddleName = table.Column<string>(nullable: true),
                     Phone = table.Column<string>(nullable: true),
-                    Email = table.Column<string>(nullable: false),
-                    ProjectRoleId = table.Column<long>(nullable: false)
+                    Email = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {

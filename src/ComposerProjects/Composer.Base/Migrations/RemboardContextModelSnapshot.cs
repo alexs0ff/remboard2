@@ -139,9 +139,6 @@ namespace Composer.Base.Migrations
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("ProjectRole")
-                        .HasColumnType("bigint");
-
                     b.Property<long>("ProjectRoleId")
                         .HasColumnType("bigint");
 
