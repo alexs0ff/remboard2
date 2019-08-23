@@ -5,6 +5,7 @@ using Common.Extensions;
 using Common.Features;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Users
 {
@@ -19,8 +20,10 @@ namespace Users
             builder.Property(p => p.LastName).IsRequired();
             builder.Property(p => p.MiddleName);
             builder.Property(p => p.Phone);
+            
+            
 
-            builder.HasOne<ProjectRole>().WithMany().HasForeignKey(nameof(User.ProjectRoleID));
+            builder.HasOne<ProjectRole>().WithMany().HasForeignKey("ProjectRoleId").IsRequired();
 
             builder.HasIndex(p => p.LoginName).AddUniqueWithoutDeleted();
             builder.HasIndex(p => p.Email).AddUniqueWithoutDeleted();

@@ -13,5 +13,6 @@ namespace Users
         Manager = 2,
         [Description("Инженер")]
         Engineer = 3
+        
     }
 }

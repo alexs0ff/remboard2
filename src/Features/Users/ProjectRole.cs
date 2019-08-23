@@ -5,7 +5,7 @@ using Common.Features;
 
 namespace Users
 {
-    public class ProjectRole: BasePermissibleValue
+    public class ProjectRole: BasePermissibleValue<ProjectRoles>
     {
     }
 }

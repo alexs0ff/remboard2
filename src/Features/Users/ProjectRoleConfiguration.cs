@@ -6,12 +6,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Users
 {
-    public class ProjectRoleConfiguration: BasePermissibleValueConfiguration<ProjectRole>
+    public class ProjectRoleConfiguration: BasePermissibleValueConfiguration<ProjectRole,ProjectRoles>
     {
         public override void Configure(EntityTypeBuilder<ProjectRole> builder)
         {
             base.Configure(builder);
-            FillData<ProjectRoles>(builder);
+            //FillData<ProjectRoles>(builder);
         }
     }
 }

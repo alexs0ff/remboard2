@@ -4,9 +4,10 @@ using System.Text;
 
 namespace Common.Features
 {
-    public abstract class BasePermissibleValue
+    public abstract class BasePermissibleValue<TEnum>
+    where TEnum:Enum
     {
-        public long Id { get; set; }
+        public TEnum Id { get; set; }
 
         public string Code { get; set; }
 

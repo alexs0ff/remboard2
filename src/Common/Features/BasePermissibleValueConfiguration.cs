@@ -7,7 +7,8 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Common.Features
 {
-    public abstract class BasePermissibleValueConfiguration<TEntity> : IEntityTypeConfiguration<TEntity> where TEntity : BasePermissibleValue,new()
+    public abstract class BasePermissibleValueConfiguration<TEntity,TEnum> : IEntityTypeConfiguration<TEntity> where TEntity : BasePermissibleValue<TEnum>,new()
+    where TEnum:Enum
     {
         public virtual void Configure(EntityTypeBuilder<TEntity> builder)
         {
@@ -20,6 +21,8 @@ namespace Common.Features
         protected void FillData<TEnum>(EntityTypeBuilder<TEntity> builder)
             where TEnum: struct, Enum
         {
+            // will be fix on preview 9 https://github.com/aspnet/EntityFrameworkCore/issues/17145
+            
             var values = Enum.GetValues(typeof(TEnum));
 
             var list = new List<TEntity>();
@@ -28,7 +31,7 @@ namespace Common.Features
             {
                 var name = Enum.GetName(typeof(TEnum), value);
                 //todo: https://stackoverflow.com/a/9276348
-                list.Add(new TEntity(){Code = name,Name = EnumExtensions.GetDescription<TEnum>(value), Id = value});
+                //list.Add(new TEntity(){Code = name,Name = EnumExtensions.GetDescription<TEnum>(value), Id = value});
             }
 
             builder.HasData(list);
