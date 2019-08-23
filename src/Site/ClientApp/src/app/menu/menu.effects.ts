@@ -9,8 +9,8 @@ import { MenuFilterService } from "./menu-filter-service";
 @Injectable()
 export class MenuEffects {
   searchItems$ = createEffect(() => this.actions$.pipe(
-      ofType(navigationPaneSearch),
-      switchMap((e) => this.filterService.filterItems(e.searchText)
+    ofType(navigationPaneSearch),
+    switchMap((e) => this.filterService.filterItems(e.searchText, e.currentUserRoles)
         .pipe(
           map(navigationGroups => setMenuItems({ menuItems: navigationGroups})),
           catchError(() => EMPTY)
