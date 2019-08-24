@@ -19,7 +19,7 @@ namespace Composer.Base.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Common.Tenant.Tenant", b =>
+            modelBuilder.Entity("Common.FeatureEntities.Tenant", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -73,9 +73,92 @@ namespace Composer.Base.Migrations
 
                     b.HasIndex("RegistredEmail")
                         .IsUnique()
-                        .HasFilter("IsDeleted Is NOT NULL");
+                        .HasFilter("IsDeleted = 0");
 
                     b.ToTable("Tenant");
+                });
+
+            modelBuilder.Entity("Orders.Autocomplete.AutocompleteItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<long>("AutocompleteKindId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("DateCreated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AutocompleteKindId");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("AutocompleteItem");
+                });
+
+            modelBuilder.Entity("Orders.Autocomplete.AutocompleteKind", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.ToTable("AutocompleteKind");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            Code = "DeviceTrademark",
+                            Name = "Бренд"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            Code = "DeviceOptions",
+                            Name = "Комплектация"
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            Code = "DeviceAppearance",
+                            Name = "Внешний вид"
+                        });
                 });
 
             modelBuilder.Entity("Users.ProjectRole", b =>
@@ -154,17 +237,32 @@ namespace Composer.Base.Migrations
 
                     b.HasIndex("Email")
                         .IsUnique()
-                        .HasFilter("IsDeleted Is NOT NULL");
+                        .HasFilter("IsDeleted = 0");
 
                     b.HasIndex("LoginName")
                         .IsUnique()
-                        .HasFilter("IsDeleted Is NOT NULL");
+                        .HasFilter("IsDeleted = 0");
 
                     b.HasIndex("ProjectRoleId");
 
                     b.HasIndex("TenantId");
 
                     b.ToTable("User");
+                });
+
+            modelBuilder.Entity("Orders.Autocomplete.AutocompleteItem", b =>
+                {
+                    b.HasOne("Orders.Autocomplete.AutocompleteKind", null)
+                        .WithMany()
+                        .HasForeignKey("AutocompleteKindId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Common.FeatureEntities.Tenant", null)
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Users.User", b =>
@@ -175,7 +273,7 @@ namespace Composer.Base.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Common.Tenant.Tenant", null)
+                    b.HasOne("Common.FeatureEntities.Tenant", null)
                         .WithMany()
                         .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Cascade)

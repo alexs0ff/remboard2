@@ -18,8 +18,7 @@ namespace Common.Features
             builder.HasIndex(p => p.Code).IsUnique();
         }
 
-        protected void FillData<TEnum>(EntityTypeBuilder<TEntity> builder)
-            where TEnum: struct, Enum
+        protected void FillData(EntityTypeBuilder<TEntity> builder)
         {
             // will be fix on preview 9 https://github.com/aspnet/EntityFrameworkCore/issues/17145
             
@@ -31,7 +30,9 @@ namespace Common.Features
             {
                 var name = Enum.GetName(typeof(TEnum), value);
                 //todo: https://stackoverflow.com/a/9276348
-                //list.Add(new TEntity(){Code = name,Name = EnumExtensions.GetDescription<TEnum>(value), Id = value});
+
+                var idFromValue = (TEnum)Enum.ToObject(typeof(TEnum), value);
+                list.Add(new TEntity(){Code = name,Name = EnumExtensions.GetDescription<TEnum>(value), Id = idFromValue });
             }
 
             builder.HasData(list);

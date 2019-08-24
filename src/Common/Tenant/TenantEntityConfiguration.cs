@@ -8,9 +8,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Common.Tenant
 {
-    public class TenantEntityConfiguration: BaseEntityGuidKeyConfiguration<Tenant>
+    public class TenantEntityConfiguration: BaseEntityGuidKeyConfiguration<FeatureEntities.Tenant>
     {
-        public override void Configure(EntityTypeBuilder<Tenant> builder)
+        public override void Configure(EntityTypeBuilder<FeatureEntities.Tenant> builder)
         {
             base.Configure(builder);
             builder.Property(p => p.RegistredEmail).IsRequired();

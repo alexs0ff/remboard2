@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Common.Features;
+﻿using Common.Features;
 
-namespace Common.Tenant
+namespace Common.FeatureEntities
 {
     public class Tenant: BaseEntityGuidKey
     {

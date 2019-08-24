@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Common.csproj" />
+    <ProjectReference Include="..\..\Features\Orders\Orders.csproj" />
     <ProjectReference Include="..\..\Features\Users\Users.csproj" />
   </ItemGroup>
 

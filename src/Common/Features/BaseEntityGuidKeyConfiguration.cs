@@ -18,7 +18,7 @@ namespace Common.Features
 
             if (typeof(TEntity).HasImplementation<ITenantedEntity>())
             {
-                builder.HasOne<Tenant.Tenant>().WithMany().HasForeignKey(nameof(ITenantedEntity.TenantId));
+                builder.HasOne<FeatureEntities.Tenant>().WithMany().HasForeignKey(nameof(ITenantedEntity.TenantId));
             }
         }
     }

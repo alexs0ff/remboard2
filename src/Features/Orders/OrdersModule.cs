@@ -4,21 +4,21 @@ using System.Text;
 using Autofac;
 using Common.Features;
 using Microsoft.EntityFrameworkCore;
-using Users.Api;
+using Orders.Autocomplete;
 
-namespace Users
+namespace Orders
 {
-    public sealed class UsersModule: FeatureModule, IConfigureModelFeature
-    { 
+    public sealed class OrdersModule : FeatureModule, IConfigureModelFeature
+    {
         protected override void RegisterServices(ContainerBuilder builder)
         {
-            builder.RegisterType<UserService>().As<IUserService>();
+            
         }
 
         public void OnContextFeatureCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new UserEntityConfiguration());
-            modelBuilder.ApplyConfiguration(new ProjectRoleConfiguration());
+            modelBuilder.ApplyConfiguration(new AutocompleteItemConfiguration());
+            modelBuilder.ApplyConfiguration(new AutocompleteKindConfiguration());
         }
     }
 }
