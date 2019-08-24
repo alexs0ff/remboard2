@@ -37,7 +37,7 @@
       <top-menu fxFlex fxLayout fxLayoutAlign="flex-end" fxHide.xs></top-menu>
     </mat-toolbar>
     <div fxLayout="row">
-      <div *ngIf="navigationPaneVisible$ | async">
+      <div *ngIf="(navigationPaneVisible$ | async) && (isAuthenticated$ | async)">
         <navigation-pane></navigation-pane>
       </div>
       <div class="main-content">

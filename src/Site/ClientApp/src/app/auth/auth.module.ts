@@ -11,6 +11,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from "./auth.service";
 import { TokenService } from "./token.service";
 import { AuthEffects } from "./auth.effects";
+import { UserInfo } from "./auth.models";
+import { selectCurrentUser, selectIsAuthenticated } from "./auth.selectors";
+import { authSignedIn } from './auth.actions';
 
 @NgModule({
   declarations: [LoginDialogComponent, LoginButtonComponent],
@@ -26,4 +29,4 @@ import { AuthEffects } from "./auth.effects";
 })
 class AuthModule { }
 
-export { AuthModule, AuthEffects, TokenService};
+export { AuthModule, AuthEffects, TokenService, selectCurrentUser, UserInfo, selectIsAuthenticated, authSignedIn};

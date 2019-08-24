@@ -1,14 +1,19 @@
 import { Injectable } from '@angular/core';
 import { NavigationGroup, navigationPaneItems } from "./navigation-pane/navigation-pane.model";
 import { of, Observable } from 'rxjs';
+import { UserInfo } from "../auth/auth.module";
+
 
 @Injectable({ providedIn: 'root' })
 export class MenuFilterService {
-  public filterItems(searchText: string,roles:string[]): Observable<NavigationGroup[]> {
+  public filterItems(searchText: string,user:UserInfo): Observable<NavigationGroup[]> {
     const groups: NavigationGroup[] = [];
     //current user can have only a role.
-    const role = roles[0];
-    
+    let role: string = '';
+
+    if (user && user.roles && user.roles.length) {
+      role = user.roles[0];
+    }
 
     for (var groupIndex = 0; groupIndex < navigationPaneItems.length; groupIndex++) {
 
