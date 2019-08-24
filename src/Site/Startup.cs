@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -16,6 +17,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using Remboard.Auth;
+using Remboard.Infrastructure;
 using Users;
 
 namespace Remboard
@@ -100,6 +102,8 @@ namespace Remboard
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            DiagnosticListener.AllListeners.Subscribe(new EfGlobalListener());
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
