@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Runtime.Loader;
 using System.Text;
 using Autofac;
 using Common.Data;
@@ -18,6 +19,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using Remboard.Auth;
 using Remboard.Infrastructure;
+using Remboard.Infrastructure.BaseControllers;
 using Users;
 
 namespace Remboard
@@ -37,6 +39,7 @@ namespace Remboard
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            AssemblyLoadContext.Default.Resolving+=DefaultOnResolving;
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -75,18 +78,49 @@ namespace Remboard
                     };
                 });
 
-            services.AddControllersWithViews().AddNewtonsoftJson(options =>
+            services.AddControllersWithViews(config =>
+            {
+                //config.Conventions.Add();
+            }).AddNewtonsoftJson(options =>
                 options.SerializerSettings.ContractResolver =
-                    new CamelCasePropertyNamesContractResolver()); ;
+                    new CamelCasePropertyNamesContractResolver()).ConfigureApplicationPartManager(ap =>
+            {
+                //Загружаем Configuration["Modules:ComposerAssembly"]; -просто создав ContainerBuilder и вызывав ConfigureContainer
+                // и ищем все сборки
+                ap.FeatureProviders.Add(new GenericControllerFeatureProvider());
+            });
+
+            
         }
 
+        private Assembly DefaultOnResolving(AssemblyLoadContext arg1, AssemblyName arg2)
+        {
+            var assemblyPath = GetComposerAssemblyPath();
+            assemblyPath = Path.GetDirectoryName(assemblyPath);
+            assemblyPath = Path.Combine(assemblyPath, arg2.Name + ".dll");
+            return arg1.LoadFromAssemblyPath(assemblyPath);
+        }
+
+        /// <summary>
+        /// Данный метод вызывается 2 раза.
+        /// Первый раз, когда временно загружаем application parts.
+        /// И второй раз неявно, когда конфигурируется ContainerBuilder уровня приложения.
+        /// </summary>
+        /// <param name="builder"></param>
         public void ConfigureContainer(ContainerBuilder builder)
+        {
+            var assemblyPath = GetComposerAssemblyPath();
+            var composerAssembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(assemblyPath);
+            //var composerAssembly = Assembly.LoadFile(assemblyPath);
+            builder.RegisterAssemblyModules(composerAssembly);
+        }
+
+        private string GetComposerAssemblyPath()
         {
             var assemblyPath = Configuration["Modules:ComposerAssembly"];
             var fullPath = Environment.ContentRootPath;
             assemblyPath = Path.Combine(fullPath, assemblyPath);
-            var composerAssembly = Assembly.LoadFile(assemblyPath);
-            builder.RegisterAssemblyModules(composerAssembly);
+            return assemblyPath;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
