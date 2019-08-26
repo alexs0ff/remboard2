@@ -41,6 +41,9 @@ namespace Remboard.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<TEntity>> Get([FromRoute]string id)
         {
+            //ВОт библиотека https://github.com/scottksmith95/LINQKit
+            //https://habr.com/ru/post/335856/
+            //http://www.albahari.com/nutshell/linqkit.aspx
             //Делать биндинг на параметр tenantId в JWT токене
             //https://docs.microsoft.com/en-us/aspnet/web-api/overview/formats-and-model-binding/parameter-binding-in-aspnet-web-api#httpparameterbinding
             return Ok(new {Awwe=222});
