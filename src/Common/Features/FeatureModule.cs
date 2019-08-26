@@ -1,4 +1,7 @@
-﻿using Autofac;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Autofac;
+using Common.Features.Cruds;
 
 namespace Common.Features
 {
@@ -17,8 +20,16 @@ namespace Common.Features
             {
                 builder.RegisterInstance(cmf).As<IConfigureModelFeature>();
             }
+
+            foreach (var crudControllerDescriptor in RegisterCrudControllers())
+            {
+                builder.RegisterInstance(crudControllerDescriptor);
+            }
         }
 
-        
+        protected virtual IEnumerable<ICrudControllerDescriptor> RegisterCrudControllers()
+        {
+            return Enumerable.Empty<ICrudControllerDescriptor>();
+        }
     }
 }

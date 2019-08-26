@@ -49,8 +49,25 @@ namespace Common.Features.Cruds
         public AccessRuleMap(ProjectRoles[] readRoles, ProjectRoles[] modifyRoles)
         {
             var innerDictionary = new Dictionary<AccessKind, HashSet<ProjectRoles>>();
-            innerDictionary.Add(AccessKind.Read, readRoles.ToHashSet());
-            innerDictionary.Add(AccessKind.Modify, modifyRoles.ToHashSet());
+
+            if (readRoles!=null && readRoles.Any())
+            {
+                innerDictionary.Add(AccessKind.Read, readRoles.ToHashSet());
+            }
+            else
+            {
+                innerDictionary.Add(AccessKind.Read, _defaultRoles[AccessKind.Read]);
+            }
+
+            if (modifyRoles!=null && modifyRoles.Any())
+            {
+                innerDictionary.Add(AccessKind.Modify, modifyRoles.ToHashSet());
+            }
+            else
+            {
+                innerDictionary.Add(AccessKind.Modify, _defaultRoles[AccessKind.Modify]);
+            }
+            
 
             _roles = new ReadOnlyDictionary<AccessKind, HashSet<ProjectRoles>>(innerDictionary);
         }

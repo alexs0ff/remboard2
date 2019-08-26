@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Autofac;
 using Common.Features;
+using Common.Features.Cruds;
 using Microsoft.EntityFrameworkCore;
 using Orders.Autocomplete;
 
@@ -19,6 +20,11 @@ namespace Orders
         {
             modelBuilder.ApplyConfiguration(new AutocompleteItemConfiguration());
             modelBuilder.ApplyConfiguration(new AutocompleteKindConfiguration());
+        }
+
+        protected override IEnumerable<ICrudControllerDescriptor> RegisterCrudControllers()
+        {
+            yield return new CrudControllerConfgurator<AutocompleteItem>().Finish();
         }
     }
 }

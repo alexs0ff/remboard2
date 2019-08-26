@@ -87,7 +87,12 @@ namespace Remboard
             {
                 //Загружаем Configuration["Modules:ComposerAssembly"]; -просто создав ContainerBuilder и вызывав ConfigureContainer
                 // и ищем все сборки
-                ap.FeatureProviders.Add(new GenericControllerFeatureProvider());
+
+                var temporaryBuilder = new ContainerBuilder();
+                temporaryBuilder.RegisterType<GenericControllerFeatureProvider>();
+                ConfigureContainer(temporaryBuilder);
+
+                ap.FeatureProviders.Add(temporaryBuilder.Build().Resolve<GenericControllerFeatureProvider>());
             });
 
             
@@ -98,6 +103,11 @@ namespace Remboard
             var assemblyPath = GetComposerAssemblyPath();
             assemblyPath = Path.GetDirectoryName(assemblyPath);
             assemblyPath = Path.Combine(assemblyPath, arg2.Name + ".dll");
+
+            if (!File.Exists(assemblyPath))
+            {
+                return null;
+            }
             return arg1.LoadFromAssemblyPath(assemblyPath);
         }
 
