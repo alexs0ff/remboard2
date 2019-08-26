@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <Folder Include="Composers\" />
+    <Folder Include="Controlles\" />
   </ItemGroup>
 
 </Project>
