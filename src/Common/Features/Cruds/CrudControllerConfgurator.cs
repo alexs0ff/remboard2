@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Common.FeatureEntities;
+using Common.Features.BaseEntity;
 using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Common.Features.Cruds

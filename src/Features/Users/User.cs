@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using Common.FeatureEntities;
 using Common.Features;
+using Common.Features.BaseEntity;
+using Common.Features.Tenant;
 
 namespace Users
 {

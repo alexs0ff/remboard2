@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Common.Features
+namespace Common.Features.BaseEntity
 {
     public abstract class BaseEntity<TKey> 
         where TKey:struct

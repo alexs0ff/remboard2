@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Common.Features.BaseEntity;
 
 namespace Common.Features.Cruds
 {

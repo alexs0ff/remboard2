@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using Common.Extensions;
+using Common.Features.BaseEntity;
+using Common.Features.Tenant;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

@@ -15,4 +15,8 @@
     <Folder Include="Controlles\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Exported\LinqKit.Microsoft.EntityFrameworkCore\LinqKit.Microsoft.EntityFrameworkCore.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Common.Features
+namespace Common.Features.BaseEntity
 {
     public class BaseEntityGuidKey:BaseEntity<Guid>
     {
