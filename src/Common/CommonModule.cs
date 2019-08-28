@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using Autofac;
 using Common.Features;
+using Common.Features.BaseEntity;
 using Common.Features.Cruds;
+using Common.Features.Tenant;
 using Common.Tenant;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +16,12 @@ namespace Common
         protected override void RegisterServices(ContainerBuilder builder)
         {
             builder.RegisterType<EntityControllerRegistry>();
+            builder.RegisterType<TenantInfoProvider>().As<ITenantInfoProvider>();
+
+
+            //specifications
+            builder.RegisterGeneric(typeof(OnlyTenantEntitiesSpecification<>));
+            builder.RegisterGeneric(typeof(IsNotDeletedSpecification<>));
         }
 
         public void OnContextFeatureCreating(ModelBuilder modelBuilder)

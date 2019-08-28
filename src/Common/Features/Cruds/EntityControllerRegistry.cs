@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Common.Features.BaseEntity;
 
 namespace Common.Features.Cruds
 {
@@ -17,5 +18,11 @@ namespace Common.Features.Cruds
         public IEnumerable<ICrudControllerDescriptor> CrudControllerDescriptors => _crudControllerDescriptors.Values;
 
         public ICrudControllerDescriptor this[string name] => _crudControllerDescriptors[name];
+
+        public ICrudTypedControllerDescriptor<TEntity> GetTypedDescriptor<TEntity>(string name)
+            where TEntity : BaseEntityGuidKey
+        {
+            return (ICrudTypedControllerDescriptor<TEntity>) this[name];
+        }
     }
 }

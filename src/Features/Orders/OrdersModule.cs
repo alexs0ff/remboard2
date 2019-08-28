@@ -22,9 +22,9 @@ namespace Orders
             modelBuilder.ApplyConfiguration(new AutocompleteKindConfiguration());
         }
 
-        protected override IEnumerable<ICrudControllerDescriptor> RegisterCrudControllers()
+        protected override IEnumerable<ICrudControllerConfgurator> RegisterCrudControllers()
         {
-            yield return new CrudControllerConfgurator<AutocompleteItem>().Finish();
+            yield return new CrudControllerConfgurator<AutocompleteItem>();
         }
     }
 }

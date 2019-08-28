@@ -2,18 +2,35 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Autofac;
+using Autofac.Core;
+using Common.Extensions;
 using Common.FeatureEntities;
 using Common.Features.BaseEntity;
+using Common.Features.Specifications;
+using Common.Features.Tenant;
 using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Common.Features.Cruds
 {
-    public class CrudControllerConfgurator<TEntity>
+    public class CrudControllerConfgurator<TEntity>: ICrudControllerConfgurator
         where TEntity : BaseEntityGuidKey
     {
         private readonly HashSet<ProjectRoles> _readRoles = new HashSet<ProjectRoles>();
 
         private readonly HashSet<ProjectRoles> _modifyRoles = new HashSet<ProjectRoles>();
+
+        private readonly IList<Type> _mandatorySpecifications =new List<Type>();
+
+        public CrudControllerConfgurator()
+        {
+            AddMandatorySpecification<IsNotDeletedSpecification<TEntity>>();
+
+            if (typeof(TEntity).HasImplementation<ITenantedEntity>())
+            {
+                AddMandatorySpecification<OnlyTenantEntitiesSpecification<TEntity>>();
+            }
+        }
 
         public CrudControllerConfgurator<TEntity> AddReadRoles(params ProjectRoles[] roles)
         {
@@ -37,10 +54,24 @@ namespace Common.Features.Cruds
                 }
             }
         }
-        
-        public ICrudControllerDescriptor Finish()
+
+        public CrudControllerConfgurator<TEntity> AddMandatorySpecification<TMandatorySpec>()
+            where TMandatorySpec: ISpecification<TEntity>
         {
-            return new CrudControllerDescriptor(new CrudEntityDescriptor<TEntity>(), new AccessRuleMap(_readRoles.ToArray(), _modifyRoles.ToArray()));
+            _mandatorySpecifications.Add(typeof(TMandatorySpec));
+            return this;
+        }
+
+        public void Finish(ContainerBuilder builder)
+        {
+            builder.RegisterType<CrudControllerDescriptor<TEntity>>()
+                .As<ICrudControllerDescriptor>()
+                .WithParameter("entityDescriptor", new CrudEntityDescriptor<TEntity>())
+                .WithParameter("accessRuleMap", new AccessRuleMap(_readRoles.ToArray()))
+                .WithParameter("mandatorySpecificationTypes", _mandatorySpecifications)
+                .SingleInstance();
+
+            //new CrudControllerDescriptor(new CrudEntityDescriptor<TEntity>(), new AccessRuleMap(_readRoles.ToArray(), _modifyRoles.ToArray()));
         }
     }
 }

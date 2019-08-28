@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Users.Api
+namespace Common.Features.Users
 {
     public interface ICurrentIdentityInfoProvider
     {
+        Guid? GetTenantId();
     }
 }

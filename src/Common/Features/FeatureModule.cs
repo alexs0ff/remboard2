@@ -21,15 +21,15 @@ namespace Common.Features
                 builder.RegisterInstance(cmf).As<IConfigureModelFeature>();
             }
 
-            foreach (var crudControllerDescriptor in RegisterCrudControllers())
+            foreach (var controllerConfgurator in RegisterCrudControllers())
             {
-                builder.RegisterInstance(crudControllerDescriptor);
+                controllerConfgurator.Finish(builder);
             }
         }
 
-        protected virtual IEnumerable<ICrudControllerDescriptor> RegisterCrudControllers()
+        protected virtual IEnumerable<ICrudControllerConfgurator> RegisterCrudControllers()
         {
-            return Enumerable.Empty<ICrudControllerDescriptor>();
+            return Enumerable.Empty<ICrudControllerConfgurator>();
         }
     }
 }

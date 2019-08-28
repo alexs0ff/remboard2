@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Common.Features.Users;
 using Microsoft.AspNetCore.Http;
 using Remboard.Auth;
 using Users.Api;

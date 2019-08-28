@@ -5,6 +5,7 @@ using System.Runtime.Loader;
 using System.Text;
 using Autofac;
 using Common.Data;
+using Common.Features.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -21,6 +22,7 @@ using Remboard.Auth;
 using Remboard.Infrastructure;
 using Remboard.Infrastructure.BaseControllers;
 using Users;
+using Users.Api;
 
 namespace Remboard
 {
@@ -124,6 +126,9 @@ namespace Remboard
             var composerAssembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(assemblyPath);
             //var composerAssembly = Assembly.LoadFile(assemblyPath);
             builder.RegisterAssemblyModules(composerAssembly);
+
+            builder.RegisterType<CurrentIdentityInfoProvider>().As<ICurrentIdentityInfoProvider>();
+
         }
 
         private string GetComposerAssemblyPath()

@@ -26,7 +26,7 @@ namespace Remboard.Controllers
     public class CrudController<TEntity>:ControllerBase
         where TEntity:BaseEntityGuidKey
     {
-        private readonly ICrudControllerDescriptor _descriptor;
+        private readonly ICrudTypedControllerDescriptor<TEntity> _descriptor;
 
         private readonly RemboardContext _context;
 
@@ -37,7 +37,7 @@ namespace Remboard.Controllers
             _context = context;
             _logger = logger;
 
-            _descriptor = registry[typeof(TEntity).Name];
+            _descriptor = registry.GetTypedDescriptor<TEntity>(typeof(TEntity).Name);
 
         }
 
@@ -46,12 +46,10 @@ namespace Remboard.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<TEntity>> Get([FromRoute]string id)
         {
-            var tenantId = Guid.Parse("A31CCB6A-8B28-4B96-A278-E3CF9DF5E130");
-            var predicate =  LinqKit.PredicateBuilder.New<TEntity>(true);
             
-            predicate.And(BaseEntityExtensions.IsNotDeleted<TEntity>());
-            predicate.And(BaseEntityExtensions.IsNot2<TEntity>());
-            predicate.And(TenantExtension.OnlyForTenanted<TEntity>(tenantId));
+            var predicate =  _descriptor.GetMandatoryPredicate();
+            
+            
            
             var list =await _context.Set<TEntity>().AsExpandable().Where(predicate).ToArrayAsync();
             //var list = _context.Set<TEntity>().Where(predicate.Compile()).ToArray();
