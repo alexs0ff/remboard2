@@ -95,7 +95,8 @@ namespace Remboard
                 ap.FeatureProviders.Add(temporaryBuilder.Build().Resolve<GenericControllerFeatureProvider>());
             });
 
-            
+            services.AddHttpContextAccessor();
+
         }
 
         private Assembly DefaultOnResolving(AssemblyLoadContext arg1, AssemblyName arg2)

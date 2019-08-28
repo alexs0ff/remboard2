@@ -74,8 +74,7 @@ namespace Remboard.Auth
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimsIdentity.DefaultNameClaimType, userInfo.UserName),
-                    //new Claim(ClaimsIdentity.DefaultRoleClaimType, "admin1"),
-                    //new Claim(ClaimsIdentity.DefaultRoleClaimType, "testrole2")
+                    new Claim(RemboardClaims.Tenant,user.TenantId.ToString()),
                 };
 
                 if (user!=null)
