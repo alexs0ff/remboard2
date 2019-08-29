@@ -16,7 +16,7 @@ const genericRetryStrategy = (
   {
     maxRetryAttempts = 3,
     scalingDuration = 1000,
-    excludedStatusCodes = []
+    excludedStatusCodes = [403]
   }: {
     maxRetryAttempts?: number;
     scalingDuration?: number;

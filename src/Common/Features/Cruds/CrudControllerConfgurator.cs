@@ -67,7 +67,7 @@ namespace Common.Features.Cruds
             builder.RegisterType<CrudControllerDescriptor<TEntity>>()
                 .As<ICrudControllerDescriptor>()
                 .WithParameter("entityDescriptor", new CrudEntityDescriptor<TEntity>())
-                .WithParameter("accessRuleMap", new AccessRuleMap(_readRoles.ToArray()))
+                .WithParameter("accessRuleMap", new AccessRuleMap(_readRoles.ToArray(),_modifyRoles.ToArray()))
                 .WithParameter("mandatorySpecificationTypes", _mandatorySpecifications)
                 .SingleInstance();
 
