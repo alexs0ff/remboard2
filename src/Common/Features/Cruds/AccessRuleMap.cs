@@ -85,6 +85,11 @@ namespace Common.Features.Cruds
 
         private bool CanDo(AccessKind accessKind, params ProjectRoles[] roles)
         {
+            if (roles==null)
+            {
+                return false;
+            }
+
             if (!roles.Any())
             {
                 return false;

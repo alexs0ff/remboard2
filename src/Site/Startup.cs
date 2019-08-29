@@ -7,6 +7,7 @@ using Autofac;
 using Common.Data;
 using Common.Features.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -19,6 +20,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using Remboard.Auth;
+using Remboard.Auth.Roles;
 using Remboard.Infrastructure;
 using Remboard.Infrastructure.BaseControllers;
 using Users;
@@ -80,6 +82,8 @@ namespace Remboard
                     };
                 });
 
+           
+
             services.AddControllersWithViews(config =>
             {
                 //config.Conventions.Add();
@@ -98,6 +102,13 @@ namespace Remboard
             });
 
             services.AddHttpContextAccessor();
+
+            services.AddAuthorization(options =>
+            {
+                //options.AddPolicy("TenantedOnly", policy => policy.RequireClaim(RemboardClaims.Tenant));
+            });
+
+            services.AddSingleton<IAuthorizationHandler, CrudAuthorizationHandler>();
 
         }
 

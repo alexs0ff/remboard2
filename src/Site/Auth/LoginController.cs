@@ -77,10 +77,8 @@ namespace Remboard.Auth
                     new Claim(RemboardClaims.Tenant,user.TenantId.ToString()),
                 };
 
-                if (user!=null)
-                {
-                    claims.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType,user.ProjectRoleId.ToString()));
-                }
+                claims.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType,user.ProjectRoleId.ToString()));
+
                 ClaimsIdentity claimsIdentity =
                     new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
                         ClaimsIdentity.DefaultRoleClaimType);

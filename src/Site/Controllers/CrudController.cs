@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Remboard.Auth.Roles;
 using Remboard.Infrastructure.BaseControllers;
 
 namespace Remboard.Controllers
@@ -32,12 +33,15 @@ namespace Remboard.Controllers
 
         private readonly ILogger<CrudController<TEntity>> _logger;
 
-        public CrudController(RemboardContext context, EntityControllerRegistry registry,ILogger<CrudController<TEntity>> logger)
+        private readonly IAuthorizationService _authorizationService;
+
+        public CrudController(RemboardContext context, EntityControllerRegistry registry,ILogger<CrudController<TEntity>> logger, IAuthorizationService authorizationService)
         {
             _context = context;
             _logger = logger;
+            _authorizationService = authorizationService;
 
-            _descriptor = registry.GetTypedDescriptor<TEntity>(typeof(TEntity).Name);
+            _descriptor = registry.GetTypedDescriptor<TEntity>();
 
         }
 
@@ -46,7 +50,13 @@ namespace Remboard.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<TEntity>> Get([FromRoute]string id)
         {
-            
+            var result = await _authorizationService.AuthorizeAsync(User, typeof(TEntity), CrudOperations.Read);
+
+            if (!result.Succeeded)
+            {
+                return Forbid();
+            }
+
             var predicate =  _descriptor.GetMandatoryPredicate();
             
             

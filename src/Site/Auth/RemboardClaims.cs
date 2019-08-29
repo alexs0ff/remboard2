@@ -6,7 +6,7 @@ using Common.FeatureEntities;
 
 namespace Remboard.Auth
 {
-    public class RemboardClaims
+    public static class RemboardClaims
 
     {
         public const string Tenant = "http://www.remboard.ru/identity/claims/tenantId";
