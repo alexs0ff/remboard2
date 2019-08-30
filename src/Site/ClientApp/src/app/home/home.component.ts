@@ -14,6 +14,8 @@ export class HomeComponent {
 
 
   send() {
-    this.response$ = this.httpClient.get<string>("api/AutocompleteItem/A31CCB6A-8B28-4B96-A278-E3CF9DF5E130");
+    this.response$ = this.httpClient.post<string>("api/AutocompleteItem",
+      { Id: "A31CCB6A-8B28-4B96-A278-E3CF9DF5E131", Title: "Test", AutocompleteKindId:1 });
+    //this.response$ = this.httpClient.get<string>("api/AutocompleteItem/A31CCB6A-8B28-4B96-A278-E3CF9DF5E130");
   }
 }

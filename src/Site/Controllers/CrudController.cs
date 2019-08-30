@@ -7,6 +7,7 @@ using Common.Data;
 using Common.Features;
 using Common.Features.BaseEntity;
 using Common.Features.Cruds;
+using Common.Features.ErrorFlow;
 using Common.Features.Tenant;
 using LinqKit;
 using Microsoft.AspNetCore.Authorization;
@@ -69,6 +70,35 @@ namespace Remboard.Controllers
             }
             
             return Ok(res);
+        }
+
+        [HttpPost()]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<TEntity>> Post([FromBody]TEntity entity)
+        {
+            _logger.LogInformation("Start add the new entity {entity} with id {id}",entity,entity.Id);
+            var result = await _authorizationService.AuthorizeAsync(User, typeof(TEntity), CrudOperations.Create);
+
+            if (!result.Succeeded)
+            {
+                return Forbid();
+            }
+
+            var validationResult = await _descriptor.Validate(entity);
+
+            if (validationResult == null)
+            {
+                return Ok();
+            }
+
+            var errorResponse = new EntityResponse
+            {
+                Message = "Failed to save entity",
+            };
+
+            errorResponse.ValidationErrors.AddRange(validationResult);
+            return BadRequest(errorResponse);
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Orders
 
         protected override IEnumerable<ICrudControllerConfgurator> RegisterCrudControllers()
         {
-            yield return new CrudControllerConfgurator<AutocompleteItem>().AddModifyRoles();
+            yield return new CrudControllerConfgurator<AutocompleteItem>().UseValidator<AutocompleteItemValidator>().AddModifyRoles();
         }
     }
 }

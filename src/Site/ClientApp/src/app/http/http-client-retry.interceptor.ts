@@ -16,7 +16,7 @@ const genericRetryStrategy = (
   {
     maxRetryAttempts = 3,
     scalingDuration = 1000,
-    excludedStatusCodes = [403]
+    excludedStatusCodes = []
   }: {
     maxRetryAttempts?: number;
     scalingDuration?: number;
@@ -40,13 +40,13 @@ const genericRetryStrategy = (
 };
 
 
-Injectable()
+@Injectable()
 export class HttpRetryInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     
     return next.handle(request).pipe(retryWhen( genericRetryStrategy({
       scalingDuration: 500,
-      excludedStatusCodes: [401]
+      excludedStatusCodes: [401, 403, 400]
     })));
   }
 }

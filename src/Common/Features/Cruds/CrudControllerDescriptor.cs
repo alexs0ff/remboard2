@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Autofac;
 using Common.Features.BaseEntity;
+using Common.Features.ErrorFlow;
 using Common.Features.Specifications;
+using FluentValidation;
 using LinqKit;
 
 namespace Common.Features.Cruds
@@ -19,6 +23,52 @@ namespace Common.Features.Cruds
 
         private readonly Lazy<IList<ISpecification<TEntity>>> _mandatorySpecifications;
 
+        /// <summary>
+        /// IValidator because can use Empty validation
+        /// </summary>
+        private readonly Lazy<IValidator<TEntity>> _entityValidator;
+
+        private readonly Type _entityValidatorType;
+
+        private readonly IList<Type> _entityCorrectorTypes;
+
+        private readonly IComponentContext _context;
+
+        private readonly Lazy<IList<IEntityCorrector<TEntity>>> _entityCorrectors;
+
+        public CrudControllerDescriptor(ICrudEntityDescriptor entityDescriptor, AccessRuleMap accessRuleMap, IList<Type> mandatorySpecificationTypes,IComponentContext context, Type entityValidatorType,IList<Type> entityCorrectorTypes)
+        {
+            _entityDescriptor = entityDescriptor;
+            _accessRuleMap = accessRuleMap;
+            _mandatorySpecificationTypes = mandatorySpecificationTypes;
+            _context = context;
+            _entityValidatorType = entityValidatorType;
+            _entityCorrectorTypes = entityCorrectorTypes;
+
+            _mandatorySpecifications = new Lazy<IList<ISpecification<TEntity>>>(SpecificationsFactory);
+
+            _entityValidator = new Lazy<IValidator<TEntity>>(ValidatorFactory);
+
+            _entityCorrectors = new Lazy<IList<IEntityCorrector<TEntity>>>(CorectorsFactory);
+        }
+
+        private IValidator<TEntity> ValidatorFactory()
+        {
+            return (IValidator<TEntity>)_context.Resolve(_entityValidatorType);
+        }
+
+        private IList<IEntityCorrector<TEntity>> CorectorsFactory()
+        {
+            var list = new List<IEntityCorrector<TEntity>>();
+
+            foreach (var entityCorrectorType in _entityCorrectorTypes)
+            {
+                list.Add((IEntityCorrector<TEntity>)_context.Resolve(entityCorrectorType));
+            }
+
+            return list;
+        }
+
         private IList<ISpecification<TEntity>> SpecificationsFactory()
         {
             var list = new List<ISpecification<TEntity>>();
@@ -29,19 +79,7 @@ namespace Common.Features.Cruds
             }
 
             return list;
-           
-        }
 
-        private readonly IComponentContext _context;
-
-        public CrudControllerDescriptor(ICrudEntityDescriptor entityDescriptor, AccessRuleMap accessRuleMap, IList<Type> mandatorySpecificationTypes,IComponentContext context)
-        {
-            _entityDescriptor = entityDescriptor;
-            _accessRuleMap = accessRuleMap;
-            _mandatorySpecificationTypes = mandatorySpecificationTypes;
-            _context = context;
-
-            _mandatorySpecifications = new Lazy<IList<ISpecification<TEntity>>>(() => SpecificationsFactory());
         }
 
         public string EntityName => _entityDescriptor.EntityName;
@@ -58,6 +96,35 @@ namespace Common.Features.Cruds
                 predicate.And(mandatorySpecification.IsSatisfiedBy());
             }
             return predicate;
+        }
+
+        public async Task<ValidationErrorItem[]> Validate(TEntity entity)
+        {
+            var result = await _entityValidator.Value.ValidateAsync(entity);
+
+            if (result.IsValid)
+            {
+                return null;
+            }
+
+            return result.Errors.Select(i => new ValidationErrorItem
+                {Property = i.PropertyName, Message = i.ErrorMessage}).ToArray();
+        }
+
+        public async Task CorrectBefore(TEntity entity)
+        {
+            foreach (var entityCorrector in _entityCorrectors.Value)
+            {
+                await entityCorrector.CorrectBefore(entity);
+            }
+        }
+
+        public async Task CorrectAfter(TEntity entity)
+        {
+            foreach (var entityCorrector in _entityCorrectors.Value)
+            {
+                await entityCorrector.CorrectAfter(entity);
+            }
         }
     }
 }

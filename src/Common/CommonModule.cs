@@ -7,6 +7,7 @@ using Common.Features.BaseEntity;
 using Common.Features.Cruds;
 using Common.Features.Tenant;
 using Common.Tenant;
+using FluentValidation.Validators;
 using Microsoft.EntityFrameworkCore;
 
 namespace Common
@@ -22,6 +23,12 @@ namespace Common
             //specifications
             builder.RegisterGeneric(typeof(OnlyTenantEntitiesSpecification<>));
             builder.RegisterGeneric(typeof(IsNotDeletedSpecification<>));
+
+            //common validators
+            builder.RegisterType<EmptyValidator>().AsSelf().SingleInstance();
+
+            //correctors
+            builder.RegisterType<TenantedEntityCorrector>().AsSelf().SingleInstance();
         }
 
         public void OnContextFeatureCreating(ModelBuilder modelBuilder)

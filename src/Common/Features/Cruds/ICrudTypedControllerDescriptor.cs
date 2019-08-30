@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
+using Common.Features.ErrorFlow;
 using LinqKit;
 
 namespace Common.Features.Cruds
@@ -9,5 +11,8 @@ namespace Common.Features.Cruds
         where TEntity : Common.Features.BaseEntity.BaseEntityGuidKey
     {
         ExpressionStarter<TEntity> GetMandatoryPredicate();
+        Task<ValidationErrorItem[]> Validate(TEntity entity);
+        Task CorrectBefore(TEntity entity);
+        Task CorrectAfter(TEntity entity);
     }
 }
