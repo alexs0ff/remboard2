@@ -11,8 +11,8 @@ namespace Common.Features.Cruds
         where TEntity : Common.Features.BaseEntity.BaseEntityGuidKey
     {
         ExpressionStarter<TEntity> GetMandatoryPredicate();
-        Task<ValidationErrorItem[]> Validate(TEntity entity);
-        Task CorrectBefore(TEntity entity);
-        Task CorrectAfter(TEntity entity);
+        Task<ValidationErrorItem[]> ValidateAsync(TEntity entity);
+        Task CorrectBeforeAsync(TEntity entity);
+        Task CorrectAfterAsync(TEntity entity);
     }
 }

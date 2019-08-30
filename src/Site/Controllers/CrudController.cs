@@ -74,7 +74,8 @@ namespace Remboard.Controllers
 
         [HttpPost()]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(EntityResponse),StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult<TEntity>> Post([FromBody]TEntity entity)
         {
             _logger.LogInformation("Start add the new entity {entity} with id {id}",entity,entity.Id);
@@ -85,11 +86,66 @@ namespace Remboard.Controllers
                 return Forbid();
             }
 
-            var validationResult = await _descriptor.Validate(entity);
+            await _descriptor.CorrectBeforeAsync(entity);
+
+            var validationResult = await _descriptor.ValidateAsync(entity);
 
             if (validationResult == null)
             {
-                return Ok();
+                _context.Set<TEntity>().Add(entity);
+                await _context.SaveChangesAsync();
+                await _descriptor.CorrectAfterAsync(entity);
+
+                return Ok(entity);
+            }
+
+            var errorResponse = new EntityResponse
+            {
+                Message = "Failed to save entity",
+            };
+
+            errorResponse.ValidationErrors.AddRange(validationResult);
+            return BadRequest(errorResponse);
+        }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(EntityResponse), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<TEntity>> Put([FromRoute]Guid id,[FromBody]TEntity entity)
+        {
+            var result = await _authorizationService.AuthorizeAsync(User, typeof(TEntity), CrudOperations.Update);
+
+            if (!result.Succeeded)
+            {
+                return Forbid();
+            }
+
+            var predicate = _descriptor.GetMandatoryPredicate();
+
+            predicate.And(i => i.Id == id);
+            var res = await _context.Set<TEntity>().AsExpandable().FirstOrDefaultAsync(predicate);
+
+            if (res == null)
+            {
+                return NotFound();
+            }
+
+
+            await _descriptor.CorrectBeforeAsync(entity);
+
+            var validationResult = await _descriptor.ValidateAsync(entity);
+
+            if (validationResult == null)
+            {
+                //_context.Set<TEntity>().Add(entity);
+                //await _context.SaveChangesAsync();
+                TODO: Mapper лучше сделать через Descriptor и переопределять маппер по умолчанию (который не копирует свойства тип ID timestamp И тд)
+
+                await _descriptor.CorrectAfterAsync(entity);
+
+                return Ok(entity);
             }
 
             var errorResponse = new EntityResponse

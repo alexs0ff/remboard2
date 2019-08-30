@@ -6,7 +6,7 @@ using Common.Features.BaseEntity;
 
 namespace Common.Features
 {
-    public interface IEntityCorrector<TEntity>
+    public interface IEntityCorrector<in TEntity>
         where TEntity : BaseEntityGuidKey
     {
         Task CorrectBefore(TEntity entity);

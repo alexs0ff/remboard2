@@ -98,7 +98,7 @@ namespace Common.Features.Cruds
             return predicate;
         }
 
-        public async Task<ValidationErrorItem[]> Validate(TEntity entity)
+        public async Task<ValidationErrorItem[]> ValidateAsync(TEntity entity)
         {
             var result = await _entityValidator.Value.ValidateAsync(entity);
 
@@ -111,7 +111,7 @@ namespace Common.Features.Cruds
                 {Property = i.PropertyName, Message = i.ErrorMessage}).ToArray();
         }
 
-        public async Task CorrectBefore(TEntity entity)
+        public async Task CorrectBeforeAsync(TEntity entity)
         {
             foreach (var entityCorrector in _entityCorrectors.Value)
             {
@@ -119,7 +119,7 @@ namespace Common.Features.Cruds
             }
         }
 
-        public async Task CorrectAfter(TEntity entity)
+        public async Task CorrectAfterAsync(TEntity entity)
         {
             foreach (var entityCorrector in _entityCorrectors.Value)
             {
