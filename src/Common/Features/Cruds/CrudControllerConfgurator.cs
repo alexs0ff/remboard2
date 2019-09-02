@@ -14,7 +14,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Common.Features.Cruds
 {
-    public class CrudControllerConfgurator<TEntity>: ICrudControllerConfgurator
+    public class CrudControllerConfgurator<TEntity,TEntityDto>: ICrudControllerConfgurator
         where TEntity : BaseEntityGuidKey
     {
         private readonly HashSet<ProjectRoles> _readRoles = new HashSet<ProjectRoles>();
@@ -34,19 +34,20 @@ namespace Common.Features.Cruds
             if (typeof(TEntity).HasImplementation<ITenantedEntity>())
             {
                 AddMandatorySpecification<OnlyTenantEntitiesSpecification<TEntity>>();
-                AddEntityCorrector<TenantedEntityCorrector>();
+                //AddEntityCorrector<TenantedEntityCorrector>();
+                _entityCorrectorTypes.Add(typeof(TenantedEntityCorrector));
             }
 
             _entityValidator = typeof(EmptyValidator);
         }
 
-        public CrudControllerConfgurator<TEntity> AddReadRoles(params ProjectRoles[] roles)
+        public CrudControllerConfgurator<TEntity, TEntityDto> AddReadRoles(params ProjectRoles[] roles)
         {
             AppendRoles(_readRoles, roles);
             return this;
         }
 
-        public CrudControllerConfgurator<TEntity> AddModifyRoles(params ProjectRoles[] roles)
+        public CrudControllerConfgurator<TEntity, TEntityDto> AddModifyRoles(params ProjectRoles[] roles)
         {
             AppendRoles(_modifyRoles, roles);
             return this;
@@ -63,22 +64,22 @@ namespace Common.Features.Cruds
             }
         }
 
-        public CrudControllerConfgurator<TEntity> AddMandatorySpecification<TMandatorySpec>()
+        public CrudControllerConfgurator<TEntity, TEntityDto> AddMandatorySpecification<TMandatorySpec>()
             where TMandatorySpec: ISpecification<TEntity>
         {
             _mandatorySpecifications.Add(typeof(TMandatorySpec));
             return this;
         }
 
-        public CrudControllerConfgurator<TEntity> AddEntityCorrector<TCorrector>()
-            where TCorrector : IEntityCorrector<TEntity>
+        public CrudControllerConfgurator<TEntity, TEntityDto> AddEntityCorrector<TCorrector>()
+            where TCorrector : IEntityCorrector<TEntity,TEntityDto>
         {
             _entityCorrectorTypes.Add(typeof(TCorrector));
             return this;
         }
 
-        public CrudControllerConfgurator<TEntity> UseValidator<TValidator>()
-            where TValidator: BaseEntityGuidKeyValidator<TEntity>
+        public CrudControllerConfgurator<TEntity, TEntityDto> UseValidator<TValidator>()
+            where TValidator: BaseEntityDtoValidator<TEntityDto>
         {
             _entityValidator = typeof(TValidator);
             return this;
@@ -91,9 +92,9 @@ namespace Common.Features.Cruds
                 builder.RegisterType(_entityValidator).AsSelf();
             }
             
-            builder.RegisterType<CrudControllerDescriptor<TEntity>>()
+            builder.RegisterType<CrudControllerDescriptor<TEntity,TEntityDto>>()
                 .As<ICrudControllerDescriptor>()
-                .WithParameter("entityDescriptor", new CrudEntityDescriptor<TEntity>())
+                .WithParameter("entityDescriptor", new CrudEntityDescriptor<TEntity, TEntityDto>())
                 .WithParameter("accessRuleMap", new AccessRuleMap(_readRoles.ToArray(),_modifyRoles.ToArray()))
                 .WithParameter("mandatorySpecificationTypes", _mandatorySpecifications)
                 .WithParameter("entityValidatorType", _entityValidator)

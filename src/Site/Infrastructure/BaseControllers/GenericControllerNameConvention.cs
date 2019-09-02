@@ -14,7 +14,7 @@ namespace Remboard.Infrastructure.BaseControllers
         public void Apply(ControllerModel controller)
         {
             if (controller.ControllerType.GetGenericTypeDefinition() !=
-                typeof(CrudController<>))
+                typeof(CrudController<,>))
             {
                 // Not a GenericController, ignore.
                 return;

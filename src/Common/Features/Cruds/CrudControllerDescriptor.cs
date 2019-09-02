@@ -12,7 +12,7 @@ using LinqKit;
 
 namespace Common.Features.Cruds
 {
-    public class CrudControllerDescriptor<TEntity> : ICrudTypedControllerDescriptor<TEntity>
+    public class CrudControllerDescriptor<TEntity, TEntityDto> : ICrudTypedControllerDescriptor<TEntity, TEntityDto>
         where TEntity : BaseEntityGuidKey
     {
         private readonly ICrudEntityDescriptor _entityDescriptor;
@@ -26,7 +26,7 @@ namespace Common.Features.Cruds
         /// <summary>
         /// IValidator because can use Empty validation
         /// </summary>
-        private readonly Lazy<IValidator<TEntity>> _entityValidator;
+        private readonly Lazy<IValidator<TEntityDto>> _entityValidator;
 
         private readonly Type _entityValidatorType;
 
@@ -34,7 +34,7 @@ namespace Common.Features.Cruds
 
         private readonly IComponentContext _context;
 
-        private readonly Lazy<IList<IEntityCorrector<TEntity>>> _entityCorrectors;
+        private readonly Lazy<IList<IEntityCorrector<TEntity, TEntityDto>>> _entityCorrectors;
 
         public CrudControllerDescriptor(ICrudEntityDescriptor entityDescriptor, AccessRuleMap accessRuleMap, IList<Type> mandatorySpecificationTypes,IComponentContext context, Type entityValidatorType,IList<Type> entityCorrectorTypes)
         {
@@ -47,23 +47,23 @@ namespace Common.Features.Cruds
 
             _mandatorySpecifications = new Lazy<IList<ISpecification<TEntity>>>(SpecificationsFactory);
 
-            _entityValidator = new Lazy<IValidator<TEntity>>(ValidatorFactory);
+            _entityValidator = new Lazy<IValidator<TEntityDto>>(ValidatorFactory);
 
-            _entityCorrectors = new Lazy<IList<IEntityCorrector<TEntity>>>(CorectorsFactory);
+            _entityCorrectors = new Lazy<IList<IEntityCorrector<TEntity,TEntityDto>>>(CorectorsFactory);
         }
 
-        private IValidator<TEntity> ValidatorFactory()
+        private IValidator<TEntityDto> ValidatorFactory()
         {
-            return (IValidator<TEntity>)_context.Resolve(_entityValidatorType);
+            return (IValidator<TEntityDto>)_context.Resolve(_entityValidatorType);
         }
 
-        private IList<IEntityCorrector<TEntity>> CorectorsFactory()
+        private IList<IEntityCorrector<TEntity, TEntityDto>> CorectorsFactory()
         {
-            var list = new List<IEntityCorrector<TEntity>>();
+            var list = new List<IEntityCorrector<TEntity, TEntityDto>>();
 
             foreach (var entityCorrectorType in _entityCorrectorTypes)
             {
-                list.Add((IEntityCorrector<TEntity>)_context.Resolve(entityCorrectorType));
+                list.Add((IEntityCorrector<TEntity, TEntityDto>)_context.Resolve(entityCorrectorType));
             }
 
             return list;
@@ -98,9 +98,9 @@ namespace Common.Features.Cruds
             return predicate;
         }
 
-        public async Task<ValidationErrorItem[]> ValidateAsync(TEntity entity)
+        public async Task<ValidationErrorItem[]> ValidateAsync(TEntityDto entityDto)
         {
-            var result = await _entityValidator.Value.ValidateAsync(entity);
+            var result = await _entityValidator.Value.ValidateAsync(entityDto);
 
             if (result.IsValid)
             {
@@ -111,20 +111,30 @@ namespace Common.Features.Cruds
                 {Property = i.PropertyName, Message = i.ErrorMessage}).ToArray();
         }
 
-        public async Task CorrectBeforeAsync(TEntity entity)
+        public async Task CorrectEntityAsync(TEntity entity, TEntityDto receivedEntityDto)
         {
             foreach (var entityCorrector in _entityCorrectors.Value)
             {
-                await entityCorrector.CorrectBefore(entity);
+                await entityCorrector.CorrectEntityAsync(entity, receivedEntityDto);
             }
         }
 
-        public async Task CorrectAfterAsync(TEntity entity)
+        public async Task CorrectEntityDtoAsync(TEntityDto entityDto, TEntity entity)
         {
             foreach (var entityCorrector in _entityCorrectors.Value)
             {
-                await entityCorrector.CorrectAfter(entity);
+                await entityCorrector.CorrectEntityDtoAsync(entityDto,entity);
             }
+        }
+
+        public TEntityDto Map(TEntity entity)
+        {
+            return default;
+        }
+
+        public TEntity Map(TEntityDto entityDto)
+        {
+            return default;
         }
     }
 }

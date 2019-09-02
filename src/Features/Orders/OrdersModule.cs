@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Autofac;
 using Common.Features;
 using Common.Features.Cruds;
@@ -13,7 +14,7 @@ namespace Orders
     {
         protected override void RegisterServices(ContainerBuilder builder)
         {
-            
+            AddMapperProfile<OrdersProfile>(builder);
         }
 
         public void OnContextFeatureCreating(ModelBuilder modelBuilder)
@@ -24,7 +25,7 @@ namespace Orders
 
         protected override IEnumerable<ICrudControllerConfgurator> RegisterCrudControllers()
         {
-            yield return new CrudControllerConfgurator<AutocompleteItem>().UseValidator<AutocompleteItemValidator>().AddModifyRoles();
+            yield return new CrudControllerConfgurator<AutocompleteItem, AutocompleteItemDto>().UseValidator<AutocompleteItemDtoValidator>().AddModifyRoles();
         }
     }
 }

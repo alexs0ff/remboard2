@@ -9,6 +9,7 @@ namespace Common.Features.Cruds
     {
         string EntityName { get; }
         string EntityPluralName { get; }
-        TypeInfo TypeInfo { get; }
+        TypeInfo EntityTypeInfo { get; }
+        TypeInfo EntityDtoTypeInfo { get; }
     }
 }

@@ -1,10 +1,15 @@
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
 using System.Text;
 using Autofac;
+using AutoMapper;
 using Common.Data;
+using Common.Features;
 using Common.Features.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -81,25 +86,19 @@ namespace Remboard
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
                     };
                 });
-
-           
+            
 
             services.AddControllersWithViews(config =>
             {
+
                 //config.Conventions.Add();
             }).AddNewtonsoftJson(options =>
-                options.SerializerSettings.ContractResolver =
-                    new CamelCasePropertyNamesContractResolver()).ConfigureApplicationPartManager(ap =>
-            {
-                //Загружаем Configuration["Modules:ComposerAssembly"]; -просто создав ContainerBuilder и вызывав ConfigureContainer
-                // и ищем все сборки
-
-                var temporaryBuilder = new ContainerBuilder();
-                temporaryBuilder.RegisterType<GenericControllerFeatureProvider>();
-                ConfigureContainer(temporaryBuilder);
-
-                ap.FeatureProviders.Add(temporaryBuilder.Build().Resolve<GenericControllerFeatureProvider>());
-            });
+                    options.SerializerSettings.ContractResolver =new CamelCasePropertyNamesContractResolver())
+                .ConfigureApplicationPartManager(ap =>
+                {
+                    var temporaryContainer = CreateTemporaryContainer();
+                    ap.FeatureProviders.Add(temporaryContainer.Resolve<GenericControllerFeatureProvider>());
+                });
 
             services.AddHttpContextAccessor();
 
@@ -109,7 +108,18 @@ namespace Remboard
             });
 
             services.AddSingleton<IAuthorizationHandler, CrudAuthorizationHandler>();
+        }
 
+        private IContainer CreateTemporaryContainer()
+        {
+            //Загружаем Configuration["Modules:ComposerAssembly"]; -просто создав ContainerBuilder и вызывав ConfigureContainer
+            // и ищем все сборки
+
+            var temporaryBuilder = new ContainerBuilder();
+            temporaryBuilder.RegisterType<GenericControllerFeatureProvider>();
+            ConfigureContainer(temporaryBuilder);
+            var temporaryContainer = temporaryBuilder.Build();
+            return temporaryContainer;
         }
 
         private Assembly DefaultOnResolving(AssemblyLoadContext arg1, AssemblyName arg2)
@@ -139,6 +149,20 @@ namespace Remboard
             builder.RegisterAssemblyModules(composerAssembly);
 
             builder.RegisterType<CurrentIdentityInfoProvider>().As<ICurrentIdentityInfoProvider>();
+
+
+            builder.Register<AutoMapper.IConfigurationProvider>(ctx =>
+            {
+                var profiles = ctx.Resolve <IEnumerable<FeatureMapperProfile>>();
+                return new MapperConfiguration(cfg => cfg.AddProfiles(profiles));
+            });
+
+
+            builder.Register<IMapper>(ctx =>
+            {
+                var provider = ctx.Resolve<AutoMapper.IConfigurationProvider>();
+                return new Mapper(provider);
+            }).InstancePerDependency();
 
         }
 

@@ -7,9 +7,9 @@ using FluentValidation.Results;
 
 namespace Orders.Autocomplete
 {
-    public sealed class AutocompleteItemValidator: BaseEntityGuidKeyValidator<AutocompleteItem>
+    public sealed class AutocompleteItemDtoValidator: BaseEntityDtoValidator<AutocompleteItemDto>
     {
-        public AutocompleteItemValidator()
+        public AutocompleteItemDtoValidator()
         {
             RuleFor(i => i.Title).NotEmpty();
             RuleFor(i => i.AutocompleteKindId).IsInEnum();

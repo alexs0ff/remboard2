@@ -6,11 +6,11 @@ using Common.Features.BaseEntity;
 
 namespace Common.Features
 {
-    public interface IEntityCorrector<in TEntity>
+    public interface IEntityCorrector<in TEntity,in TEntityDto>
         where TEntity : BaseEntityGuidKey
     {
-        Task CorrectBefore(TEntity entity);
+        Task CorrectEntityAsync(TEntity entity, TEntityDto receivedEntityDto);
 
-        Task CorrectAfter(TEntity entity);
+        Task CorrectEntityDtoAsync(TEntityDto entityDto, TEntity entity);
     }
 }

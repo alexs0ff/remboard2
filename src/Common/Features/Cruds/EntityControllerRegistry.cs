@@ -19,10 +19,10 @@ namespace Common.Features.Cruds
 
         public ICrudControllerDescriptor this[string name] => _crudControllerDescriptors[name];
 
-        public ICrudTypedControllerDescriptor<TEntity> GetTypedDescriptor<TEntity>()
+        public ICrudTypedControllerDescriptor<TEntity, TEntityDto> GetTypedDescriptor<TEntity, TEntityDto>()
             where TEntity : BaseEntityGuidKey
         {
-            return (ICrudTypedControllerDescriptor<TEntity>) this[typeof(TEntity).Name];
+            return (ICrudTypedControllerDescriptor<TEntity, TEntityDto>) this[typeof(TEntity).Name];
         }
     }
 }

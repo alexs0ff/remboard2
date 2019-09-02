@@ -31,5 +31,11 @@ namespace Common.Features
         {
             return Enumerable.Empty<ICrudControllerConfgurator>();
         }
+
+        protected void AddMapperProfile<TMapperProfile>(ContainerBuilder builder)
+            where TMapperProfile: FeatureMapperProfile
+        {
+            builder.RegisterType<TMapperProfile>().As<FeatureMapperProfile>();
+        }
     }
 }

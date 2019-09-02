@@ -6,7 +6,7 @@ using Common.Features.BaseEntity;
 
 namespace Common.Features.Tenant
 {
-    public class TenantedEntityCorrector:IEntityCorrector<BaseEntityGuidKey>
+    public class TenantedEntityCorrector:IEntityCorrector<BaseEntityGuidKey, object>
     {
         private readonly ITenantInfoProvider _tenantInfoProvider;
 
@@ -15,13 +15,13 @@ namespace Common.Features.Tenant
             _tenantInfoProvider = tenantInfoProvider;
         }
 
-        public Task CorrectBefore(BaseEntityGuidKey entity)
+        public Task CorrectEntityAsync(BaseEntityGuidKey entity, object receivedEntityDto)
         {
-            ((ITenantedEntity) entity).TenantId = _tenantInfoProvider.GetCurrentTenantId()??Guid.Empty;
+            ((ITenantedEntity)entity).TenantId = _tenantInfoProvider.GetCurrentTenantId() ?? Guid.Empty;
             return Task.CompletedTask;
         }
 
-        public Task CorrectAfter(BaseEntityGuidKey entity)
+        public Task CorrectEntityDtoAsync(object entityDto, BaseEntityGuidKey entity)
         {
             return Task.CompletedTask;
         }

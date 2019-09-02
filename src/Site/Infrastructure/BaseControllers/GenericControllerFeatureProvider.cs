@@ -29,8 +29,8 @@ namespace Remboard.Infrastructure.BaseControllers
                 if (!feature.Controllers.Any(t => t.Name == typeName))
                 {
                     // There's no 'real' controller for this entity, so add the generic version.
-                    var controllerType = typeof(CrudController<>)
-                        .MakeGenericType(crudControllerDescriptor.EntityDescriptor.TypeInfo.AsType()).GetTypeInfo();
+                    var controllerType = typeof(CrudController<,>)
+                        .MakeGenericType(crudControllerDescriptor.EntityDescriptor.EntityTypeInfo.AsType(), crudControllerDescriptor.EntityDescriptor.EntityDtoTypeInfo.AsType()).GetTypeInfo();
                     feature.Controllers.Add(controllerType);
                 }
             }

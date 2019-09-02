@@ -7,12 +7,12 @@ using LinqKit;
 
 namespace Common.Features.Cruds
 {
-    public interface ICrudTypedControllerDescriptor<TEntity>: ICrudControllerDescriptor
+    public interface ICrudTypedControllerDescriptor<TEntity, TEntityDto> : ICrudControllerDescriptor
         where TEntity : Common.Features.BaseEntity.BaseEntityGuidKey
     {
         ExpressionStarter<TEntity> GetMandatoryPredicate();
-        Task<ValidationErrorItem[]> ValidateAsync(TEntity entity);
-        Task CorrectBeforeAsync(TEntity entity);
-        Task CorrectAfterAsync(TEntity entity);
+        Task<ValidationErrorItem[]> ValidateAsync(TEntityDto entityDto);
+        Task CorrectEntityAsync(TEntity entity,TEntityDto receivedEntityDto);
+        Task CorrectEntityDtoAsync(TEntityDto entityDto, TEntity entity);
     }
 }
