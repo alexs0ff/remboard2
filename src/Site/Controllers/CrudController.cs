@@ -133,9 +133,10 @@ namespace Remboard.Controllers
                 return Forbid();
             }
 
+            var getByIdSpec = new GetByIdSpecification<TEntity>(id);
             var predicate = _descriptor.GetMandatoryPredicate();
 
-            predicate.And(i => i.Id == id);
+            predicate.And(getByIdSpec.IsSatisfiedBy());
             var foundEntity = await _context.Set<TEntity>().AsExpandable().FirstOrDefaultAsync(predicate);
 
             if (foundEntity == null)
@@ -168,6 +169,51 @@ namespace Remboard.Controllers
 
             errorResponse.ValidationErrors.AddRange(validationResult);
             return BadRequest(errorResponse);
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> Delete([FromRoute]Guid id, [FromServices]OnlyTenantEntitiesSpecification<TEntity> onlyTenantEntitiesSpecification)
+        {
+            var result = await _authorizationService.AuthorizeAsync(User, typeof(TEntity), CrudOperations.Delete);
+
+            if (!result.Succeeded)
+            {
+                return Forbid();
+            }
+
+            var predicate = _descriptor.GetMandatoryPredicate();
+            var getByIdSpec = new GetByIdSpecification<TEntity>(id);
+
+            predicate.And(getByIdSpec.IsSatisfiedBy());
+
+            var foundEntity = await _context.Set<TEntity>().AsExpandable().FirstOrDefaultAsync(predicate);
+
+            if (foundEntity == null)
+            {
+                predicate = LinqKit.PredicateBuilder.New<TEntity>(true);
+
+                predicate.And(getByIdSpec.IsSatisfiedBy());
+                predicate.And(onlyTenantEntitiesSpecification.IsSatisfiedBy());
+
+                foundEntity = await _context.Set<TEntity>().AsExpandable().FirstOrDefaultAsync(predicate);
+
+                if (foundEntity!=null && foundEntity.IsDeleted)
+                {
+                    return Ok();
+                }
+
+                return NotFound();
+            }
+
+            foundEntity.IsDeleted = true;
+
+            _context.Set<TEntity>().Update(foundEntity);
+            await _context.SaveChangesAsync();
+
+            return Ok();
         }
     }
 }
