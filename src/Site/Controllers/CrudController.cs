@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Common.Data;
 using Common.Features;
 using Common.Features.BaseEntity;
@@ -49,6 +50,22 @@ namespace Remboard.Controllers
             _descriptor = registry.GetTypedDescriptor<TEntity, TEntityDto>();
 
         }
+        
+        public async Task<ActionResult<IEnumerable<TEntityDto>>> Get()
+        {
+            var result = await _authorizationService.AuthorizeAsync(User, typeof(TEntity), CrudOperations.Read);
+
+            if (!result.Succeeded)
+            {
+                return Forbid();
+            }
+
+            var query = _context.Set<TEntity>().Where(i => !i.IsDeleted);
+
+            var projected = await _mapper.ProjectTo<TEntityDto>(query).ToArrayAsync();
+
+            return projected;
+        }
 
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -63,9 +80,10 @@ namespace Remboard.Controllers
                 return Forbid();
             }
 
+            var getByIdSpec = new GetByIdSpecification<TEntity>(id);
             var predicate =  _descriptor.GetMandatoryPredicate();
 
-            predicate.And(i => i.Id == id);
+            predicate.And(getByIdSpec.IsSatisfiedBy());
             var entity =  await _context.Set<TEntity>().AsExpandable().FirstOrDefaultAsync(predicate);
 
             if (entity == null)

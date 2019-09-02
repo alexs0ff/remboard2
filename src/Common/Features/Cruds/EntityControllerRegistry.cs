@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Common.Features.BaseEntity;
@@ -11,7 +12,6 @@ namespace Common.Features.Cruds
 
         public EntityControllerRegistry(IEnumerable<ICrudControllerDescriptor> crudControllerDescriptors)
         {
-            
             _crudControllerDescriptors = new ReadOnlyDictionary<string, ICrudControllerDescriptor>(crudControllerDescriptors.ToDictionary(descriptor => descriptor.EntityName));
         }
 

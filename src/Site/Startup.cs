@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -108,6 +109,11 @@ namespace Remboard
             });
 
             services.AddSingleton<IAuthorizationHandler, CrudAuthorizationHandler>();
+
+            services.Configure<MvcOptions>(c =>
+            {
+                c.Conventions.Add(new PluralActionNameConvention());
+            });
         }
 
         private IContainer CreateTemporaryContainer()
@@ -117,6 +123,7 @@ namespace Remboard
 
             var temporaryBuilder = new ContainerBuilder();
             temporaryBuilder.RegisterType<GenericControllerFeatureProvider>();
+            temporaryBuilder.RegisterType<PluralActionNameConvention>().PropertiesAutowired();
             ConfigureContainer(temporaryBuilder);
             var temporaryContainer = temporaryBuilder.Build();
             return temporaryContainer;
@@ -201,10 +208,12 @@ namespace Remboard
 
             app.UseEndpoints(endpoints =>
             {
+                
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
+
 
             });
 
