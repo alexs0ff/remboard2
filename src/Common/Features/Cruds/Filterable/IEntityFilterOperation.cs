@@ -10,6 +10,6 @@ namespace Common.Features.Cruds.Filterable
     public interface IEntityFilterOperation<TEntity,TFilterableEntity>
         where TEntity : BaseEntityGuidKey
     {
-        Task<IEnumerable<TFilterableEntity>> FilterAsync(DbContext context, ICrudPredicateFeature<TEntity> predicateFactory, FilterParameters filterParameters);
+        Task<PagedResult<TFilterableEntity>> FilterAsync(DbContext context, ICrudPredicateFeature<TEntity> predicateFactory, FilterParameters filterParameters);
     }
 }

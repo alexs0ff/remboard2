@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Autofac;
 using Common.Features;
 using Common.Features.Cruds;
+using Common.Features.Cruds.Filterable;
 using Microsoft.EntityFrameworkCore;
 using Orders.Autocomplete;
 
@@ -27,6 +28,7 @@ namespace Orders
         {
             yield return new CrudControllerConfgurator<AutocompleteItem, AutocompleteItemDto, AutocompleteItemDto>()
                 .UseValidator<AutocompleteItemDtoValidator>()
+                .UseFilterableEntityOperation<EntityContextFilterOperation<AutocompleteItem, AutocompleteItemDto>>()
                 .AddModifyRoles();
         }
     }

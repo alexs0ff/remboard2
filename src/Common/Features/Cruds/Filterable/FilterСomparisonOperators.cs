@@ -10,6 +10,6 @@ namespace Common.Features.Cruds.Filterable
         Equals,
         Contains,
         LessThan,
-        MoreThan
+        GreaterThan
     }
 }

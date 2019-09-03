@@ -5,6 +5,7 @@ using Autofac;
 using Common.Features;
 using Common.Features.BaseEntity;
 using Common.Features.Cruds;
+using Common.Features.Cruds.Filterable;
 using Common.Features.Tenant;
 using Common.Tenant;
 using FluentValidation.Validators;
@@ -17,6 +18,7 @@ namespace Common
         protected override void RegisterServices(ContainerBuilder builder)
         {
             builder.RegisterType<EntityControllerRegistry>();
+            builder.RegisterGeneric(typeof(EntityContextFilterOperation<,>));
             builder.RegisterType<TenantInfoProvider>().As<ITenantInfoProvider>();
 
 

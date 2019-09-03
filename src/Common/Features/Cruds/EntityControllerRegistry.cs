@@ -24,5 +24,11 @@ namespace Common.Features.Cruds
         {
             return (ICrudTypedControllerDescriptor<TEntity, TEntityDto>) this[typeof(TEntity).Name];
         }
+
+        public IFilterableOperationFeature<TEntity, TFilterableEntity> GetFilterableOperationFeature<TEntity, TFilterableEntity>()
+            where TEntity : BaseEntityGuidKey
+        {
+            return (IFilterableOperationFeature<TEntity, TFilterableEntity>)this[typeof(TEntity).Name];
+        }
     }
 }

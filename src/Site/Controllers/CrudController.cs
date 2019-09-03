@@ -33,6 +33,8 @@ namespace Remboard.Controllers
     {
         private readonly ICrudTypedControllerDescriptor<TEntity, TEntityDto> _descriptor;
 
+        private readonly IFilterableOperationFeature<TEntity, TFilterableEntity> _filterableOperation;
+
         private readonly RemboardContext _context;
 
         private readonly ILogger<CrudController<TEntity, TEntityDto, TFilterableEntity>> _logger;
@@ -49,12 +51,13 @@ namespace Remboard.Controllers
             _mapper = mapper;
 
             _descriptor = registry.GetTypedDescriptor<TEntity, TEntityDto>();
+            _filterableOperation = registry.GetFilterableOperationFeature<TEntity, TFilterableEntity>();
 
         }
         
         [PluralActionNameConvention]
         [HttpGet("/api/[action]")]
-        public async Task<ActionResult<IEnumerable<TFilterableEntity>>> Get(FilterParameters filterParameters)
+        public async Task<ActionResult<PagedResult<TFilterableEntity>>> Get(FilterParameters filterParameters)
         {
             var result = await _authorizationService.AuthorizeAsync(User, typeof(TEntity), CrudOperations.Read);
 
@@ -62,12 +65,11 @@ namespace Remboard.Controllers
             {
                 return Forbid();
             }
-            return Forbid();
-            //var query = _context.Set<TEntity>().Where(i => !i.IsDeleted);
 
-            //var projected = await _mapper.ProjectTo<TEntityDto>(query).ToArrayAsync();
+            var pagedResult = await _filterableOperation.GetFiltarableOperation().FilterAsync(_context,
+                _descriptor, filterParameters);            
 
-            //return projected;
+            return Ok(pagedResult);
         }
 
         [HttpGet("{id}")]

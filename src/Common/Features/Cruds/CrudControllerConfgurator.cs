@@ -7,6 +7,7 @@ using Autofac.Core;
 using Common.Extensions;
 using Common.FeatureEntities;
 using Common.Features.BaseEntity;
+using Common.Features.Cruds.Filterable;
 using Common.Features.Specifications;
 using Common.Features.Tenant;
 using FluentValidation.Validators;
@@ -27,6 +28,8 @@ namespace Common.Features.Cruds
 
         private Type _entityValidator = null;
 
+        private Type _filterableEntityOperation = null;
+
         public CrudControllerConfgurator()
         {
             AddMandatorySpecification<IsNotDeletedSpecification<TEntity>>();
@@ -34,7 +37,6 @@ namespace Common.Features.Cruds
             if (typeof(TEntity).HasImplementation<ITenantedEntity>())
             {
                 AddMandatorySpecification<OnlyTenantEntitiesSpecification<TEntity>>();
-                //AddEntityCorrector<TenantedEntityCorrector>();
                 _entityCorrectorTypes.Add(typeof(TenantedEntityCorrector));
             }
 
@@ -85,20 +87,33 @@ namespace Common.Features.Cruds
             return this;
         }
 
+        public CrudControllerConfgurator<TEntity, TEntityDto, TFilterableEntity> UseFilterableEntityOperation<TFilterableOperation>()
+            where TFilterableOperation: IEntityFilterOperation<TEntity,TFilterableEntity>
+        {
+            _filterableEntityOperation = typeof(TFilterableOperation);
+            return this;
+        }
+
         public void Finish(ContainerBuilder builder)
         {
+            if (_filterableEntityOperation==null)
+            {
+                throw new InvalidOperationException("Need to call UseFilterableEntityOperation");
+            }
+
             if (_entityValidator !=typeof(EmptyValidator))
             {
                 builder.RegisterType(_entityValidator).AsSelf();
             }
             
-            builder.RegisterType<CrudControllerDescriptor<TEntity,TEntityDto>>()
+            builder.RegisterType<CrudControllerDescriptor<TEntity,TEntityDto,TFilterableEntity>>()
                 .As<ICrudControllerDescriptor>()
                 .WithParameter("entityDescriptor", new CrudEntityDescriptor<TEntity, TEntityDto, TFilterableEntity>())
                 .WithParameter("accessRuleMap", new AccessRuleMap(_readRoles.ToArray(),_modifyRoles.ToArray()))
                 .WithParameter("mandatorySpecificationTypes", _mandatorySpecifications)
                 .WithParameter("entityValidatorType", _entityValidator)
                 .WithParameter("entityCorrectorTypes", _entityCorrectorTypes)
+                .WithParameter("filterableEntityOperationType", _filterableEntityOperation)
                 .SingleInstance();
         }
     }

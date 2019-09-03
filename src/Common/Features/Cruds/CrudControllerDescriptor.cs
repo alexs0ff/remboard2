@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Autofac;
 using Common.Features.BaseEntity;
+using Common.Features.Cruds.Filterable;
 using Common.Features.ErrorFlow;
 using Common.Features.Specifications;
 using FluentValidation;
@@ -12,7 +13,7 @@ using LinqKit;
 
 namespace Common.Features.Cruds
 {
-    public class CrudControllerDescriptor<TEntity, TEntityDto> : ICrudTypedControllerDescriptor<TEntity, TEntityDto>
+    public class CrudControllerDescriptor<TEntity, TEntityDto, TFilterableEntity> : ICrudTypedControllerDescriptor<TEntity, TEntityDto>, IFilterableOperationFeature<TEntity,TFilterableEntity>
         where TEntity : BaseEntityGuidKey
     {
         private readonly ICrudEntityDescriptor _entityDescriptor;
@@ -28,7 +29,11 @@ namespace Common.Features.Cruds
         /// </summary>
         private readonly Lazy<IValidator<TEntityDto>> _entityValidator;
 
+        private readonly Lazy<IEntityFilterOperation<TEntity, TFilterableEntity>> _filterableEntityOperation;
+
         private readonly Type _entityValidatorType;
+
+        private readonly Type _filterableEntityOperationType;
 
         private readonly IList<Type> _entityCorrectorTypes;
 
@@ -36,7 +41,7 @@ namespace Common.Features.Cruds
 
         private readonly Lazy<IList<IEntityCorrector<TEntity, TEntityDto>>> _entityCorrectors;
 
-        public CrudControllerDescriptor(ICrudEntityDescriptor entityDescriptor, AccessRuleMap accessRuleMap, IList<Type> mandatorySpecificationTypes,IComponentContext context, Type entityValidatorType,IList<Type> entityCorrectorTypes)
+        public CrudControllerDescriptor(ICrudEntityDescriptor entityDescriptor, AccessRuleMap accessRuleMap, IList<Type> mandatorySpecificationTypes,IComponentContext context, Type entityValidatorType,IList<Type> entityCorrectorTypes, Type filterableEntityOperationType)
         {
             _entityDescriptor = entityDescriptor;
             _accessRuleMap = accessRuleMap;
@@ -44,17 +49,25 @@ namespace Common.Features.Cruds
             _context = context;
             _entityValidatorType = entityValidatorType;
             _entityCorrectorTypes = entityCorrectorTypes;
+            _filterableEntityOperationType = filterableEntityOperationType;
 
             _mandatorySpecifications = new Lazy<IList<ISpecification<TEntity>>>(SpecificationsFactory);
 
             _entityValidator = new Lazy<IValidator<TEntityDto>>(ValidatorFactory);
 
             _entityCorrectors = new Lazy<IList<IEntityCorrector<TEntity,TEntityDto>>>(CorectorsFactory);
+
+            _filterableEntityOperation = new Lazy<IEntityFilterOperation<TEntity, TFilterableEntity>>(EntityFilterOperationFactory);
         }
 
         private IValidator<TEntityDto> ValidatorFactory()
         {
             return (IValidator<TEntityDto>)_context.Resolve(_entityValidatorType);
+        }
+
+        private IEntityFilterOperation<TEntity, TFilterableEntity> EntityFilterOperationFactory()
+        {
+            return (IEntityFilterOperation<TEntity, TFilterableEntity>)_context.Resolve(_filterableEntityOperationType);
         }
 
         private IList<IEntityCorrector<TEntity, TEntityDto>> CorectorsFactory()
@@ -111,6 +124,11 @@ namespace Common.Features.Cruds
                 {Property = i.PropertyName, Message = i.ErrorMessage}).ToArray();
         }
 
+        public IEntityFilterOperation<TEntity, TFilterableEntity> GetFiltarableOperation()
+        {
+            return _filterableEntityOperation.Value;
+        }
+
         public async Task CorrectEntityAsync(TEntity entity, TEntityDto receivedEntityDto)
         {
             foreach (var entityCorrector in _entityCorrectors.Value)
@@ -125,16 +143,6 @@ namespace Common.Features.Cruds
             {
                 await entityCorrector.CorrectEntityDtoAsync(entityDto,entity);
             }
-        }
-
-        public TEntityDto Map(TEntity entity)
-        {
-            return default;
-        }
-
-        public TEntity Map(TEntityDto entityDto)
-        {
-            return default;
         }
     }
 }
