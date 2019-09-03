@@ -7,10 +7,9 @@ using LinqKit;
 
 namespace Common.Features.Cruds
 {
-    public interface ICrudTypedControllerDescriptor<TEntity, TEntityDto> : ICrudControllerDescriptor
+    public interface ICrudTypedControllerDescriptor<TEntity, TEntityDto> : ICrudControllerDescriptor, ICrudPredicateFeature<TEntity>
         where TEntity : Common.Features.BaseEntity.BaseEntityGuidKey
     {
-        ExpressionStarter<TEntity> GetMandatoryPredicate();
         Task<ValidationErrorItem[]> ValidateAsync(TEntityDto entityDto);
         Task CorrectEntityAsync(TEntity entity,TEntityDto receivedEntityDto);
         Task CorrectEntityDtoAsync(TEntityDto entityDto, TEntity entity);
