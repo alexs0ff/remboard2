@@ -29,23 +29,11 @@ namespace Remboard.Infrastructure.BaseControllers
                 if (!feature.Controllers.Any(t => t.Name == typeName))
                 {
                     // There's no 'real' controller for this entity, so add the generic version.
-                    var controllerType = typeof(CrudController<,>)
-                        .MakeGenericType(crudControllerDescriptor.EntityDescriptor.EntityTypeInfo.AsType(), crudControllerDescriptor.EntityDescriptor.EntityDtoTypeInfo.AsType()).GetTypeInfo();
+                    var controllerType = typeof(CrudController<,,>)
+                        .MakeGenericType(crudControllerDescriptor.EntityDescriptor.EntityTypeInfo.AsType(), crudControllerDescriptor.EntityDescriptor.EntityDtoTypeInfo.AsType(), crudControllerDescriptor.EntityDescriptor.FilterableEntityTypeInfo.AsType()).GetTypeInfo();
                     feature.Controllers.Add(controllerType);
                 }
             }
         }
-    }
-
-    public static class EntityTypes
-    {
-        public static IReadOnlyList<TypeInfo> Types => new List<TypeInfo>()
-        {
-            typeof(Sprocket).GetTypeInfo(),
-            typeof(Widget).GetTypeInfo(),
-        };
-
-        public class Sprocket { }
-        public class Widget { }
     }
 }

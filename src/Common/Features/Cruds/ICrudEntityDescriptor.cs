@@ -11,5 +11,6 @@ namespace Common.Features.Cruds
         string EntityPluralName { get; }
         TypeInfo EntityTypeInfo { get; }
         TypeInfo EntityDtoTypeInfo { get; }
+        TypeInfo FilterableEntityTypeInfo { get; }
     }
 }

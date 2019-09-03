@@ -9,6 +9,7 @@ using Common.Data;
 using Common.Features;
 using Common.Features.BaseEntity;
 using Common.Features.Cruds;
+using Common.Features.Cruds.Filterable;
 using Common.Features.ErrorFlow;
 using Common.Features.Tenant;
 using LinqKit;
@@ -26,21 +27,21 @@ namespace Remboard.Controllers
     [GenericControllerNameConvention]
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
-    public class CrudController<TEntity, TEntityDto> :ControllerBase
+    //[Authorize]
+    public class CrudController<TEntity, TEntityDto, TFilterableEntity> :ControllerBase
         where TEntity:BaseEntityGuidKey
     {
         private readonly ICrudTypedControllerDescriptor<TEntity, TEntityDto> _descriptor;
 
         private readonly RemboardContext _context;
 
-        private readonly ILogger<CrudController<TEntity, TEntityDto>> _logger;
+        private readonly ILogger<CrudController<TEntity, TEntityDto, TFilterableEntity>> _logger;
 
         private readonly IAuthorizationService _authorizationService;
 
         private readonly IMapper _mapper;
 
-        public CrudController(RemboardContext context, EntityControllerRegistry registry,ILogger<CrudController<TEntity, TEntityDto>> logger, IAuthorizationService authorizationService, IMapper mapper)
+        public CrudController(RemboardContext context, EntityControllerRegistry registry,ILogger<CrudController<TEntity, TEntityDto, TFilterableEntity>> logger, IAuthorizationService authorizationService, IMapper mapper)
         {
             _context = context;
             _logger = logger;
@@ -53,7 +54,7 @@ namespace Remboard.Controllers
         
         [PluralActionNameConvention]
         [HttpGet("/api/[action]")]
-        public async Task<ActionResult<IEnumerable<TEntityDto>>> Get()
+        public async Task<ActionResult<IEnumerable<TFilterableEntity>>> Get(FilterParameters filterParameters)
         {
             var result = await _authorizationService.AuthorizeAsync(User, typeof(TEntity), CrudOperations.Read);
 
@@ -61,12 +62,12 @@ namespace Remboard.Controllers
             {
                 return Forbid();
             }
+            return Forbid();
+            //var query = _context.Set<TEntity>().Where(i => !i.IsDeleted);
 
-            var query = _context.Set<TEntity>().Where(i => !i.IsDeleted);
+            //var projected = await _mapper.ProjectTo<TEntityDto>(query).ToArrayAsync();
 
-            var projected = await _mapper.ProjectTo<TEntityDto>(query).ToArrayAsync();
-
-            return projected;
+            //return projected;
         }
 
         [HttpGet("{id}")]

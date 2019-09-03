@@ -31,7 +31,7 @@ namespace Remboard.Infrastructure.BaseControllers
         public void Apply(ActionModel action)
         {
             if (action.Controller.ControllerType.IsGenericType && action.Controller.ControllerType.GetGenericTypeDefinition() ==
-                typeof(CrudController<,>))
+                typeof(CrudController<,,>))
             {
                 var hasAttribute = action.Attributes.Cast<Attribute>().Any(a => a.GetType() == typeof(PluralActionNameConventionAttribute));
                 if (hasAttribute)
