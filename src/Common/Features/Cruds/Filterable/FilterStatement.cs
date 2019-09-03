@@ -12,6 +12,6 @@ namespace Common.Features.Cruds.Filterable
 
         public FilterСomparisonOperators СomparisonOperator { get; set; }
 
-        public FilterLogicalOperators NextLogicalOperator { get; set; }
+        public FilterLogicalOperators LogicalOperator { get; set; }
     }
 }
