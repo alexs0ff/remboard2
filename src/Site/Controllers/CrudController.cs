@@ -51,6 +51,8 @@ namespace Remboard.Controllers
 
         }
         
+        [PluralActionNameConvention]
+        [HttpGet("/api/[action]")]
         public async Task<ActionResult<IEnumerable<TEntityDto>>> Get()
         {
             var result = await _authorizationService.AuthorizeAsync(User, typeof(TEntity), CrudOperations.Read);

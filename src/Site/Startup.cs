@@ -87,7 +87,8 @@ namespace Remboard
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
                     };
                 });
-            
+
+            var temporaryContainer = CreateTemporaryContainer();
 
             services.AddControllersWithViews(config =>
             {
@@ -97,7 +98,6 @@ namespace Remboard
                     options.SerializerSettings.ContractResolver =new CamelCasePropertyNamesContractResolver())
                 .ConfigureApplicationPartManager(ap =>
                 {
-                    var temporaryContainer = CreateTemporaryContainer();
                     ap.FeatureProviders.Add(temporaryContainer.Resolve<GenericControllerFeatureProvider>());
                 });
 
@@ -112,7 +112,7 @@ namespace Remboard
 
             services.Configure<MvcOptions>(c =>
             {
-                c.Conventions.Add(new PluralActionNameConvention());
+                c.Conventions.Add(temporaryContainer.Resolve<PluralActionNameConvention>());
             });
         }
 
@@ -123,6 +123,7 @@ namespace Remboard
 
             var temporaryBuilder = new ContainerBuilder();
             temporaryBuilder.RegisterType<GenericControllerFeatureProvider>();
+            temporaryBuilder.RegisterType<PluralActionNameConvention>();
             temporaryBuilder.RegisterType<PluralActionNameConvention>().PropertiesAutowired();
             ConfigureContainer(temporaryBuilder);
             var temporaryContainer = temporaryBuilder.Build();
