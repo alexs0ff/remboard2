@@ -30,6 +30,7 @@ namespace Remboard.Controllers
     //[Authorize]
     public class CrudController<TEntity, TEntityDto, TFilterableEntity> :ControllerBase
         where TEntity:BaseEntityGuidKey
+        where TFilterableEntity : class
     {
         private readonly ICrudTypedControllerDescriptor<TEntity, TEntityDto> _descriptor;
 

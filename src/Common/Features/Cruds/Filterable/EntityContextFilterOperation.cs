@@ -21,14 +21,16 @@ namespace Common.Features.Cruds.Filterable
         private readonly IMapper _mapper;
 
         /// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
-        public EntityContextFilterOperation(IMapper mapper)
+        public EntityContextFilterOperation(IMapper mapper, EntityFilterOperationParameters parameters)
         {
             _mapper = mapper;
         }
 
         public async Task<PagedResult<TFilterableEntity>> FilterAsync(DbContext context, ICrudPredicateFeature<TEntity> predicateFactory, FilterParameters filterParameters)
         {
-            var predicate = predicateFactory.GetMandatoryPredicate();
+            var mandatoryPredicate = predicateFactory.GetMandatoryPredicate();
+
+            var predicate = LinqKit.PredicateBuilder.New<TEntity>(true);
 
             foreach (var filter in filterParameters.Statements)
             {
@@ -49,11 +51,11 @@ namespace Common.Features.Cruds.Filterable
                 }
             }
 
-            var count = await context.Set<TEntity>().AsExpandable().Where(predicate).LongCountAsync();
+            var count = await context.Set<TEntity>().AsExpandable().Where(mandatoryPredicate).Where(predicate).LongCountAsync();
 
-            var query = context.Set<TEntity>().AsExpandable().Where(predicate);
+            var query = context.Set<TEntity>().AsExpandable().Where(mandatoryPredicate).Where(predicate);
 
-            var pageData = GetPageData(filterParameters.PageSize, filterParameters.CurrentPage);
+            var pageData = PageDataExtensions.GetPageData(filterParameters.PageSize, filterParameters.CurrentPage);
 
             if (pageData.skip>=0)
             {
@@ -74,24 +76,11 @@ namespace Common.Features.Cruds.Filterable
                 return null;
             }
 
-            object value = filter.ParameterValue;
+            object value = FilterTypeCorrector.ChangeType<TEntity>(filter.ParameterName, filter.ParameterValue);
 
-            if (targetType== typeof(int))
+            if (value == null)
             {
-                if (!int.TryParse(filter.ParameterValue,NumberStyles.None, CultureInfo.InvariantCulture, out var res))
-                {
-                    return null;
-                }
-                value = res;
-            }
-
-            if (targetType == typeof(long))
-            {
-                if (!long.TryParse(filter.ParameterValue, NumberStyles.None, CultureInfo.InvariantCulture, out var res))
-                {
-                    return null;
-                }
-                value = res;
+                return null;
             }
 
             if (filter.СomparisonOperator == FilterСomparisonOperators.Equals)
@@ -117,16 +106,6 @@ namespace Common.Features.Cruds.Filterable
             return null;
         }
 
-        private (int skip, int take) GetPageData(int pageSize, int currentPage)
-        {
-            if (pageSize <=0 || currentPage <=0)
-            {
-                return (-1,-1);
-            }
-
-            var skip = pageSize * (currentPage - 1);
-
-            return (skip, pageSize);
-        }
+        
     }
 }

@@ -30,6 +30,8 @@ namespace Common.Features.Cruds
 
         private Type _filterableEntityOperation = null;
 
+        private EntityFilterOperationParameters _filterableEntityOperationParameters = EntityFilterOperationParameters.Empty;
+
         public CrudControllerConfgurator()
         {
             AddMandatorySpecification<IsNotDeletedSpecification<TEntity>>();
@@ -88,9 +90,19 @@ namespace Common.Features.Cruds
         }
 
         public CrudControllerConfgurator<TEntity, TEntityDto, TFilterableEntity> UseFilterableEntityOperation<TFilterableOperation>()
-            where TFilterableOperation: IEntityFilterOperation<TEntity,TFilterableEntity>
+            where TFilterableOperation: EntityContextFilterOperation<TEntity,TFilterableEntity>
         {
             _filterableEntityOperation = typeof(TFilterableOperation);
+            return this;
+        }
+
+        public CrudControllerConfgurator<TEntity, TEntityDto, TFilterableEntity> UseFilterableEntityOperation<TFilterableOperation>(Action<EntitySqlFilterOperationParameters> config)
+            where TFilterableOperation : EntitySqlFilterOperation<TEntity, TFilterableEntity>
+        {
+            _filterableEntityOperation = typeof(TFilterableOperation);
+            var parameters = new EntitySqlFilterOperationParameters();
+            config(parameters);
+            _filterableEntityOperationParameters = parameters;
             return this;
         }
 
@@ -114,6 +126,7 @@ namespace Common.Features.Cruds
                 .WithParameter("entityValidatorType", _entityValidator)
                 .WithParameter("entityCorrectorTypes", _entityCorrectorTypes)
                 .WithParameter("filterableEntityOperationType", _filterableEntityOperation)
+                .WithParameter("filterableEntityOperationParameters", _filterableEntityOperationParameters)
                 .SingleInstance();
         }
     }

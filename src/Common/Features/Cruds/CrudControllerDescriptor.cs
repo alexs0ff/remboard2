@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Autofac;
+using Autofac.Core;
 using Common.Features.BaseEntity;
 using Common.Features.Cruds.Filterable;
 using Common.Features.ErrorFlow;
@@ -35,13 +36,24 @@ namespace Common.Features.Cruds
 
         private readonly Type _filterableEntityOperationType;
 
+        private readonly EntityFilterOperationParameters _filterableEntityOperationParameters;
+
         private readonly IList<Type> _entityCorrectorTypes;
 
         private readonly IComponentContext _context;
 
         private readonly Lazy<IList<IEntityCorrector<TEntity, TEntityDto>>> _entityCorrectors;
 
-        public CrudControllerDescriptor(ICrudEntityDescriptor entityDescriptor, AccessRuleMap accessRuleMap, IList<Type> mandatorySpecificationTypes,IComponentContext context, Type entityValidatorType,IList<Type> entityCorrectorTypes, Type filterableEntityOperationType)
+        public CrudControllerDescriptor(
+            ICrudEntityDescriptor entityDescriptor, 
+            AccessRuleMap accessRuleMap, 
+            IList<Type> mandatorySpecificationTypes,
+            IComponentContext context, 
+            Type entityValidatorType,
+            IList<Type> entityCorrectorTypes, 
+            Type filterableEntityOperationType, 
+            EntityFilterOperationParameters filterableEntityOperationParameters
+            )
         {
             _entityDescriptor = entityDescriptor;
             _accessRuleMap = accessRuleMap;
@@ -50,6 +62,7 @@ namespace Common.Features.Cruds
             _entityValidatorType = entityValidatorType;
             _entityCorrectorTypes = entityCorrectorTypes;
             _filterableEntityOperationType = filterableEntityOperationType;
+            _filterableEntityOperationParameters = filterableEntityOperationParameters;
 
             _mandatorySpecifications = new Lazy<IList<ISpecification<TEntity>>>(SpecificationsFactory);
 
@@ -67,7 +80,7 @@ namespace Common.Features.Cruds
 
         private IEntityFilterOperation<TEntity, TFilterableEntity> EntityFilterOperationFactory()
         {
-            return (IEntityFilterOperation<TEntity, TFilterableEntity>)_context.Resolve(_filterableEntityOperationType);
+            return (IEntityFilterOperation<TEntity, TFilterableEntity>)_context.Resolve(_filterableEntityOperationType, new NamedParameter("parameters", _filterableEntityOperationParameters));
         }
 
         private IList<IEntityCorrector<TEntity, TEntityDto>> CorectorsFactory()
