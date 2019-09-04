@@ -17,6 +17,7 @@ namespace Common.Features.Cruds
 {
     public class CrudControllerConfgurator<TEntity,TEntityDto, TFilterableEntity> : ICrudControllerConfgurator
         where TEntity : BaseEntityGuidKey
+        where TFilterableEntity : class
     {
         private readonly HashSet<ProjectRoles> _readRoles = new HashSet<ProjectRoles>();
 

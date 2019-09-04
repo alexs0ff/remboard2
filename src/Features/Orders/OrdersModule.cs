@@ -46,16 +46,6 @@ namespace Orders
                                           {PaggingClause}
 "
                             ;
-                        parameters.Sql = @"SELECT [Id]
-                                          ,[IsDeleted]
-                                          ,[DateCreated]
-                                          ,[DateModified]
-                                          ,[RowVersion]
-                                          ,[TenantId]
-                                          ,[AutocompleteKindId]
-                                          ,[Title] FROM [dbo].[AutocompleteItem]
-"
-                            ;
                         parameters.DefaultOrderColumn = "Title";
                         parameters.AliasName = "a";
 

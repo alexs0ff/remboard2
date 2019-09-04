@@ -52,7 +52,7 @@ namespace Common.Features.Cruds.Filterable
 
         private (string sql, object[] parameters) CreateWhere(FilterParameters filterParameters)
         {
-            return _filterStatementParser.Parse(filterParameters.Statements);
+            return _filterStatementParser.Parse(filterParameters.Statements,_parameters);
         }
 
         private string CreatePagging(FilterParameters filterParameters)

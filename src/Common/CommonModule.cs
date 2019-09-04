@@ -19,6 +19,7 @@ namespace Common
         {
             builder.RegisterType<EntityControllerRegistry>();
             builder.RegisterGeneric(typeof(EntityContextFilterOperation<,>));
+            builder.RegisterGeneric(typeof(EntitySqlFilterOperation<,>));
             builder.RegisterGeneric(typeof(SqlFilterStatementParser<,>));
             builder.RegisterType<TenantInfoProvider>().As<ITenantInfoProvider>();
 

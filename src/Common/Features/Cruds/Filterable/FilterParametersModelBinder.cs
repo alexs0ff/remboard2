@@ -44,6 +44,8 @@ namespace Common.Features.Cruds.Filterable
 
             if (!queryParameters.Any())
             {
+                var par = new FilterParameters();
+                bindingContext.Result = ModelBindingResult.Success(par);
                 return Task.CompletedTask;
             }
 
