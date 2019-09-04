@@ -32,7 +32,7 @@ namespace Remboard.Auth.Roles
         {
             AccessRuleMap accessRules;
 
-            if (_entityControllerRegistry[resource.Name]==null)
+            if (_entityControllerRegistry.HasEntity(resource.Name)==false)
             {
                 accessRules = _permissibleValuesControllerRegistry[resource.Name].AccessRules;
             }

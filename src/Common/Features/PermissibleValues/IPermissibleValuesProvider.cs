@@ -9,6 +9,6 @@ namespace Common.Features.PermissibleValues
         where TEnum:Enum
         where TEntity: BasePermissibleValue<TEnum>
     {
-        Task<IEnumerable<TEntity>> ReadEntities();
+        Task<IEnumerable<TEntity>> ReadEntitiesAsync();
     }
 }

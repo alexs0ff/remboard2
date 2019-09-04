@@ -19,6 +19,11 @@ namespace Common.Features.Cruds
 
         public ICrudControllerDescriptor this[string name] => _crudControllerDescriptors[name];
 
+        public bool HasEntity(string name)
+        {
+            return _crudControllerDescriptors.ContainsKey(name);
+        }
+
         public ICrudTypedControllerDescriptor<TEntity, TEntityDto> GetTypedDescriptor<TEntity, TEntityDto>()
             where TEntity : BaseEntityGuidKey
         {

@@ -17,8 +17,8 @@ namespace Remboard.Controllers
     [ApiController]
     [Route("api/[controller]")]
     public class PermissibleValuesController<TEntity,TEnum>: ControllerBase
-        where TEnum : Enum
         where TEntity : BasePermissibleValue<TEnum>
+        where TEnum : Enum
     {
         private readonly ILogger<PermissibleValuesController<TEntity, TEnum>> _logger;
 
@@ -45,7 +45,7 @@ namespace Remboard.Controllers
                 return Forbid();
             }
 
-            var entities = _descriptor.PermissibleValuesProvider.ReadEntities();
+            var entities = await _descriptor.PermissibleValuesProvider.ReadEntitiesAsync();
 
             return Ok(entities);
         }

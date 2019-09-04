@@ -46,7 +46,7 @@ namespace Remboard.Infrastructure.BaseControllers
                 {
                     // There's no 'real' controller for this entity, so add the generic version.
                     var controllerType = typeof(PermissibleValuesController<,>)
-                        .MakeGenericType(valuesControllerDescriptor.PermissibleValuesDescriptor.EntityTypeInfo.AsType(), valuesControllerDescriptor.PermissibleValuesDescriptor.EntityTypeInfo.AsType()).GetTypeInfo();
+                        .MakeGenericType(valuesControllerDescriptor.PermissibleValuesDescriptor.EntityTypeInfo.AsType(), valuesControllerDescriptor.PermissibleValuesDescriptor.EntityEnumInfo.AsType()).GetTypeInfo();
                     feature.Controllers.Add(controllerType);
                 }
             }

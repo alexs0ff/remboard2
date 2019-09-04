@@ -29,6 +29,7 @@ namespace Orders
         protected override IEnumerable<IPermissibleValuesControllerConfigurator> RegisterPermissibleValuesControllers()
         {
             yield return new PermissibleValuesControllerConfigurator<AutocompleteKind, AutocompleteKinds>()
+                .AddValuesProvider<ReflectionPermissibleValuesProvider<AutocompleteKind, AutocompleteKinds>>()
                 .AddReadRoles();
         }
 

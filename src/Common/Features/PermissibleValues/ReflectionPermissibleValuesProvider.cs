@@ -25,7 +25,7 @@ namespace Common.Features.PermissibleValues
             return EnumExtensions.EnumToEntities<TEntity, TEnum>();
         }
 
-        public Task<IEnumerable<TEntity>> ReadEntities()
+        public Task<IEnumerable<TEntity>> ReadEntitiesAsync()
         {
             return Task.FromResult(_entities.Value);
         }

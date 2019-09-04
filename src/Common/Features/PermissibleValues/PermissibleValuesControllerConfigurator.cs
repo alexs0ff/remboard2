@@ -49,7 +49,7 @@ namespace Common.Features.PermissibleValues
             builder.RegisterType<PermissibleValuesControllerDescriptor<TEntity, TEnum>>()
                 .As<IPermissibleValuesControllerDescriptor>()
                 .WithParameter("permissibleValuesDescriptor", new PermissibleValuesDescriptor<TEntity, TEnum>())
-                .WithParameter("accessRuleMap", new AccessRuleMap(_readRoles.ToArray()))
+                .WithParameter("accessRuleMap", new AccessRuleMap(_readRoles.ToArray(),null))
                 .WithParameter("permissibleValuesProviderType", _permissibleValuesProvider)
                 .SingleInstance();
         }
