@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using Common.Features.Cruds;
+using Common.Features.PermissibleValues;
 using Common.Features.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
@@ -14,19 +15,31 @@ namespace Remboard.Auth.Roles
     public class CrudAuthorizationHandler :
         AuthorizationHandler<OperationAuthorizationRequirement, Type>
     {
-        private readonly EntityControllerRegistry _registry;
+        private readonly EntityControllerRegistry _entityControllerRegistry;
+
+        private readonly PermissibleValuesControllerRegistry _permissibleValuesControllerRegistry;
 
         private readonly ICurrentIdentityInfoProvider _currentIdentityInfoProvider;
 
-        public CrudAuthorizationHandler(EntityControllerRegistry registry, ICurrentIdentityInfoProvider currentIdentityInfoProvider)
+        public CrudAuthorizationHandler(EntityControllerRegistry entityControllerRegistry, ICurrentIdentityInfoProvider currentIdentityInfoProvider, PermissibleValuesControllerRegistry permissibleValuesControllerRegistry)
         {
-            _registry = registry;
+            _entityControllerRegistry = entityControllerRegistry;
             _currentIdentityInfoProvider = currentIdentityInfoProvider;
+            _permissibleValuesControllerRegistry = permissibleValuesControllerRegistry;
         }
 
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, OperationAuthorizationRequirement requirement, Type resource)
         {
-            var accessRules = _registry[resource.Name].AccessRules;
+            AccessRuleMap accessRules;
+
+            if (_entityControllerRegistry[resource.Name]==null)
+            {
+                accessRules = _permissibleValuesControllerRegistry[resource.Name].AccessRules;
+            }
+            else
+            {
+                accessRules = _entityControllerRegistry[resource.Name].AccessRules;
+            }
 
             var roles = _currentIdentityInfoProvider.GetRoles();
             if (requirement.Name == CrudOperations.Read.Name)

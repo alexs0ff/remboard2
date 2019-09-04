@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Common.Features.Cruds;
+using Common.Features.PermissibleValues;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Remboard.Controllers;
@@ -14,9 +15,12 @@ namespace Remboard.Infrastructure.BaseControllers
     {
         private readonly EntityControllerRegistry _controllerRegistry;
 
-        public GenericControllerFeatureProvider(EntityControllerRegistry controllerRegistry)
+        private readonly PermissibleValuesControllerRegistry _permissibleValuesControllerRegistry;
+
+        public GenericControllerFeatureProvider(EntityControllerRegistry controllerRegistry, PermissibleValuesControllerRegistry permissibleValuesControllerRegistry)
         {
             _controllerRegistry = controllerRegistry;
+            _permissibleValuesControllerRegistry = permissibleValuesControllerRegistry;
         }
 
         public void PopulateFeature(IEnumerable<ApplicationPart> parts, ControllerFeature feature)
@@ -26,11 +30,23 @@ namespace Remboard.Infrastructure.BaseControllers
             foreach (var crudControllerDescriptor in _controllerRegistry.CrudControllerDescriptors)
             {
                 var typeName = crudControllerDescriptor.EntityName + "Controller";
-                if (!feature.Controllers.Any(t => t.Name == typeName))
+                if (feature.Controllers.All(t => t.Name != typeName))
                 {
                     // There's no 'real' controller for this entity, so add the generic version.
                     var controllerType = typeof(CrudController<,,>)
                         .MakeGenericType(crudControllerDescriptor.EntityDescriptor.EntityTypeInfo.AsType(), crudControllerDescriptor.EntityDescriptor.EntityDtoTypeInfo.AsType(), crudControllerDescriptor.EntityDescriptor.FilterableEntityTypeInfo.AsType()).GetTypeInfo();
+                    feature.Controllers.Add(controllerType);
+                }
+            }
+
+            foreach (var valuesControllerDescriptor in _permissibleValuesControllerRegistry.PermissibleValuesControllerDescriptors)
+            {
+                var typeName = valuesControllerDescriptor.EntityName + "Controller";
+                if (feature.Controllers.All(t => t.Name != typeName))
+                {
+                    // There's no 'real' controller for this entity, so add the generic version.
+                    var controllerType = typeof(PermissibleValuesController<,>)
+                        .MakeGenericType(valuesControllerDescriptor.PermissibleValuesDescriptor.EntityTypeInfo.AsType(), valuesControllerDescriptor.PermissibleValuesDescriptor.EntityTypeInfo.AsType()).GetTypeInfo();
                     feature.Controllers.Add(controllerType);
                 }
             }

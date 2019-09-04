@@ -9,7 +9,7 @@ namespace Remboard.Infrastructure.BaseControllers
     //
     // Conventions can be applied as attributes or added to MvcOptions.Conventions.
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-    public class GenericControllerNameConvention : Attribute, IControllerModelConvention
+    public class CrudControllerNameConvention : Attribute, IControllerModelConvention
     {
         public void Apply(ControllerModel controller)
         {

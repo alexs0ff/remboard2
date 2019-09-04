@@ -188,6 +188,7 @@ namespace Remboard
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                DiagnosticListener.AllListeners.Subscribe(new EfGlobalListener());
             }
             else
             {
@@ -196,7 +197,6 @@ namespace Remboard
                 app.UseHsts();
             }
 
-            DiagnosticListener.AllListeners.Subscribe(new EfGlobalListener());
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -214,8 +214,6 @@ namespace Remboard
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
-
-
             });
 
             app.UseSpa(spa =>

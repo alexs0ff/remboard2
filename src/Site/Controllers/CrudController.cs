@@ -24,7 +24,7 @@ using Remboard.Infrastructure.BaseControllers;
 
 namespace Remboard.Controllers
 {
-    [GenericControllerNameConvention]
+    [CrudControllerNameConvention]
     [ApiController]
     [Route("api/[controller]")]
     //[Authorize]
@@ -58,6 +58,7 @@ namespace Remboard.Controllers
         
         [PluralActionNameConvention]
         [HttpGet("/api/[action]")]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult<PagedResult<TFilterableEntity>>> Get(FilterParameters filterParameters)
         {
             var result = await _authorizationService.AuthorizeAsync(User, typeof(TEntity), CrudOperations.Read);

@@ -19,6 +19,8 @@ namespace Common
         protected override void RegisterServices(ContainerBuilder builder)
         {
             builder.RegisterType<EntityControllerRegistry>();
+            builder.RegisterType<PermissibleValuesControllerRegistry>();
+
             builder.RegisterGeneric(typeof(EntityContextFilterOperation<,>));
             builder.RegisterGeneric(typeof(EntitySqlFilterOperation<,>));
             builder.RegisterGeneric(typeof(SqlFilterStatementParser<,>));
