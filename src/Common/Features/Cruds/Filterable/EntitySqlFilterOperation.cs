@@ -69,8 +69,12 @@ namespace Common.Features.Cruds.Filterable
 
         private string CreateOrderBy(FilterParameters filterParameters)
         {
-            //TODO: add order by into filter
-            return $" ORDER BY {_parameters.DefaultOrderColumn} ";
+            if (string.IsNullOrWhiteSpace(filterParameters.OrderBy))
+            {
+                return $" ORDER BY {_parameters.DefaultOrderColumn} ";
+            }
+
+            return $" ORDER BY {filterParameters.OrderBy} {filterParameters.OrderKind} ";
         }
 
         private void ShouldContains(string sql, string clause)

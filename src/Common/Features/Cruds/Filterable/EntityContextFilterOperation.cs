@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -62,10 +63,17 @@ namespace Common.Features.Cruds.Filterable
                 query = query.Skip(pageData.skip).Take(pageData.take);
             }
 
+            if (!string.IsNullOrWhiteSpace(filterParameters.OrderBy))
+            {
+                var sortOrder = filterParameters.OrderKind == OrderKind.Asc? ListSortDirection.Ascending: ListSortDirection.Descending;
+
+                query = query.OrderBy(filterParameters.OrderBy, sortOrder);
+            }
             var entities = await _mapper.ProjectTo<TFilterableEntity>(query).ToArrayAsync();
 
             return new PagedResult<TFilterableEntity>(count,entities);
         }
+
 
         private ISpecification<TEntity> Create(FilterStatement filter)
         {

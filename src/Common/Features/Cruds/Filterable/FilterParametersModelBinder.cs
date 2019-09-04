@@ -104,6 +104,12 @@ namespace Common.Features.Cruds.Filterable
             filter.PageSize = ParseInt(queryParameters, PageSize, -1);
             filter.CurrentPage = ParseInt(queryParameters, CurrentPage, -1);
 
+            if (queryParameters.ContainsKey(OrderBy))
+            {
+                filter.OrderKind = ParseEnum(queryParameters, OrderKind, Filterable.OrderKind.Asc);
+                filter.OrderBy = queryParameters[OrderBy];
+            }
+
             return filter;
         }
 
@@ -148,5 +154,9 @@ namespace Common.Features.Cruds.Filterable
         private const string PageSize = "pagesize";
 
         private const string CurrentPage = "page";
+
+        private const string OrderBy  = "OrderBy";
+
+        private const string OrderKind  = "OrderKind";
     }
 }

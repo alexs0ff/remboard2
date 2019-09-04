@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Common.Features.Cruds.Filterable
 {
     /// <summary>
-    /// example:https://localhost:44378/api/AutocompleteItems?filterColumnName=Title&filterColumnTitleValue=test&filterColumnTitleOperator=Equals&filterColumnIdLogic=and&filterColumnName=Id&filterColumnIdValue=2&filterColumnIdOperator=LessThan&pageSize=10&page=1
+    /// example:https://localhost:44378/api/AutocompleteItems?filterColumnName=Title&filterColumnTitleValue=test&filterColumnTitleOperator=Equals&filterColumnIdLogic=and&filterColumnName=Id&filterColumnIdValue=2&filterColumnIdOperator=LessThan&pageSize=10&page=1&orderby=title&orderkind=desc
     /// </summary>
     [ModelBinder(BinderType = typeof(FilterParametersModelBinder))]
     public class FilterParameters
@@ -22,5 +22,10 @@ namespace Common.Features.Cruds.Filterable
         public int PageSize { get; set; }
 
         public int CurrentPage { get; set; }
+
+        public string OrderBy { get; set; }
+
+        public OrderKind OrderKind { get; set; }
+
     }
 }

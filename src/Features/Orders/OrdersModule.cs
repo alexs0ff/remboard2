@@ -29,8 +29,8 @@ namespace Orders
         {
             yield return new CrudControllerConfgurator<AutocompleteItem, AutocompleteItemDto, AutocompleteItemDto>()
                 .UseValidator<AutocompleteItemDtoValidator>()
-                //.UseFilterableEntityOperation<EntityContextFilterOperation<AutocompleteItem, AutocompleteItemDto>>()
-                .UseFilterableEntityOperation<EntitySqlFilterOperation<AutocompleteItem, AutocompleteItemDto>>(
+                .UseFilterableEntityOperation<EntityContextFilterOperation<AutocompleteItem, AutocompleteItemDto>>()
+                /*.UseFilterableEntityOperation<EntitySqlFilterOperation<AutocompleteItem, AutocompleteItemDto>>(
                     parameters =>
                     {
                         parameters.Sql = @"SELECT [Id]
@@ -49,7 +49,7 @@ namespace Orders
                         parameters.DefaultOrderColumn = "Title";
                         parameters.AliasName = "a";
 
-                    })
+                    })*/
                 .AddModifyRoles();
         }
     }
