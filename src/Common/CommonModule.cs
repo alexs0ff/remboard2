@@ -6,6 +6,7 @@ using Common.Features;
 using Common.Features.BaseEntity;
 using Common.Features.Cruds;
 using Common.Features.Cruds.Filterable;
+using Common.Features.PermissibleValues;
 using Common.Features.Tenant;
 using Common.Tenant;
 using FluentValidation.Validators;
@@ -21,6 +22,7 @@ namespace Common
             builder.RegisterGeneric(typeof(EntityContextFilterOperation<,>));
             builder.RegisterGeneric(typeof(EntitySqlFilterOperation<,>));
             builder.RegisterGeneric(typeof(SqlFilterStatementParser<,>));
+            builder.RegisterGeneric(typeof(ReflectionPermissibleValuesProvider<,>));
             builder.RegisterType<TenantInfoProvider>().As<ITenantInfoProvider>();
 
 

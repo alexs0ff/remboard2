@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using Autofac;
 
-namespace Common.Features.Cruds
+namespace Common.Features.PermissibleValues
 {
-    public interface ICrudControllerConfgurator
+    public interface IPermissibleValuesControllerConfigurator
     {
         void Finish(ContainerBuilder builder);
     }

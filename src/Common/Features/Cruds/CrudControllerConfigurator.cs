@@ -15,7 +15,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Common.Features.Cruds
 {
-    public class CrudControllerConfgurator<TEntity,TEntityDto, TFilterableEntity> : ICrudControllerConfgurator
+    public class CrudControllerConfigurator<TEntity,TEntityDto, TFilterableEntity> : ICrudControllerConfigurator
         where TEntity : BaseEntityGuidKey
         where TFilterableEntity : class
     {
@@ -33,7 +33,7 @@ namespace Common.Features.Cruds
 
         private EntityFilterOperationParameters _filterableEntityOperationParameters = EntityFilterOperationParameters.Empty;
 
-        public CrudControllerConfgurator()
+        public CrudControllerConfigurator()
         {
             AddMandatorySpecification<IsNotDeletedSpecification<TEntity>>();
 
@@ -46,13 +46,13 @@ namespace Common.Features.Cruds
             _entityValidator = typeof(EmptyValidator);
         }
 
-        public CrudControllerConfgurator<TEntity, TEntityDto, TFilterableEntity> AddReadRoles(params ProjectRoles[] roles)
+        public CrudControllerConfigurator<TEntity, TEntityDto, TFilterableEntity> AddReadRoles(params ProjectRoles[] roles)
         {
             AppendRoles(_readRoles, roles);
             return this;
         }
 
-        public CrudControllerConfgurator<TEntity, TEntityDto, TFilterableEntity> AddModifyRoles(params ProjectRoles[] roles)
+        public CrudControllerConfigurator<TEntity, TEntityDto, TFilterableEntity> AddModifyRoles(params ProjectRoles[] roles)
         {
             AppendRoles(_modifyRoles, roles);
             return this;
@@ -69,35 +69,35 @@ namespace Common.Features.Cruds
             }
         }
 
-        public CrudControllerConfgurator<TEntity, TEntityDto, TFilterableEntity> AddMandatorySpecification<TMandatorySpec>()
+        public CrudControllerConfigurator<TEntity, TEntityDto, TFilterableEntity> AddMandatorySpecification<TMandatorySpec>()
             where TMandatorySpec: ISpecification<TEntity>
         {
             _mandatorySpecifications.Add(typeof(TMandatorySpec));
             return this;
         }
 
-        public CrudControllerConfgurator<TEntity, TEntityDto, TFilterableEntity> AddEntityCorrector<TCorrector>()
+        public CrudControllerConfigurator<TEntity, TEntityDto, TFilterableEntity> AddEntityCorrector<TCorrector>()
             where TCorrector : IEntityCorrector<TEntity,TEntityDto>
         {
             _entityCorrectorTypes.Add(typeof(TCorrector));
             return this;
         }
 
-        public CrudControllerConfgurator<TEntity, TEntityDto, TFilterableEntity> UseValidator<TValidator>()
+        public CrudControllerConfigurator<TEntity, TEntityDto, TFilterableEntity> UseValidator<TValidator>()
             where TValidator: BaseEntityDtoValidator<TEntityDto>
         {
             _entityValidator = typeof(TValidator);
             return this;
         }
 
-        public CrudControllerConfgurator<TEntity, TEntityDto, TFilterableEntity> UseFilterableEntityOperation<TFilterableOperation>()
+        public CrudControllerConfigurator<TEntity, TEntityDto, TFilterableEntity> UseFilterableEntityOperation<TFilterableOperation>()
             where TFilterableOperation: EntityContextFilterOperation<TEntity,TFilterableEntity>
         {
             _filterableEntityOperation = typeof(TFilterableOperation);
             return this;
         }
 
-        public CrudControllerConfgurator<TEntity, TEntityDto, TFilterableEntity> UseFilterableEntityOperation<TFilterableOperation>(Action<EntitySqlFilterOperationParameters> config)
+        public CrudControllerConfigurator<TEntity, TEntityDto, TFilterableEntity> UseFilterableEntityOperation<TFilterableOperation>(Action<EntitySqlFilterOperationParameters> config)
             where TFilterableOperation : EntitySqlFilterOperation<TEntity, TFilterableEntity>
         {
             _filterableEntityOperation = typeof(TFilterableOperation);

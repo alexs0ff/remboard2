@@ -17,10 +17,6 @@ namespace Common.Features.Cruds
     public class CrudControllerDescriptor<TEntity, TEntityDto, TFilterableEntity> : ICrudTypedControllerDescriptor<TEntity, TEntityDto>, IFilterableOperationFeature<TEntity,TFilterableEntity>
         where TEntity : BaseEntityGuidKey
     {
-        private readonly ICrudEntityDescriptor _entityDescriptor;
-
-        private readonly AccessRuleMap _accessRuleMap;
-
         private readonly IList<Type> _mandatorySpecificationTypes;
 
         private readonly Lazy<IList<ISpecification<TEntity>>> _mandatorySpecifications;
@@ -55,8 +51,8 @@ namespace Common.Features.Cruds
             EntityFilterOperationParameters filterableEntityOperationParameters
             )
         {
-            _entityDescriptor = entityDescriptor;
-            _accessRuleMap = accessRuleMap;
+            EntityDescriptor = entityDescriptor;
+            AccessRules = accessRuleMap;
             _mandatorySpecificationTypes = mandatorySpecificationTypes;
             _context = context;
             _entityValidatorType = entityValidatorType;
@@ -108,11 +104,11 @@ namespace Common.Features.Cruds
 
         }
 
-        public string EntityName => _entityDescriptor.EntityName;
+        public string EntityName => EntityDescriptor.EntityName;
 
-        public ICrudEntityDescriptor EntityDescriptor => _entityDescriptor;
+        public ICrudEntityDescriptor EntityDescriptor { get; }
 
-        public AccessRuleMap AccessRules => _accessRuleMap;
+        public AccessRuleMap AccessRules { get; }
 
         public ExpressionStarter<TEntity> GetMandatoryPredicate()
         {

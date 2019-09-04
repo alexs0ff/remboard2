@@ -21,19 +21,9 @@ namespace Common.Features
         protected void FillData(EntityTypeBuilder<TEntity> builder)
         {
             // will be fix on preview 9 https://github.com/aspnet/EntityFrameworkCore/issues/17145
-            
-            var values = Enum.GetValues(typeof(TEnum));
 
-            var list = new List<TEntity>();
 
-            foreach (long value in values)
-            {
-                var name = Enum.GetName(typeof(TEnum), value);
-                //todo: https://stackoverflow.com/a/9276348
-
-                var idFromValue = (TEnum)Enum.ToObject(typeof(TEnum), value);
-                list.Add(new TEntity(){Code = name,Name = EnumExtensions.GetDescription<TEnum>(value), Id = idFromValue });
-            }
+            var list = EnumExtensions.EnumToEntities<TEntity,TEnum>();
 
             builder.HasData(list);
         }

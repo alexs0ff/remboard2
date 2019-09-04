@@ -6,6 +6,7 @@ using Autofac;
 using Common.Features;
 using Common.Features.Cruds;
 using Common.Features.Cruds.Filterable;
+using Common.Features.PermissibleValues;
 using Microsoft.EntityFrameworkCore;
 using Orders.Autocomplete;
 
@@ -25,9 +26,15 @@ namespace Orders
             modelBuilder.ApplyConfiguration(new EntityDtoConfiguration<AutocompleteItemDto>());
         }
 
-        protected override IEnumerable<ICrudControllerConfgurator> RegisterCrudControllers()
+        protected override IEnumerable<IPermissibleValuesControllerConfigurator> RegisterPermissibleValuesControllers()
         {
-            yield return new CrudControllerConfgurator<AutocompleteItem, AutocompleteItemDto, AutocompleteItemDto>()
+            yield return new PermissibleValuesControllerConfigurator<AutocompleteKind, AutocompleteKinds>()
+                .AddReadRoles();
+        }
+
+        protected override IEnumerable<ICrudControllerConfigurator> RegisterCrudControllers()
+        {
+            yield return new CrudControllerConfigurator<AutocompleteItem, AutocompleteItemDto, AutocompleteItemDto>()
                 .UseValidator<AutocompleteItemDtoValidator>()
                 .UseFilterableEntityOperation<EntityContextFilterOperation<AutocompleteItem, AutocompleteItemDto>>()
                 /*.UseFilterableEntityOperation<EntitySqlFilterOperation<AutocompleteItem, AutocompleteItemDto>>(

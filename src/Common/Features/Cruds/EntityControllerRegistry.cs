@@ -6,7 +6,7 @@ using Common.Features.BaseEntity;
 
 namespace Common.Features.Cruds
 {
-    public class EntityControllerRegistry
+    public sealed class EntityControllerRegistry
     {
         private readonly IReadOnlyDictionary<string,ICrudControllerDescriptor> _crudControllerDescriptors;
 

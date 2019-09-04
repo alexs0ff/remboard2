@@ -2,6 +2,7 @@
 using System.Linq;
 using Autofac;
 using Common.Features.Cruds;
+using Common.Features.PermissibleValues;
 
 namespace Common.Features
 {
@@ -25,11 +26,21 @@ namespace Common.Features
             {
                 controllerConfgurator.Finish(builder);
             }
+
+            foreach (var permissibleValuesControllerConfigurator in RegisterPermissibleValuesControllers())
+            {
+                permissibleValuesControllerConfigurator.Finish(builder);
+            }
         }
 
-        protected virtual IEnumerable<ICrudControllerConfgurator> RegisterCrudControllers()
+        protected virtual IEnumerable<ICrudControllerConfigurator> RegisterCrudControllers()
         {
-            return Enumerable.Empty<ICrudControllerConfgurator>();
+            return Enumerable.Empty<ICrudControllerConfigurator>();
+        }
+
+        protected virtual IEnumerable<IPermissibleValuesControllerConfigurator> RegisterPermissibleValuesControllers()
+        {
+            return Enumerable.Empty<IPermissibleValuesControllerConfigurator>();
         }
 
         protected void AddMapperProfile<TMapperProfile>(ContainerBuilder builder)
