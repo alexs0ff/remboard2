@@ -11,7 +11,11 @@ import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { storeMessageValidator } from './store.message.validator'
+import { storeMessageValidator } from './store.message.validator';
+import { RaTextboxComponent } from './forms-composition/ra-textbox/ra-textbox.component';
+import { RaSelectboxComponent } from './forms-composition/ra-selectbox/ra-selectbox.component';
+import { RaControlComponent } from './forms-composition/ra-control/ra-control.component';
+import { RaFormComponent } from './forms-composition/ra-form/ra-form.component'
 
 const commonUi = [
   CommonModule,
@@ -33,7 +37,7 @@ const commonUi = [
   ];
 
 @NgModule({
-  declarations: [],
+  declarations: [RaTextboxComponent, RaSelectboxComponent, RaControlComponent, RaControlComponent, RaFormComponent],
   imports: commonUi,
   exports: commonUi
 })

@@ -1,6 +1,7 @@
 import { Component, } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {Observable} from 'rxjs'
+import { Observable } from 'rxjs'
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-home',
@@ -10,7 +11,7 @@ export class HomeComponent {
 
   response$: Observable<string>;
 
-  constructor(private httpClient:HttpClient) {}
+  constructor(private httpClient: HttpClient, private router: Router) {}
 
 
   send() {
@@ -21,5 +22,9 @@ export class HomeComponent {
     //this.response$ = this.httpClient.get<string>("api/AutocompleteItems?filterColumnName=Title&filterColumnTitleValue=t&filterColumnTitleOperator=Contains&orderby=title&orderkind=desc");
     //this.response$ = this.httpClient.get<string>("api/AutocompleteItems");
     this.response$ = this.httpClient.get<string>("api/AutocompleteKinds");
+  }
+
+  test() {
+    this.router.navigateByUrl("orders/autocomplete-item/sdsdsdsdsdsd");
   }
 }
