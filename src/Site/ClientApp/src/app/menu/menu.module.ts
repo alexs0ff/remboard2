@@ -13,12 +13,14 @@ import { MenuEffects } from "./menu.effects";
 import { EffectsModule } from '@ngrx/effects';
 import { TopMenuComponent } from './top-menu/top-menu.component';
 import { AuthModule } from "../auth/auth.module";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   imports: [
     CommonModule,
     UiCommonModule,
     RouterModule,
+    BrowserAnimationsModule,
     StoreModule.forFeature(MenuReducer.featureKey, MenuReducer.reducer),
     AuthModule,
   ],

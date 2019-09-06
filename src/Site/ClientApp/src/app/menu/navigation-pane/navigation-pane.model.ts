@@ -22,7 +22,7 @@ export const navigationPaneItems: NavigationGroup[] = [
       { name: "Филиалы", url: "/Departments", roles: ['Admin'] },
       { name: "Статусы", url: "/OrderStatuses", roles: ['Admin'] },
       { name: "Типы заказов", url: "/OrderKinds", roles: ['Admin'] },
-      { name: "Автодополнение", url: "autocomplete-item", roles: ['Admin'] },
+      { name: "Автодополнение", url: "orders/autocomplete-item", roles: ['Admin'] },
       { name: "Профиль", url: "/Profile", roles: ['Admin', 'Engineer', 'Manager'] }
     ],
     roles: ['Admin', 'Engineer','Manager']

@@ -27,6 +27,7 @@
     "@auth0/angular-jwt": "^3.0.0",
     "@ngrx/data": "^8.2.0",
     "@ngrx/effects": "^8.2.0",
+    "@ngrx/entity": "^8.2.0",
     "@ngrx/store": "^8.2.0",
     "@ngrx/store-devtools": "^8.2.0",
     "@nguniversal/module-map-ngfactory-loader": "7.1.0",

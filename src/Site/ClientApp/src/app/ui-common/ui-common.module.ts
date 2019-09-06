@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule, MatIconModule, MatSidenavModule, MatListModule, MatButtonModule } from '@angular/material';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { MatInputModule } from '@angular/material/input';
@@ -16,15 +15,14 @@ import { RaTextboxComponent } from './forms-composition/ra-textbox/ra-textbox.co
 import { RaSelectboxComponent } from './forms-composition/ra-selectbox/ra-selectbox.component';
 import { RaControlComponent } from './forms-composition/ra-control/ra-control.component';
 import { RaFormComponent } from './forms-composition/ra-form/ra-form.component'
+import { MatTableModule } from '@angular/material/table';
 
 const commonUi = [
-  CommonModule,
   MatToolbarModule,
   MatIconModule,
   MatSidenavModule,
   MatListModule,
   MatButtonModule,
-  BrowserAnimationsModule,
   FlexLayoutModule,
   CdkAccordionModule,
   MatInputModule,
@@ -33,12 +31,16 @@ const commonUi = [
   MatCardModule,
   MatProgressSpinnerModule,
   MatSnackBarModule,
-  MatExpansionModule
-  ];
+  MatExpansionModule,
+  MatTableModule,
+  CommonModule
+];
+
+const commonUiImport = [...commonUi];
 
 @NgModule({
-  declarations: [RaTextboxComponent, RaSelectboxComponent, RaControlComponent, RaControlComponent, RaFormComponent],
-  imports: commonUi,
+  declarations: [/*RaTextboxComponent, RaSelectboxComponent, RaControlComponent, RaControlComponent, RaFormComponent*/],
+  imports: commonUiImport,
   exports: commonUi
 })
 class UiCommonModule { }

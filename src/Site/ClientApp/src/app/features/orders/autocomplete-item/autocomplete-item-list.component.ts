@@ -1,19 +1,41 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { AutocompleteItemService } from "./autocomplete-item.configuration";
+import { AutocompleteItem } from "./autocomplete-item.models";
 
 @Component({
   selector: 'autocomplete-item-list',
   template: `
-    <p>
-      list
-    </p>
+<table mat-table [dataSource]="dataSource$">
+  
+  <ng-container matColumnDef="title">
+    <th mat-header-cell *matHeaderCellDef>Title</th>
+    <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="autocompleteKindId">
+    <th mat-header-cell *matHeaderCellDef> Kind </th>
+    <td mat-cell *matCellDef="let element"> {{element.autocompleteKindId}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
   `,
   styles: []
 })
 export class AutocompleteItemListComponent implements OnInit {
 
-  constructor() { }
+  dataSource$: Observable<AutocompleteItem[]>;
+
+  displayedColumns: string[] = ['title', 'autocompleteKindId'];
+
+  constructor(private autocompleteItemService: AutocompleteItemService) {
+    this.dataSource$ = autocompleteItemService.entities$;
+  }
 
   ngOnInit() {
+    this.autocompleteItemService.getAll();
   }
 
 }
