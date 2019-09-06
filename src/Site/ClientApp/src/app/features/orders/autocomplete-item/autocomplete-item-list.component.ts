@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AutocompleteItemService } from "./autocomplete-item.configuration";
 import { AutocompleteItem } from "./autocomplete-item.models";
 
 @Component({
@@ -30,12 +29,10 @@ export class AutocompleteItemListComponent implements OnInit {
 
   displayedColumns: string[] = ['title', 'autocompleteKindId'];
 
-  constructor(private autocompleteItemService: AutocompleteItemService) {
-    this.dataSource$ = autocompleteItemService.entities$;
+  constructor() {
   }
 
   ngOnInit() {
-    this.autocompleteItemService.getAll();
   }
 
 }

@@ -25,7 +25,6 @@
     "@angular/platform-server": "8.2.2",
     "@angular/router": "8.2.2",
     "@auth0/angular-jwt": "^3.0.0",
-    "@ngrx/data": "^8.2.0",
     "@ngrx/effects": "^8.2.0",
     "@ngrx/entity": "^8.2.0",
     "@ngrx/store": "^8.2.0",
