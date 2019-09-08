@@ -2,7 +2,7 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { StoreModule } from "@ngrx/store";
 import { ActionReducerMap, } from '@ngrx/store';
 import { CrudsEntityMetadata } from "./ra-cruds.models";
-import { ConfiguratorRegistry, EntityServiceFabric } from "./ra-cruds.services";
+import { ConfiguratorRegistry, EntityServiceFabric, CrudEntityConfigurator } from "./ra-cruds.services";
 import { IEntityBase, IEntityService, ICrudEntityConfigurator } from "./ra-cruds.models"
 
 interface IFeatureState {
@@ -40,4 +40,4 @@ class RaCrudsModule {
   }
 }
 
-export { RaCrudsModule, CrudsEntityMetadata, IEntityBase, IEntityService}
+export { RaCrudsModule, CrudsEntityMetadata, IEntityBase, IEntityService, CrudEntityConfigurator}
