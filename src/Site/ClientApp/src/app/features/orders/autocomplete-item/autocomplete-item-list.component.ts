@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AutocompleteItem } from "./autocomplete-item.models";
+import { EntityServiceFabric, IEntityService } from "../../ra-cruds/ra-cruds.module";
 
 @Component({
   selector: 'autocomplete-item-list',
   template: `
+<button (click)="test()"> test</button>
 <table mat-table [dataSource]="dataSource$">
   
   <ng-container matColumnDef="title">
@@ -29,10 +31,18 @@ export class AutocompleteItemListComponent implements OnInit {
 
   displayedColumns: string[] = ['title', 'autocompleteKindId'];
 
-  constructor() {
+  private entityService: IEntityService<AutocompleteItem>;
+
+  constructor(entityServiceFabric: EntityServiceFabric) {
+    this.entityService = entityServiceFabric.getService("autocompleteItems");
+    this.dataSource$ = this.entityService.entities;
   }
 
   ngOnInit() {
+    
   }
 
+  test() {
+    this.entityService.addMany([{ id: "1", title: "ssss", autocompleteKindId: 1 }, { id: "2", title: "sdds", autocompleteKindId: 1 }]);
+  }
 }

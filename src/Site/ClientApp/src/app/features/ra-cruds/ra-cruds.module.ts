@@ -3,7 +3,7 @@ import { StoreModule } from "@ngrx/store";
 import { ActionReducerMap, } from '@ngrx/store';
 import { CrudsEntityMetadata } from "./ra-cruds.models";
 import { ConfiguratorRegistry, EntityServiceFabric, CrudEntityConfigurator } from "./ra-cruds.services";
-import { IEntityBase, IEntityService, ICrudEntityConfigurator } from "./ra-cruds.models"
+import { IEntityBase, IEntityService, ICrudEntityConfigurator, } from "./ra-cruds.models"
 
 interface IFeatureState {
 
@@ -24,7 +24,7 @@ class RaCrudsModule {
 
     for (let key in config) {
       let configurator = config[key];
-      configurator.configure(key);
+      configurator.configure(featureName,key);
       ruducersMap[key] = configurator.entityReducer;
 
       registry.add(key, configurator);
@@ -40,4 +40,4 @@ class RaCrudsModule {
   }
 }
 
-export { RaCrudsModule, CrudsEntityMetadata, IEntityBase, IEntityService, CrudEntityConfigurator}
+export { RaCrudsModule, CrudsEntityMetadata, IEntityBase, IEntityService, CrudEntityConfigurator, EntityServiceFabric}

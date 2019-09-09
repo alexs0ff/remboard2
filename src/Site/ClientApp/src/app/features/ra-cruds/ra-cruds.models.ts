@@ -1,5 +1,6 @@
-import { EntityState, EntityAdapter } from '@ngrx/entity';
-import { Action,ActionReducer} from '@ngrx/store';
+import { EntityState, EntityAdapter} from '@ngrx/entity';
+import { Action, ActionReducer } from '@ngrx/store';
+import { Observable } from 'rxjs';
 
 export interface IEntityBase {
   id: string;
@@ -16,12 +17,14 @@ export interface CrudAdapter<T extends IEntityBase> extends EntityAdapter<T> {
 
 
 export interface IEntityService<T extends IEntityBase> {
-
+  entities: Observable<T[]>;
+  getAll();
+  addMany(entities: T[]);
 }
 
 export interface ICrudEntityConfigurator<T extends IEntityBase> {
   entityReducer: ActionReducer<EntityState<T>, Action>;
-  configure(entityName: string);
+  configure(featureName:string,entityName: string);
 }
 
 
