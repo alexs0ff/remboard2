@@ -34,18 +34,13 @@ class RaCrudsModule {
     }
 
     let storeModule = StoreModule.forFeature(featureName, ruducersMap);
-    storeModule.providers.push({ provide: ConfiguratorRegistry, useValue: registry });
-
-
-    storeModule.providers.push({ provide: EntityServiceFabric, useClass: EntityServiceFabric });
 
     const effectsModule = EffectsModule.forFeature([RaCrudsEntityEffects]);
 
-    const raCrudsModule: ModuleWithProviders = { ngModule: RaCrudsModule, providers: [EntityServiceApiFactory]}
+    const raCrudsModule: ModuleWithProviders = { ngModule: RaCrudsModule, providers: [EntityServiceApiFactory, EntityServiceFabric, { provide: ConfiguratorRegistry, useValue: registry }]}
 
     return [raCrudsModule,storeModule,effectsModule];
   }
 }
-
 
 export { RaCrudsModule, CrudsEntityMetadata, IEntityBase, IEntityService, CrudEntityConfigurator, EntityServiceFabric}

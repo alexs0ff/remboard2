@@ -7,8 +7,9 @@ export interface IEntityBase {
 }
 
 export interface IState<T extends IEntityBase> extends EntityState<T> {
-  selectedId: number | null,
-  totalCount: number,
+  selectedId: number | null;
+  totalCount: number;
+  loading:boolean;
 }
 
 export interface CrudAdapter<T extends IEntityBase> extends EntityAdapter<T> {

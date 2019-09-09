@@ -23,6 +23,7 @@ export class EntityActions<T extends IEntityBase> {
   clearEntities = createAction('[' + this.entityName + ' Page] Clear Entities');
   setCurrentEntity = createAction('[' + this.entityName + ' Page] Set current Entity', props<{ id: string }>());
   setTotalCount = createAction('[' + this.entityName + ' Page] Set total count', props<{ totalCount: number }>());
+  startApiFetch = createAction('[' + this.entityName + ' Page] Start fetch from API');
 }
 
 export const loadAllEntities = createAction('Load entities from API', props<{entitiesName:string}>());

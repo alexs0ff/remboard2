@@ -27,8 +27,7 @@ const config: CrudsEntityMetadata = {
     CommonModule,
     UiCommonModule,
     RouterModule.forChild(routes),
-    RaCrudsModule.forFeature("orders", config),
-    //EffectsModule.forFeature([RaCrudsEntityEffects2])
+    RaCrudsModule.forFeature("orders", config)
   ],
   providers: []
 })

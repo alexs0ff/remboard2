@@ -46,10 +46,10 @@ export class CrudEntityConfigurator<T extends IEntityBase> implements ICrudEntit
     this.adapter = createEntityAdapter<T>();
     this.initialState = this.adapter.getInitialState({
       selectedId: null,
-      totalCount: 0
+      totalCount: 0,
+      loading:false
     });
 
-    console.log("logs actions",entitiesName);
     this.entityActions = new EntityActions<T>(entitiesName);
 
     this.entitySelectors = new EntitySelectors<T>(featureName, entitiesName,this.adapter);
@@ -85,7 +85,7 @@ export class CrudEntityConfigurator<T extends IEntityBase> implements ICrudEntit
         return this.adapter.removeMany(predicate, state);
       }),
       on(this.entityActions.loadEntities, (state, { entities, totalCount }) => {
-        return this.adapter.addAll(entities, { ...state, totalCount: totalCount  });
+        return this.adapter.addAll(entities, { ...state, totalCount: totalCount, loading: false  });
       }),
       on(this.entityActions.clearEntities, (state: IState<T>) => {
         return this.adapter.removeAll({ ...state, selectedEntityId: null });
@@ -95,6 +95,9 @@ export class CrudEntityConfigurator<T extends IEntityBase> implements ICrudEntit
       }),
       on(this.entityActions.setTotalCount, (state: IState<T>, { totalCount }) => {
         return { ...state, totalCount: totalCount };
+      }),
+      on(this.entityActions.startApiFetch, (state: IState<T>) => {
+        return { ...state, loading:true };
       })
     );
 
@@ -138,6 +141,7 @@ export class EntityService<T extends IEntityBase> implements IEntityService<T> {
   }
 
   getAll() {
+    this.store.dispatch(this.entityActions.startApiFetch());
     this.store.dispatch(loadAllEntities({ entitiesName:this.entitiesName }));
   }
 }
