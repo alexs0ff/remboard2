@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IEntityBase } from "./ra-cruds.models";
+import { IEntityBase, EntityResponse } from "./ra-cruds.models";
 import { createAction, props} from '@ngrx/store';
 import { Update, Predicate, EntityMap } from '@ngrx/entity';
 
@@ -23,6 +23,7 @@ export class EntityActions<T extends IEntityBase> {
   clearEntities = createAction('[' + this.entityName + ' Page] Clear Entities');
   setCurrentEntity = createAction('[' + this.entityName + ' Page] Set current Entity', props<{ id: string }>());
   setTotalCount = createAction('[' + this.entityName + ' Page] Set total count', props<{ totalCount: number }>());
+  setApiError = createAction('[' + this.entityName + ' Page] Set Error', props<{ error: EntityResponse }>());
   startApiFetch = createAction('[' + this.entityName + ' Page] Start fetch from API');
 }
 

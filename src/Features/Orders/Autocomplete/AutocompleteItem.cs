@@ -14,6 +14,8 @@ namespace Orders.Autocomplete
         /// </summary>
         public AutocompleteKinds AutocompleteKindId { get; set; }
 
+        public AutocompleteKind AutocompleteKind { get; set; }
+
         /// <summary>
         /// Задает или получает название автодополнения.
         /// </summary>

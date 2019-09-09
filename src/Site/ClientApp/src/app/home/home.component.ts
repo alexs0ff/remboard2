@@ -20,8 +20,8 @@ export class HomeComponent {
     //this.response$ = this.httpClient.post<string>("api/AutocompleteItem",{ Id: "A878952B-8D87-4D04-B2D2-480FD60D003E", Title: "Test", AutocompleteKindId:1 });
     //this.response$ = this.httpClient.get<string>("api/AutocompleteItem/A31CCB6A-8B28-4B96-A278-E3CF9DF5E130");
     //this.response$ = this.httpClient.get<string>("api/AutocompleteItems?filterColumnName=Title&filterColumnTitleValue=t&filterColumnTitleOperator=Contains&orderby=title&orderkind=desc");
-    //this.response$ = this.httpClient.get<string>("api/AutocompleteItems");
-    this.response$ = this.httpClient.get<string>("api/AutocompleteKinds");
+    this.response$ = this.httpClient.get<string>("api/AutocompleteItems");
+    //this.response$ = this.httpClient.get<string>("api/AutocompleteKinds");
   }
 
   test() {

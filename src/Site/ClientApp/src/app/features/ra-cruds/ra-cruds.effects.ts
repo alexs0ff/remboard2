@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { IEntityBase } from "./ra-cruds.models";
+import { IEntityBase, EntityResponse } from "./ra-cruds.models";
 import { map, mergeMap, catchError, tap  } from 'rxjs/operators';
 import { Actions, Effect, ofType, createEffect } from '@ngrx/effects';
 import { loadAllEntities } from "./ra-cruds.actions";
-import { EMPTY} from 'rxjs';
+import { EMPTY,of} from 'rxjs';
 import { EntityServiceApiFactory } from "./ra-cruds.services";
 
 @Injectable()
@@ -12,10 +12,17 @@ export class RaCrudsEntityEffects {
     ofType(loadAllEntities),
     mergeMap((e) => this.entityServiceApiFactory.getApiService(e.entitiesName).getAll().pipe(
       map(pagedResult => this.entityServiceApiFactory.getEntityActions(e.entitiesName).loadEntities({ entities: pagedResult.entities, totalCount:pagedResult.count })),
-      catchError(() => EMPTY)
+      catchError((error) => {
+        const parsed = this.parseError(error);
+        return of(this.entityServiceApiFactory.getEntityActions(e.entitiesName).setApiError({error:parsed}));
+      })
     ))));
   constructor(private actions$: Actions, private entityServiceApiFactory: EntityServiceApiFactory) {
     
+  }
+
+  private parseError(error: any): EntityResponse {
+    return { validationErrors: [], message:"untyped message"}
   }
 
 }

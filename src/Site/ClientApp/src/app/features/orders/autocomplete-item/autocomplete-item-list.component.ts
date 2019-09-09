@@ -14,9 +14,9 @@ import { EntityServiceFabric, IEntityService } from "../../ra-cruds/ra-cruds.mod
     <td mat-cell *matCellDef="let element"> {{element.title}} </td>
   </ng-container>
 
-  <ng-container matColumnDef="autocompleteKindId">
+  <ng-container matColumnDef="autocompleteKindTitle">
     <th mat-header-cell *matHeaderCellDef> Kind </th>
-    <td mat-cell *matCellDef="let element"> {{element.autocompleteKindId}} </td>
+    <td mat-cell *matCellDef="let element"> {{element.autocompleteKindTitle}} </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -29,7 +29,7 @@ export class AutocompleteItemListComponent implements OnInit {
 
   dataSource$: Observable<AutocompleteItem[]>;
 
-  displayedColumns: string[] = ['title', 'autocompleteKindId'];
+  displayedColumns: string[] = ['title', 'autocompleteKindTitle'];
 
   private entityService: IEntityService<AutocompleteItem>;
 
@@ -39,11 +39,10 @@ export class AutocompleteItemListComponent implements OnInit {
   }
 
   ngOnInit() {
-    
+    this.entityService.getAll();
   }
 
   test() {
-    //this.entityService.addMany([{ id: "1", title: "ssss", autocompleteKindId: 1 }, { id: "2", title: "sdds", autocompleteKindId: 1 }]);
-    this.entityService.getAll();
+    
   }
 }

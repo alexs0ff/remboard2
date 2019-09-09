@@ -47,7 +47,9 @@ export class CrudEntityConfigurator<T extends IEntityBase> implements ICrudEntit
     this.initialState = this.adapter.getInitialState({
       selectedId: null,
       totalCount: 0,
-      loading:false
+      loading: false,
+      hasError: false,
+      error:null
     });
 
     this.entityActions = new EntityActions<T>(entitiesName);
@@ -97,8 +99,11 @@ export class CrudEntityConfigurator<T extends IEntityBase> implements ICrudEntit
         return { ...state, totalCount: totalCount };
       }),
       on(this.entityActions.startApiFetch, (state: IState<T>) => {
-        return { ...state, loading:true };
-      })
+        return { ...state, loading:true,error:null,hasError:false };
+      }),
+      on(this.entityActions.setApiError, (state: IState<T>, { error }) => {
+        return { ...state, hasError:true,error:error };
+      }),
     );
 
     

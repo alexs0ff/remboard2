@@ -12,7 +12,7 @@ namespace Orders.Autocomplete
         {
             base.Configure(builder);
             builder.Property(p => p.Title).IsRequired();
-            builder.HasOne<AutocompleteKind>().WithMany().HasForeignKey(p => p.AutocompleteKindId).IsRequired();
+            builder.HasOne<AutocompleteKind>(i=>i.AutocompleteKind).WithMany().HasForeignKey(p => p.AutocompleteKindId).IsRequired();
         }
     }
 }

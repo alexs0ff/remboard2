@@ -12,6 +12,7 @@ namespace Orders
         public OrdersProfile()
         {
             CreateMap<AutocompleteItem, AutocompleteItemDto>()
+                .ForMember(i=>i.AutocompleteKindTitle,m=>m.MapFrom(i=>i.AutocompleteKind.Name))
                 .ReverseMap();
         }
     }

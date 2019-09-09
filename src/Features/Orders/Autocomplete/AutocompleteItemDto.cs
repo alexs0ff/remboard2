@@ -13,6 +13,8 @@ namespace Orders.Autocomplete
         /// </summary>
         public AutocompleteKinds AutocompleteKindId { get; set; }
 
+        public string AutocompleteKindTitle { get; set; }
+
         /// <summary>
         /// Задает или получает название автодополнения.
         /// </summary>
