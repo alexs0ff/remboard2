@@ -17,11 +17,7 @@ class EntitySelectors<T extends IEntityBase> {
 
   constructor(featureName: string,private entitiesName: string, adapter: CrudAdapter<T>) {
     const { selectIds, selectEntities, selectAll, selectTotal, } = adapter.getSelectors();
-    /*this.selectAll = selectAll;
-    this.selectIds = selectIds;
-    this.selectEntities = selectEntities;
-    this.selectTotal = selectTotal;*/
-
+   
     const getAppState = (state: any) => state[featureName];
 
     const getModuleStateAny = (state: any) => getAppState(state)[entitiesName];
@@ -53,6 +49,7 @@ export class CrudEntityConfigurator<T extends IEntityBase> implements ICrudEntit
       totalCount: 0
     });
 
+    console.log("logs actions",entitiesName);
     this.entityActions = new EntityActions<T>(entitiesName);
 
     this.entitySelectors = new EntitySelectors<T>(featureName, entitiesName,this.adapter);
@@ -87,8 +84,8 @@ export class CrudEntityConfigurator<T extends IEntityBase> implements ICrudEntit
       on(this.entityActions.deleteEntitiesByPredicate, (state, { predicate }) => {
         return this.adapter.removeMany(predicate, state);
       }),
-      on(this.entityActions.loadEntities, (state, { entities }) => {
-        return this.adapter.addAll(entities, state);
+      on(this.entityActions.loadEntities, (state, { entities, totalCount }) => {
+        return this.adapter.addAll(entities, { ...state, totalCount: totalCount  });
       }),
       on(this.entityActions.clearEntities, (state: IState<T>) => {
         return this.adapter.removeAll({ ...state, selectedEntityId: null });

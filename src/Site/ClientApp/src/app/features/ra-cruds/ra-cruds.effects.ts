@@ -11,7 +11,7 @@ export class RaCrudsEntityEffects {
   loadEntities$ = createEffect(() => this.actions$.pipe(
     ofType(loadAllEntities),
     mergeMap((e) => this.entityServiceApiFactory.getApiService(e.entitiesName).getAll().pipe(
-      map(pagedResult => this.entityServiceApiFactory.getEntityActions(e.entitiesName).loadEntities({ entities: pagedResult.entities })),
+      map(pagedResult => this.entityServiceApiFactory.getEntityActions(e.entitiesName).loadEntities({ entities: pagedResult.entities, totalCount:pagedResult.count })),
       catchError(() => EMPTY)
     ))));
   constructor(private actions$: Actions, private entityServiceApiFactory: EntityServiceApiFactory) {

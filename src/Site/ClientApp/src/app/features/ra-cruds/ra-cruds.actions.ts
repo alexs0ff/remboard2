@@ -4,13 +4,11 @@ import { createAction, props} from '@ngrx/store';
 import { Update, Predicate, EntityMap } from '@ngrx/entity';
 
 export class EntityActions<T extends IEntityBase> {
-  private entityName: string;
 
-  constructor(entityName: string) {
-    this.entityName = entityName;
+  constructor(private entityName: string) {
   }
 
-  loadEntities = createAction('[' + this.entityName + ' Page] Load Entities', props<{ entities: T[] }>());
+  loadEntities = createAction('[' + this.entityName + ' Page] Load Entities', props<{ entities: T[],totalCount:number }>());
   addEntity = createAction('[' + this.entityName + ' Page] Add Entity', props<{ entity: T }>());
 
   upsertEntity = createAction('[' + this.entityName + ' Page] Upsert Entity', props<{ entity: T }>());
