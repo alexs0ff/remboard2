@@ -24,10 +24,17 @@ export interface IEntityService<T extends IEntityBase> {
 
 export interface ICrudEntityConfigurator<T extends IEntityBase> {
   entityReducer: ActionReducer<EntityState<T>, Action>;
-  configure(featureName:string,entityName: string);
+  configure(featureName: string, entitiesName: string);
+  singleEntityName: string;
 }
 
 
 export interface CrudsEntityMetadata {
-  [p: string]: ICrudEntityConfigurator<any>
+  [p: string]: ICrudEntityConfigurator<any>;
+}
+
+
+export interface PagedResult {
+  count: number;
+  entities:any[];
 }

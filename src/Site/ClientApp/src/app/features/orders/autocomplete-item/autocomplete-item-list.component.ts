@@ -43,6 +43,7 @@ export class AutocompleteItemListComponent implements OnInit {
   }
 
   test() {
-    this.entityService.addMany([{ id: "1", title: "ssss", autocompleteKindId: 1 }, { id: "2", title: "sdds", autocompleteKindId: 1 }]);
+    //this.entityService.addMany([{ id: "1", title: "ssss", autocompleteKindId: 1 }, { id: "2", title: "sdds", autocompleteKindId: 1 }]);
+    this.entityService.getAll();
   }
 }

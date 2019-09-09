@@ -1,36 +1,12 @@
-import { Injectable } from '@angular/core'
+import { Injectable,Type } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { Action, createAction, props, ActionReducer, on, createReducer, createSelector, MemoizedSelector } from '@ngrx/store';
 import { EntityState, createEntityAdapter } from '@ngrx/entity';
-import { IEntityBase, CrudAdapter, IState, IEntityService, ICrudEntityConfigurator } from "./ra-cruds.models"
-import { Update, Predicate, EntityMap } from '@ngrx/entity';
+import { IEntityBase, CrudAdapter, IState, IEntityService, ICrudEntityConfigurator, PagedResult } from "./ra-cruds.models"
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { EntityActions, loadAllEntities } from "./ra-cruds.actions";
 
-
-class EntityActions<T extends IEntityBase> {
-  private entityName: string;
-
-  constructor(entityName: string) {
-    this.entityName = entityName;
-  }
-
-  loadEntities = createAction('[' + this.entityName + ' Page] Load Entities', props<{ entities: T[] }>());
-  addEntity = createAction('[' + this.entityName + ' Page] Add Entity', props<{ entity: T }>());
-
-  upsertEntity = createAction('[' + this.entityName + ' Page] Upsert Entity', props<{ entity: T }>());
-  addEntities = createAction('[' + this.entityName + ' Page] Add Entities', props<{ entities: T[] }>());
-  upsertEntities = createAction('[' + this.entityName + ' Page] Upsert Entities', props<{ entities: T[] }>());
-  updateEntity = createAction('[' + this.entityName + ' Page] Update Entity', props<{ entity: Update<T> }>());
-  updateEntities = createAction('[' + this.entityName + ' Page] Update Entities', props<{ entities: Update<T>[] }>());
-  mapEntities = createAction('[' + this.entityName + ' Page] Map Entities', props<{ entityMap: EntityMap<T> }>());
-  deleteEntity = createAction('[' + this.entityName + ' Page] Delete Entity', props<{ id: string }>());
-  deleteEntities = createAction('[' + this.entityName + ' Page] Delete Entities', props<{ ids: string[] }>());
-  deleteEntitiesByPredicate = createAction('[' + this.entityName + ' Page] Delete Entities By Predicate', props<{ predicate: Predicate<T> }>());
-  clearEntities = createAction('[' + this.entityName + ' Page] Clear Entities');
-  setCurrentEntity = createAction('[' + this.entityName + ' Page] Set current Entity', props<{ id: string }>());
-  setTotalCount = createAction('[' + this.entityName + ' Page] Set total count', props<{ totalCount: number }>());
-}
 
 class EntitySelectors<T extends IEntityBase> {
   selectAll: MemoizedSelector<any,T[]>;
@@ -39,7 +15,7 @@ class EntitySelectors<T extends IEntityBase> {
   private selectAll: (state: IState<T>) => T[];
   private selectTotal: (state: IState<T>) => number;*/
 
-  constructor(featureName: string,private entityName: string, adapter: CrudAdapter<T>) {
+  constructor(featureName: string,private entitiesName: string, adapter: CrudAdapter<T>) {
     const { selectIds, selectEntities, selectAll, selectTotal, } = adapter.getSelectors();
     /*this.selectAll = selectAll;
     this.selectIds = selectIds;
@@ -48,7 +24,7 @@ class EntitySelectors<T extends IEntityBase> {
 
     const getAppState = (state: any) => state[featureName];
 
-    const getModuleStateAny = (state: any) => getAppState(state)[entityName];
+    const getModuleStateAny = (state: any) => getAppState(state)[entitiesName];
     const getModuleState = (state: any) => <IState<T>>getModuleStateAny(state);
 
 
@@ -66,19 +42,20 @@ export class CrudEntityConfigurator<T extends IEntityBase> implements ICrudEntit
 
   entityActions: EntityActions<T>;
   entitySelectors: EntitySelectors<T>;
-
   entityReducer: ActionReducer<EntityState<T>, Action>;
 
-  public configure(featureName: string,entityName: string)  {
+  constructor(public singleEntityName:string) {}
+
+  public configure(featureName: string,entitiesName: string)  {
     this.adapter = createEntityAdapter<T>();
     this.initialState = this.adapter.getInitialState({
       selectedId: null,
       totalCount: 0
     });
 
-    this.entityActions = new EntityActions<T>(entityName);
+    this.entityActions = new EntityActions<T>(entitiesName);
 
-    this.entitySelectors = new EntitySelectors<T>(featureName, entityName,this.adapter);
+    this.entitySelectors = new EntitySelectors<T>(featureName, entitiesName,this.adapter);
 
     this.entityReducer = createReducer(
       this.initialState,
@@ -134,12 +111,16 @@ export class CrudEntityConfigurator<T extends IEntityBase> implements ICrudEntit
 export class ConfiguratorRegistry {
   private configurators: { [key: string]: ICrudEntityConfigurator<any> } = {};
 
-  public add(entityName: string, configurator: ICrudEntityConfigurator<any>) {
-    this.configurators[entityName] = configurator;
+  public add(entitiesName: string, configurator: ICrudEntityConfigurator<any>) {
+    this.configurators[entitiesName] = configurator;
   }
 
-  public getCrudEntityConfigurator<T extends IEntityBase>(entityName: string): ICrudEntityConfigurator<T> {
-    return this.configurators[entityName];
+  public getCrudEntityConfigurator<T extends IEntityBase>(entitiesName: string): ICrudEntityConfigurator<T> {
+    if (!this.configurators.hasOwnProperty(entitiesName)) {
+      throw "entity configurator of '" + entitiesName +"' doesn't exist";
+    }
+
+    return this.configurators[entitiesName];
   }
 
 }
@@ -150,7 +131,7 @@ export class EntityService<T extends IEntityBase> implements IEntityService<T> {
 
   entities:Observable<T[]>;
 
-  constructor(private configurator: CrudEntityConfigurator<T>, private httpClient: HttpClient, private store: Store<{}>) {
+  constructor(private configurator: CrudEntityConfigurator<T>, private store: Store<{}>, private entitiesName:string) {
     this.entityActions = configurator.entityActions;
     this.entities = store.pipe(select(configurator.entitySelectors.selectAll));
   }
@@ -158,18 +139,48 @@ export class EntityService<T extends IEntityBase> implements IEntityService<T> {
   addMany(entities: T[]) {
     this.store.dispatch(this.entityActions.addEntities({ entities: entities }));
   }
+
   getAll() {
-    
+    this.store.dispatch(loadAllEntities({ entitiesName:this.entitiesName }));
   }
 }
 
 
 @Injectable()
 export class EntityServiceFabric {
-  constructor(private registry: ConfiguratorRegistry, private httpClient: HttpClient, private store: Store<{}>) { }
+  constructor(private registry: ConfiguratorRegistry, private store: Store<{}>) { }
 
-  public getService<T extends IEntityBase>(entityName: string): IEntityService<T> {
-    const configurator = this.registry.getCrudEntityConfigurator<T>(entityName);
-    return new EntityService<T>(<CrudEntityConfigurator<T>>configurator,this.httpClient,this.store);
+  public getService<T extends IEntityBase>(entitiesName: string): IEntityService<T> {
+    const configurator = this.registry.getCrudEntityConfigurator<T>(entitiesName);
+    return new EntityService<T>(<CrudEntityConfigurator<T>>configurator,this.store,entitiesName);
   }
+}
+
+export interface IEntityApiService{
+  getAll(): Observable<PagedResult>;
+}
+
+class EntityApiService implements IEntityApiService {
+  constructor(private entitiesName:string,private entitySingleName:string,private httpClient: HttpClient) {}
+
+  getAll(): Observable<PagedResult> {
+    return this.httpClient.get<PagedResult>("api/" + this.entitiesName);
+  }
+}
+
+@Injectable()
+export class EntityServiceApiFactory{
+  constructor(private registry: ConfiguratorRegistry, private httpClient: HttpClient) { }
+
+  getApiService(entitiesName: string): IEntityApiService {
+    const configurator = this.registry.getCrudEntityConfigurator(entitiesName);
+    return new EntityApiService(entitiesName, configurator.singleEntityName, this.httpClient);
+  }
+
+  getEntityActions(entitiesName: string): EntityActions<any> {
+    const configurator = <CrudEntityConfigurator<any>>this.registry.getCrudEntityConfigurator(entitiesName);
+
+    return configurator.entityActions;
+  }
+  
 }
