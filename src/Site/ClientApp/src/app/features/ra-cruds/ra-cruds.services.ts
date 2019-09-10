@@ -5,7 +5,7 @@ import { EntityState, createEntityAdapter } from '@ngrx/entity';
 import { IEntityBase, CrudAdapter, IState, IEntityService, ICrudEntityConfigurator, PagedResult } from "./ra-cruds.models"
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { EntityActions, loadAllEntities } from "./ra-cruds.actions";
+import { EntityActions, loadAllEntities, createEntity, updateEntity, deleteEntity } from "./ra-cruds.actions";
 
 
 class EntitySelectors<T extends IEntityBase> {
@@ -60,7 +60,7 @@ export class CrudEntityConfigurator<T extends IEntityBase> implements ICrudEntit
       this.initialState,
       on(this.entityActions.addEntity, (state, { entity }) => this.adapter.addOne(entity, state)),
       on(this.entityActions.upsertEntity, (state, { entity }) => {
-        return this.adapter.upsertOne(entity, state);
+        return this.adapter.upsertOne(entity, <IState<T>>{ ...state, loading: false });
       }),
       on(this.entityActions.addEntities, (state, { entities }) => {
         return this.adapter.addMany(entities, state);
@@ -69,7 +69,7 @@ export class CrudEntityConfigurator<T extends IEntityBase> implements ICrudEntit
         return this.adapter.upsertMany(entities, state);
       }),
       on(this.entityActions.updateEntity, (state, { entity }) => {
-        return this.adapter.updateOne(entity, state);
+        return this.adapter.updateOne(entity, <IState<T>>{ ...state, loading: false });
       }),
       on(this.entityActions.updateEntities, (state, { entities }) => {
         return this.adapter.updateMany(entities, state);
@@ -78,7 +78,7 @@ export class CrudEntityConfigurator<T extends IEntityBase> implements ICrudEntit
         return this.adapter.map(entityMap, state);
       }),
       on(this.entityActions.deleteEntity, (state, { id }) => {
-        return this.adapter.removeOne(id, state);
+        return this.adapter.removeOne(id, <IState<T>>{ ...state, loading: false });
       }),
       on(this.entityActions.deleteEntities, (state, { ids }) => {
         return this.adapter.removeMany(ids, state);
@@ -87,7 +87,7 @@ export class CrudEntityConfigurator<T extends IEntityBase> implements ICrudEntit
         return this.adapter.removeMany(predicate, state);
       }),
       on(this.entityActions.loadEntities, (state, { entities, totalCount }) => {
-        return this.adapter.addAll(entities, { ...state, totalCount: totalCount, loading: false  });
+        return this.adapter.addAll(entities, <IState<T>>{ ...state, totalCount: totalCount, loading: false  });
       }),
       on(this.entityActions.clearEntities, (state: IState<T>) => {
         return this.adapter.removeAll({ ...state, selectedEntityId: null });
@@ -149,6 +149,21 @@ export class EntityService<T extends IEntityBase> implements IEntityService<T> {
     this.store.dispatch(this.entityActions.startApiFetch());
     this.store.dispatch(loadAllEntities({ entitiesName:this.entitiesName }));
   }
+
+  add(entity: T) {
+    this.store.dispatch(this.entityActions.startApiFetch());
+    this.store.dispatch(createEntity({ entitiesName: this.entitiesName, entity:entity }));
+  }
+
+  update(entity: T) {
+    this.store.dispatch(this.entityActions.startApiFetch());
+    this.store.dispatch(updateEntity({ entitiesName: this.entitiesName, entity: entity,id:entity.id }));
+  }
+
+  delete(id:string) {
+    this.store.dispatch(this.entityActions.startApiFetch());
+    this.store.dispatch(deleteEntity({ entitiesName: this.entitiesName, id:id}));
+  }
 }
 
 
@@ -164,6 +179,9 @@ export class EntityServiceFabric {
 
 export interface IEntityApiService{
   getAll(): Observable<PagedResult>;
+  add<T extends IEntityBase>(newEntity: T): Observable<T>;
+  update<T extends IEntityBase>(id: string, entity: T): Observable<T>;
+  delete(id: string): Observable<any>;
 }
 
 class EntityApiService implements IEntityApiService {
@@ -171,6 +189,18 @@ class EntityApiService implements IEntityApiService {
 
   getAll(): Observable<PagedResult> {
     return this.httpClient.get<PagedResult>("api/" + this.entitiesName);
+  }
+
+  add<T extends IEntityBase>(newEntity: T): Observable<T> {
+    return this.httpClient.post<T>("api/" + this.entitySingleName, newEntity);
+  }
+
+  update<T extends IEntityBase>(id:string,entity: T): Observable<T> {
+    return this.httpClient.put<T>("api/" + this.entitySingleName+"/"+id, entity);
+  }
+
+  delete(id: string): Observable<any> {
+    return this.httpClient.delete("api/" + this.entitySingleName + "/" + id);
   }
 }
 

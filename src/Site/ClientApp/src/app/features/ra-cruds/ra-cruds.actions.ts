@@ -28,3 +28,6 @@ export class EntityActions<T extends IEntityBase> {
 }
 
 export const loadAllEntities = createAction('Load entities from API', props<{entitiesName:string}>());
+export const createEntity = createAction('Create entity to API', props < { entitiesName:string,entity:IEntityBase}>());
+export const updateEntity = createAction('Update entity to API', props<{ entitiesName: string,id:string,entity:IEntityBase}>());
+export const deleteEntity = createAction('Delete entity to API', props<{ entitiesName: string,id:string}>());

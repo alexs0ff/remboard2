@@ -35,6 +35,9 @@ export interface IEntityService<T extends IEntityBase> {
   entities: Observable<T[]>;
   getAll();
   addMany(entities: T[]);
+  add(entity: T);
+  update(entity: T);
+  delete(id: string);
 }
 
 export interface ICrudEntityConfigurator<T extends IEntityBase> {
