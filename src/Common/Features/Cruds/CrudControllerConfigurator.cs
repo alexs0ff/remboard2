@@ -90,9 +90,13 @@ namespace Common.Features.Cruds
             return this;
         }
 
-        public CrudControllerConfigurator<TEntity, TEntityDto, TFilterableEntity> UseFilterableEntityOperation<TFilterableOperation>()
+        public CrudControllerConfigurator<TEntity, TEntityDto, TFilterableEntity> UseFilterableEntityOperation<TFilterableOperation>(Action<EntityContextFilterOperationParameters> config)
             where TFilterableOperation: EntityContextFilterOperation<TEntity,TFilterableEntity>
         {
+            var parameters = new EntityContextFilterOperationParameters();
+            config(parameters);
+            _filterableEntityOperationParameters = parameters;
+
             _filterableEntityOperation = typeof(TFilterableOperation);
             return this;
         }

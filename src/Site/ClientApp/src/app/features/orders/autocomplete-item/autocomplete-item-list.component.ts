@@ -4,20 +4,21 @@ import { AutocompleteItem } from "./autocomplete-item.models";
 import { EntityServiceFabric, IEntityService } from "../../ra-cruds/ra-cruds.module";
 import { QueryParamsConfigurator } from "../../ra-cruds/ra-cruds.utils";
 import { PageEvent } from '@angular/material/paginator';
+import { Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'autocomplete-item-list',
   template: `
 <div>
-<table mat-table [dataSource]="dataSource$">
+<table mat-table [dataSource]="dataSource$" matSort (matSortChange)="onSortChange($event)">
   
   <ng-container matColumnDef="title">
-    <th mat-header-cell *matHeaderCellDef>Title</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
     <td mat-cell *matCellDef="let element"> {{element.title}} </td>
   </ng-container>
 
   <ng-container matColumnDef="autocompleteKindTitle">
-    <th mat-header-cell *matHeaderCellDef> Kind </th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Kind </th>
     <td mat-cell *matCellDef="let element"> {{element.autocompleteKindTitle}} </td>
   </ng-container>
 
@@ -41,6 +42,9 @@ export class AutocompleteItemListComponent implements OnInit {
   displayedColumns: string[] = ['title', 'autocompleteKindTitle'];
 
   pageSize = 10;
+  private currentPage:number = 1;
+  private sortedColumn:string = "";
+  private sortDirection:string = "";
 
   private entityService: IEntityService<AutocompleteItem>;
 
@@ -51,17 +55,30 @@ export class AutocompleteItemListComponent implements OnInit {
   }
 
   ngOnInit() {
-    const qConfig: QueryParamsConfigurator = new QueryParamsConfigurator();
-    qConfig.setCurrentPage(1);
-    qConfig.setPageSize(this.pageSize);
-
-    this.entityService.getWithQuery(qConfig.toQueryParams());
+    this.refreshData();
   }
 
   onPaginateChange(event: PageEvent) {
+    this.currentPage = event.pageIndex + 1;
+    this.pageSize = event.pageSize;
+    this.refreshData();
+  }
+
+  onSortChange(event: Sort) {
+    this.sortedColumn = event.active;
+    this.sortDirection = event.direction;
+    this.refreshData();
+  }
+
+  refreshData() {
     const qConfig: QueryParamsConfigurator = new QueryParamsConfigurator();
-    qConfig.setCurrentPage(event.pageIndex + 1);
-    qConfig.setPageSize(event.pageSize);
+    qConfig.setCurrentPage(this.currentPage);
+    qConfig.setPageSize(this.pageSize);
+
+    if (this.sortedColumn.length>0) {
+      let isAscending = this.sortDirection === 'asc' || this.sortDirection === '';
+      qConfig.setSort(this.sortedColumn, isAscending);  
+    }
     this.entityService.getWithQuery(qConfig.toQueryParams());
   }
 

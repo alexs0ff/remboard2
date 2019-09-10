@@ -9,6 +9,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { storeMessageValidator } from './store.message.validator';
@@ -22,6 +23,7 @@ const commonUi = [
   MatToolbarModule,
   MatIconModule,
   MatSidenavModule,
+  MatSortModule,
   MatListModule,
   MatButtonModule,
   FlexLayoutModule,

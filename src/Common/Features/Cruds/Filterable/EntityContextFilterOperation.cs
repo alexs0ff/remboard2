@@ -20,11 +20,13 @@ namespace Common.Features.Cruds.Filterable
         where TEntity : BaseEntityGuidKey
     {
         private readonly IMapper _mapper;
+        private readonly EntityContextFilterOperationParameters _parameters;
 
         /// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
         public EntityContextFilterOperation(IMapper mapper, EntityFilterOperationParameters parameters)
         {
             _mapper = mapper;
+            _parameters = (EntityContextFilterOperationParameters)parameters;
         }
 
         public async Task<PagedResult<TFilterableEntity>> FilterAsync(DbContext context, ICrudPredicateFeature<TEntity> predicateFactory, FilterParameters filterParameters)
@@ -56,19 +58,28 @@ namespace Common.Features.Cruds.Filterable
 
             var query = context.Set<TEntity>().AsExpandable().Where(mandatoryPredicate).Where(predicate);
 
-            var pageData = PageDataExtensions.GetPageData(filterParameters.PageSize, filterParameters.CurrentPage);
-
-            if (pageData.skip>=0)
-            {
-                query = query.Skip(pageData.skip).Take(pageData.take);
-            }
-
+            
             if (!string.IsNullOrWhiteSpace(filterParameters.OrderBy))
             {
                 var sortOrder = filterParameters.OrderKind == OrderKind.Asc? ListSortDirection.Ascending: ListSortDirection.Descending;
 
-                query = query.OrderBy(filterParameters.OrderBy, sortOrder);
+                var orderByColumn = filterParameters.OrderBy.ToLower();
+
+                if (_parameters.SortFieldsMaping.ContainsKey(orderByColumn))
+                {
+                    orderByColumn = _parameters.SortFieldsMaping[orderByColumn];
+                }
+
+                query = query.OrderBy(orderByColumn, sortOrder);
             }
+
+            var pageData = PageDataExtensions.GetPageData(filterParameters.PageSize, filterParameters.CurrentPage);
+
+            if (pageData.skip >= 0)
+            {
+                query = query.Skip(pageData.skip).Take(pageData.take);
+            }
+
             var entities = await _mapper.ProjectTo<TFilterableEntity>(query).ToArrayAsync();
 
             return new PagedResult<TFilterableEntity>(count,entities);

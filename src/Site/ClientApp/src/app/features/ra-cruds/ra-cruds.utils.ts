@@ -32,6 +32,12 @@ export class QueryParamsConfigurator {
     return this;
   }
 
+  setSort(column: string, isAscending:boolean = true) {
+    this.parameters["orderBy"] = column;
+    this.parameters["orderKind"] = isAscending?"asc":"desc";
+    return this;
+  }
+
   toQueryParams(): QueryParams {
     return this.parameters;
   }
