@@ -31,9 +31,15 @@ export interface CrudAdapter<T extends IEntityBase> extends EntityAdapter<T> {
 }
 
 
+export interface QueryParams {
+  [name: string]: string | string[];
+}
+
 export interface IEntityService<T extends IEntityBase> {
   entities: Observable<T[]>;
+  totalLength: Observable<number>;
   getAll();
+  getWithQuery(queryParams: QueryParams);
   addMany(entities: T[]);
   add(entity: T);
   update(entity: T);
@@ -55,4 +61,9 @@ export interface CrudsEntityMetadata {
 export interface PagedResult {
   count: number;
   entities:any[];
+}
+
+export interface EntityFilter {
+  currentPage: number;
+  pageSize:number;
 }

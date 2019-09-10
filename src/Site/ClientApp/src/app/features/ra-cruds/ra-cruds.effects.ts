@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { IEntityBase, EntityResponse } from "./ra-cruds.models";
 import { map, mergeMap, catchError, tap  } from 'rxjs/operators';
 import { Actions, Effect, ofType, createEffect } from '@ngrx/effects';
-import { loadAllEntities, EntityActions, createEntity, updateEntity, deleteEntity } from "./ra-cruds.actions";
+import { loadAllEntities, EntityActions, createEntity, updateEntity, deleteEntity, loadWithQueryEntities } from "./ra-cruds.actions";
 import { EMPTY,of} from 'rxjs';
 import { EntityServiceApiFactory, IEntityApiService } from "./ra-cruds.services";
 import { RaUtils } from "./ra-cruds.utils";
@@ -17,6 +17,16 @@ export class RaCrudsEntityEffects {
       catchError((error) => {
         const parsed = RaUtils.parseHttpError(error);
         return of(this.getEntityActions(e.entitiesName).setApiError({error:parsed}));
+      })
+    ))));
+
+  loadwithQueryEntities$ = createEffect(() => this.actions$.pipe(
+    ofType(loadWithQueryEntities),
+    mergeMap((e) => this.getApiService(e.entitiesName).getWithQuery(e.queryParams).pipe(
+      map(pagedResult => this.getEntityActions(e.entitiesName).loadEntities({ entities: pagedResult.entities, totalCount: pagedResult.count })),
+      catchError((error) => {
+        const parsed = RaUtils.parseHttpError(error);
+        return of(this.getEntityActions(e.entitiesName).setApiError({ error: parsed }));
       })
     ))));
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IEntityBase, EntityResponse } from "./ra-cruds.models";
+import { IEntityBase, EntityResponse, QueryParams } from "./ra-cruds.models";
 import { createAction, props} from '@ngrx/store';
 import { Update, Predicate, EntityMap } from '@ngrx/entity';
 
@@ -27,7 +27,8 @@ export class EntityActions<T extends IEntityBase> {
   startApiFetch = createAction('[' + this.entityName + ' Page] Start fetch from API');
 }
 
-export const loadAllEntities = createAction('Load entities from API', props<{entitiesName:string}>());
+export const loadAllEntities = createAction('Load entities from API', props<{ entitiesName: string}>());
+export const loadWithQueryEntities = createAction('Load with query entities from API', props<{ entitiesName: string,queryParams:QueryParams}>());
 export const createEntity = createAction('Create entity to API', props < { entitiesName:string,entity:IEntityBase}>());
 export const updateEntity = createAction('Update entity to API', props<{ entitiesName: string,id:string,entity:IEntityBase}>());
 export const deleteEntity = createAction('Delete entity to API', props<{ entitiesName: string,id:string}>());

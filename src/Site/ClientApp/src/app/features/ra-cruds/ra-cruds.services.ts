@@ -2,14 +2,16 @@ import { Injectable,Type } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { Action, createAction, props, ActionReducer, on, createReducer, createSelector, MemoizedSelector } from '@ngrx/store';
 import { EntityState, createEntityAdapter } from '@ngrx/entity';
-import { IEntityBase, CrudAdapter, IState, IEntityService, ICrudEntityConfigurator, PagedResult } from "./ra-cruds.models"
+import { IEntityBase, CrudAdapter, IState, IEntityService, ICrudEntityConfigurator, PagedResult, QueryParams } from "./ra-cruds.models"
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { EntityActions, loadAllEntities, createEntity, updateEntity, deleteEntity } from "./ra-cruds.actions";
+import { EntityActions, loadAllEntities, createEntity, updateEntity, deleteEntity, loadWithQueryEntities } from "./ra-cruds.actions";
+import { RaUtils } from "./ra-cruds.utils";
 
 
 class EntitySelectors<T extends IEntityBase> {
-  selectAll: MemoizedSelector<any,T[]>;
+  selectAll: MemoizedSelector<any, T[]>;
+  totalCount: MemoizedSelector<any, number>;
   /*private selectIds: (state: IState<T>) => string[] | number[];
   private selectEntities: (state: IState<T>) => { [id: string]: T | undefined;};
   private selectAll: (state: IState<T>) => T[];
@@ -25,6 +27,7 @@ class EntitySelectors<T extends IEntityBase> {
 
 
     this.selectAll = createSelector(getModuleState, selectAll);
+    this.totalCount = createSelector(getModuleState, (i)=>i.totalCount);
   }
 
 
@@ -134,11 +137,14 @@ export class ConfiguratorRegistry {
 export class EntityService<T extends IEntityBase> implements IEntityService<T> {
   private entityActions: EntityActions<T>;
 
-  entities:Observable<T[]>;
+  entities: Observable<T[]>;
+
+  totalLength:Observable<number>;
 
   constructor(private configurator: CrudEntityConfigurator<T>, private store: Store<{}>, private entitiesName:string) {
     this.entityActions = configurator.entityActions;
     this.entities = store.pipe(select(configurator.entitySelectors.selectAll));
+    this.totalLength = store.pipe(select(configurator.entitySelectors.totalCount));
   }
 
   addMany(entities: T[]) {
@@ -147,7 +153,12 @@ export class EntityService<T extends IEntityBase> implements IEntityService<T> {
 
   getAll() {
     this.store.dispatch(this.entityActions.startApiFetch());
-    this.store.dispatch(loadAllEntities({ entitiesName:this.entitiesName }));
+    this.store.dispatch(loadAllEntities({ entitiesName: this.entitiesName }));
+  }
+
+  getWithQuery(queryParams: QueryParams) {
+    this.store.dispatch(this.entityActions.startApiFetch());
+    this.store.dispatch(loadWithQueryEntities({ entitiesName: this.entitiesName, queryParams: queryParams }));
   }
 
   add(entity: T) {
@@ -179,6 +190,7 @@ export class EntityServiceFabric {
 
 export interface IEntityApiService{
   getAll(): Observable<PagedResult>;
+  getWithQuery(queryParams:QueryParams): Observable<PagedResult>;
   add<T extends IEntityBase>(newEntity: T): Observable<T>;
   update<T extends IEntityBase>(id: string, entity: T): Observable<T>;
   delete(id: string): Observable<any>;
@@ -189,6 +201,11 @@ class EntityApiService implements IEntityApiService {
 
   getAll(): Observable<PagedResult> {
     return this.httpClient.get<PagedResult>("api/" + this.entitiesName);
+  }
+
+  getWithQuery(queryParams: QueryParams): Observable<PagedResult> {
+    const httpParams = RaUtils.toHttpParams(queryParams);
+    return this.httpClient.get<PagedResult>("api/" + this.entitiesName, { params:httpParams });
   }
 
   add<T extends IEntityBase>(newEntity: T): Observable<T> {
