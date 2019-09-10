@@ -9,6 +9,15 @@ import { Sort } from '@angular/material/sort';
 @Component({
   selector: 'autocomplete-item-list',
   template: `
+<div class="table-content">
+  
+  <mat-progress-spinner *ngIf="isLoading$ | async"
+    color="primary" 
+    mode="indeterminate"
+    class="loading-table-spinner"    
+    >
+  </mat-progress-spinner>
+  
 <div>
 <table mat-table [dataSource]="dataSource$" matSort (matSortChange)="onSortChange($event)">
   
@@ -26,11 +35,23 @@ import { Sort } from '@angular/material/sort';
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
   <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons [pageSize]="pageSize" [length]="totalLength$ | async" (page)="onPaginateChange($event)">></mat-paginator>
+  
+</div>
+ 
 </div>
   `,
   styles: [`
 table {
   width: 100%;
+}
+.loading-table-spinner{
+  position: absolute;
+  opacity: 0.8;
+  top: 0; left: 0; bottom: 0; right: 0;
+  margin: auto;
+}
+.table-content{
+  position: relative;
 }
 `]
 })
@@ -38,6 +59,7 @@ export class AutocompleteItemListComponent implements OnInit {
 
   dataSource$: Observable<AutocompleteItem[]>;
   totalLength$: Observable<number>;
+  isLoading$: Observable<boolean>;
 
   displayedColumns: string[] = ['title', 'autocompleteKindTitle'];
 
@@ -52,6 +74,7 @@ export class AutocompleteItemListComponent implements OnInit {
     this.entityService = entityServiceFabric.getService("autocompleteItems");
     this.dataSource$ = this.entityService.entities;
     this.totalLength$ = this.entityService.totalLength;
+    this.isLoading$ = this.entityService.isLoading;
   }
 
   ngOnInit() {

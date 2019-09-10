@@ -38,6 +38,7 @@ export interface QueryParams {
 export interface IEntityService<T extends IEntityBase> {
   entities: Observable<T[]>;
   totalLength: Observable<number>;
+  isLoading: Observable<boolean>;
   getAll();
   getWithQuery(queryParams: QueryParams);
   addMany(entities: T[]);

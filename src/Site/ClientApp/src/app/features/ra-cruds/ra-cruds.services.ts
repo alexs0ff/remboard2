@@ -12,6 +12,7 @@ import { RaUtils } from "./ra-cruds.utils";
 class EntitySelectors<T extends IEntityBase> {
   selectAll: MemoizedSelector<any, T[]>;
   totalCount: MemoizedSelector<any, number>;
+  isLoading: MemoizedSelector<any, boolean>;
   /*private selectIds: (state: IState<T>) => string[] | number[];
   private selectEntities: (state: IState<T>) => { [id: string]: T | undefined;};
   private selectAll: (state: IState<T>) => T[];
@@ -28,6 +29,7 @@ class EntitySelectors<T extends IEntityBase> {
 
     this.selectAll = createSelector(getModuleState, selectAll);
     this.totalCount = createSelector(getModuleState, (i)=>i.totalCount);
+    this.isLoading = createSelector(getModuleState, (i)=>i.loading);
   }
 
 
@@ -139,12 +141,15 @@ export class EntityService<T extends IEntityBase> implements IEntityService<T> {
 
   entities: Observable<T[]>;
 
-  totalLength:Observable<number>;
+  totalLength: Observable<number>;
+
+  isLoading:Observable<boolean>;
 
   constructor(private configurator: CrudEntityConfigurator<T>, private store: Store<{}>, private entitiesName:string) {
     this.entityActions = configurator.entityActions;
     this.entities = store.pipe(select(configurator.entitySelectors.selectAll));
     this.totalLength = store.pipe(select(configurator.entitySelectors.totalCount));
+    this.isLoading = store.pipe(select(configurator.entitySelectors.isLoading));
   }
 
   addMany(entities: T[]) {
