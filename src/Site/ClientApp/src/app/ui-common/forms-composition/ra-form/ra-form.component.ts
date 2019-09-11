@@ -25,6 +25,7 @@ export class RaFormComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.service.toFormGroup(this.controls);
+    console.log("dsd", this.controls); 
   }
 
   onSubmit() {

@@ -5,7 +5,7 @@ import { EntityServiceFabric, IEntityService } from "../../ra-cruds/ra-cruds.mod
 import { QueryParamsConfigurator } from "../../ra-cruds/ra-cruds.utils";
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
-import { RaServerDataGridModel } from "../../../ui-common/list-composition/list-composition.models";
+import { RaServerDataGridModel } from "../../../ui-common/ui-common.module";
 
 @Component({
   selector: 'autocomplete-item-list',

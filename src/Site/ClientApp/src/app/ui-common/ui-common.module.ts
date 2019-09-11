@@ -19,7 +19,8 @@ import { RaControlComponent } from './forms-composition/ra-control/ra-control.co
 import { RaFormComponent } from './forms-composition/ra-form/ra-form.component'
 import { MatTableModule } from '@angular/material/table';
 import { RaServerdataGridComponent } from './list-composition/ra-serverdata-grid/ra-serverdata-grid.component';
-
+import { RaServerDataGridModel } from './list-composition/list-composition.models';
+import { RaTextbox, RaSelectbox, RaBaseControl } from './forms-composition/forms-composition.models';
 const commonUi = [
   MatToolbarModule,
   MatIconModule,
@@ -38,17 +39,18 @@ const commonUi = [
   MatExpansionModule,
   MatTableModule,
   CommonModule,
-  MatPaginatorModule
+  MatPaginatorModule,
+
 ];
 
 const commonUiImport = [...commonUi];
-const commonUiExport = [...commonUi, RaServerdataGridComponent];
+const commonUiExport = [...commonUi, RaServerdataGridComponent, RaFormComponent];
 
 @NgModule({
-  declarations: [RaServerdataGridComponent],
+  declarations: [RaServerdataGridComponent, RaFormComponent, RaControlComponent, RaSelectboxComponent, RaTextboxComponent],
   imports: commonUiImport,
   exports: commonUiExport
 })
 class UiCommonModule { }
 
-export { UiCommonModule, storeMessageValidator}
+export { UiCommonModule, storeMessageValidator, RaServerDataGridModel, RaTextbox, RaSelectbox, RaBaseControl}
