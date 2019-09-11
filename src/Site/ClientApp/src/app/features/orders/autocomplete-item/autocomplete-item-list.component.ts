@@ -5,104 +5,33 @@ import { EntityServiceFabric, IEntityService } from "../../ra-cruds/ra-cruds.mod
 import { QueryParamsConfigurator } from "../../ra-cruds/ra-cruds.utils";
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
+import { RaServerDataGridModel } from "../../../ui-common/list-composition/list-composition.models";
 
 @Component({
   selector: 'autocomplete-item-list',
   template: `
-<div class="table-content">
-  
-  <mat-progress-spinner *ngIf="isLoading$ | async"
-    color="primary" 
-    mode="indeterminate"
-    class="loading-table-spinner"    
-    >
-  </mat-progress-spinner>
-  
-<div>
-<table mat-table [dataSource]="dataSource$" matSort (matSortChange)="onSortChange($event)">
-  
-  <ng-container matColumnDef="title">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
-    <td mat-cell *matCellDef="let element"> {{element.title}} </td>
-  </ng-container>
-
-  <ng-container matColumnDef="autocompleteKindTitle">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Kind </th>
-    <td mat-cell *matCellDef="let element"> {{element.autocompleteKindTitle}} </td>
-  </ng-container>
-
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
-  <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons [pageSize]="pageSize" [length]="totalLength$ | async" (page)="onPaginateChange($event)">></mat-paginator>
-  
-</div>
  
-</div>
+<ra-serverdata-grid [model]="dataGrid"></ra-serverdata-grid>
   `,
-  styles: [`
-table {
-  width: 100%;
-}
-.loading-table-spinner{
-  position: absolute;
-  opacity: 0.8;
-  top: 0; left: 0; bottom: 0; right: 0;
-  margin: auto;
-}
-.table-content{
-  position: relative;
-}
-`]
+  styles: []
 })
 export class AutocompleteItemListComponent implements OnInit {
 
-  dataSource$: Observable<AutocompleteItem[]>;
-  totalLength$: Observable<number>;
-  isLoading$: Observable<boolean>;
+  dataGrid:RaServerDataGridModel;
 
-  displayedColumns: string[] = ['title', 'autocompleteKindTitle'];
-
-  pageSize = 10;
-  private currentPage:number = 1;
-  private sortedColumn:string = "";
-  private sortDirection:string = "";
-
-  private entityService: IEntityService<AutocompleteItem>;
-
-  constructor(entityServiceFabric: EntityServiceFabric) {
-    this.entityService = entityServiceFabric.getService("autocompleteItems");
-    this.dataSource$ = this.entityService.entities;
-    this.totalLength$ = this.entityService.totalLength;
-    this.isLoading$ = this.entityService.isLoading;
+  constructor() {
+    this.dataGrid = {
+      entitiesName: "autocompleteItems",
+      columns: [
+        { canOrder: true, id: "title", name: "Название" },
+        { canOrder: false, id: "autocompleteKindTitle", name: "Тип" },
+      ],
+      pageSize:10
+    };
   }
 
   ngOnInit() {
-    this.refreshData();
-  }
-
-  onPaginateChange(event: PageEvent) {
-    this.currentPage = event.pageIndex + 1;
-    this.pageSize = event.pageSize;
-    this.refreshData();
-  }
-
-  onSortChange(event: Sort) {
-    this.sortedColumn = event.active;
-    this.sortDirection = event.direction;
-    this.refreshData();
-  }
-
-  refreshData() {
-    const qConfig: QueryParamsConfigurator = new QueryParamsConfigurator();
-    qConfig.setCurrentPage(this.currentPage);
-    qConfig.setPageSize(this.pageSize);
-
-    if (this.sortedColumn.length>0) {
-      let isAscending = this.sortDirection === 'asc' || this.sortDirection === '';
-      qConfig.setSort(this.sortedColumn, isAscending);  
-    }
-    this.entityService.getWithQuery(qConfig.toQueryParams());
+    
   }
 
   test() {

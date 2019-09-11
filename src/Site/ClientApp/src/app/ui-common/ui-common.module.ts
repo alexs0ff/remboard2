@@ -18,6 +18,7 @@ import { RaSelectboxComponent } from './forms-composition/ra-selectbox/ra-select
 import { RaControlComponent } from './forms-composition/ra-control/ra-control.component';
 import { RaFormComponent } from './forms-composition/ra-form/ra-form.component'
 import { MatTableModule } from '@angular/material/table';
+import { RaServerdataGridComponent } from './list-composition/ra-serverdata-grid/ra-serverdata-grid.component';
 
 const commonUi = [
   MatToolbarModule,
@@ -41,11 +42,12 @@ const commonUi = [
 ];
 
 const commonUiImport = [...commonUi];
+const commonUiExport = [...commonUi, RaServerdataGridComponent];
 
 @NgModule({
-  declarations: [/*RaTextboxComponent, RaSelectboxComponent, RaControlComponent, RaControlComponent, RaFormComponent*/],
+  declarations: [RaServerdataGridComponent],
   imports: commonUiImport,
-  exports: commonUi
+  exports: commonUiExport
 })
 class UiCommonModule { }
 

@@ -1,0 +1,28 @@
+<div class="table-content">
+  
+  <mat-progress-spinner *ngIf="isLoading$ | async"
+                        color="primary" 
+                        mode="indeterminate"
+                        class="loading-table-spinner"    
+  >
+  </mat-progress-spinner>
+  
+  <div>
+    <table mat-table [dataSource]="dataSource$" matSort (matSortChange)="onSortChange($event)">
+      <ng-container *ngFor="let column of model.columns" matColumnDef="{{column.id}}">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{column.name}}</th>
+        <td mat-cell *matCellDef="let element"> {{element[column.id]}} </td>
+      </ng-container>
+      <ng-container matColumnDef="title" *ngFor>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
+        <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons [pageSize]="pageSize" [length]="totalLength$ | async" (page)="onPaginateChange($event)">></mat-paginator>
+  
+  </div>
+ 
+</div>
