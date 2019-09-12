@@ -20,7 +20,7 @@ import { RaFormComponent } from './forms-composition/ra-form/ra-form.component'
 import { MatTableModule } from '@angular/material/table';
 import { RaServerdataGridComponent } from './list-composition/ra-serverdata-grid/ra-serverdata-grid.component';
 import { RaServerDataGridModel } from './list-composition/list-composition.models';
-import { RaTextbox, RaSelectbox, RaBaseControl } from './forms-composition/forms-composition.models';
+import { RaControl, RaFormLayout, flexExpressions } from './forms-composition/forms-composition.models';
 const commonUi = [
   MatToolbarModule,
   MatIconModule,
@@ -53,4 +53,4 @@ const commonUiExport = [...commonUi, RaServerdataGridComponent, RaFormComponent]
 })
 class UiCommonModule { }
 
-export { UiCommonModule, storeMessageValidator, RaServerDataGridModel, RaTextbox, RaSelectbox, RaBaseControl}
+export { UiCommonModule, storeMessageValidator, RaServerDataGridModel, RaControl, RaFormLayout, flexExpressions}

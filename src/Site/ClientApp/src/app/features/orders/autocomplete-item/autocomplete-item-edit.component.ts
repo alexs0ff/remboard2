@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
-import { RaBaseControl, RaTextbox } from "../../../ui-common/ui-common.module";
+import { RaFormLayout, flexExpressions } from "../../../ui-common/ui-common.module";
 
 @Component({
   selector: 'autocomplete-item-edit',
@@ -10,18 +10,69 @@ import { RaBaseControl, RaTextbox } from "../../../ui-common/ui-common.module";
     <p>
       autocomplete-item id: {{id$|async}}
 
-  <ra-form [controls]="autocompliteControls"></ra-form>
+  <ra-form [layout]="autocompliteControls"></ra-form>
     </p>
   `,
   styles: []
 })
 export class AutocompleteItemEditComponent implements OnInit {
   id$: Observable<string>;
-  autocompliteControls: Array<RaBaseControl>;
+  layout: RaFormLayout;
   constructor(private route: ActivatedRoute) {
     this.id$ = route.paramMap.pipe(map(p => p.get("id")));
-    this.autocompliteControls = new Array<RaBaseControl>();
-    this.autocompliteControls.push(new RaTextbox({ key: "Title", label:"Название"}));
+    this.layout = {
+      rows: [
+        { content: { kind: 'caption', title: "Общие поля" } },
+
+        {
+          content: {
+            kind: 'controls',
+            items: [
+              {
+                flexExpression: flexExpressions.threeItemsExpressions,
+                control: {
+                  id: "title",
+                  kind: 'textbox',
+                  label: 'Название',
+                  hint: "Название пункта автодополнения",
+                  valueKind: 'string',
+                  validators: {
+                    required: true
+                  }
+                }
+              },
+              {
+                flexExpression: flexExpressions.threeItemsExpressions,
+                control: {
+                  id: "title2",
+                  kind: 'textbox',
+                  label: 'Название2',
+                  hint: "Название2 пункта автодополнения",
+                  valueKind: 'string',
+                  validators: {
+                    required: true
+                  }
+                }
+              },
+              ,
+              {
+                flexExpression: flexExpressions.threeItemsExpressions,
+                control: {
+                  id: "title3",
+                  kind: 'textbox',
+                  label: 'Название3',
+                  hint: "Название3 пункта автодополнения",
+                  valueKind: 'string',
+                  validators: {
+                    required: true
+                  }
+                }
+              }
+            ]
+          }
+        },
+      ]
+    };
 
   }
 

@@ -1,5 +1,6 @@
 import { Component, OnInit,Input } from '@angular/core';
-import { RaSelectbox } from "../forms-composition.models";
+import { RaControl } from "../forms-composition.models";
+import { FormGroup } from "@angular/forms";
 
 @Component({
   selector: 'ra-selectbox',
@@ -11,7 +12,11 @@ import { RaSelectbox } from "../forms-composition.models";
   styles: []
 })
 export class RaSelectboxComponent implements OnInit {
-  @Input() model: RaSelectbox;
+  @Input() model: RaControl;
+
+
+  @Input()
+  form: FormGroup;
   constructor() { }
 
   ngOnInit() {
