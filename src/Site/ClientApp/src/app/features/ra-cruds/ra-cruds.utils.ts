@@ -6,7 +6,7 @@ import {
 
 export class RaUtils {
   static parseHttpError(error): EntityResponse {
-
+    console.log("http error:",error);
     return { validationErrors: [], message: "untyped message" };
   }
 

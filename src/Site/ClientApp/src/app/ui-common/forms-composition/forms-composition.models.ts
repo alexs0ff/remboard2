@@ -22,10 +22,6 @@ export interface RaControl {
   hint?: string |null;
 }
 
-interface RaFormLayoutItemBase {
-  kind: 'controls' | 'divider' |'caption';
-}
-
 export interface RaFormItemFlexExpression {
   fxFlexCommonExpression: string;
   fxFlexLtmdExpression: string;
@@ -77,13 +73,13 @@ export const flexExpressions = {
     fxFlexLtsmExpression: "100%"
   },
   twoItemsExpressions: {
-    fxFlexCommonExpression: "0 1 calc(50% - 32px)",
-    fxFlexLtmdExpression: "0 1 calc(50% - 32px)",
+    fxFlexCommonExpression: "0 1 47%",
+    fxFlexLtmdExpression: "0 1 47%",
     fxFlexLtsmExpression: "100%"
   },
   threeItemsExpressions: {
-    fxFlexCommonExpression: "0 1 calc(33.3% - 32px)",
-    fxFlexLtmdExpression: "0 1 calc(50% - 32px)",
+    fxFlexCommonExpression: "0 1 31%",
+    fxFlexLtmdExpression: "0 1 47%",
     fxFlexLtsmExpression: "100%"
   }
 }

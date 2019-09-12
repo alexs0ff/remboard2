@@ -40,6 +40,7 @@ export interface IEntityService<T extends IEntityBase> {
   totalLength: Observable<number>;
   isLoading: Observable<boolean>;
   getAll();
+  getById(id: string);
   getWithQuery(queryParams: QueryParams);
   addMany(entities: T[]);
   add(entity: T);

@@ -24,7 +24,7 @@ export class RaServerdataGridComponent implements OnInit {
   private currentPage: number = 1;
   private sortedColumn: string = "";
   private sortDirection: string = "";
-  private entityService: IEntityService<AutocompleteItem>;
+  private entityService: IEntityService<any>;
 
   @Input()
   model: RaServerDataGridModel;

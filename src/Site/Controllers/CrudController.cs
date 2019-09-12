@@ -78,7 +78,7 @@ namespace Remboard.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<ActionResult<TEntityDto>> Get([FromRoute]Guid id)
+        public async Task<ActionResult<TEntityDto>> Get([FromRoute]string id)
         {
             var result = await _authorizationService.AuthorizeAsync(User, typeof(TEntity), CrudOperations.Read);
 
@@ -87,7 +87,16 @@ namespace Remboard.Controllers
                 return Forbid();
             }
 
-            var getByIdSpec = new GetByIdSpecification<TEntity>(id);
+            Guid guidId;
+
+            if (!Guid.TryParse(id,out guidId))
+            {
+                var entityName = typeof(TEntity).Name;
+                _logger.LogError("Can`t parse {id} for {entityName}",id, entityName);
+                return NotFound();
+            }
+
+            var getByIdSpec = new GetByIdSpecification<TEntity>(guidId);
             var predicate =  _descriptor.GetMandatoryPredicate();
 
             predicate.And(getByIdSpec.IsSatisfiedBy());

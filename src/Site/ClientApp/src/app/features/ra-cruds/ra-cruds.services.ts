@@ -5,7 +5,7 @@ import { EntityState, createEntityAdapter } from '@ngrx/entity';
 import { IEntityBase, CrudAdapter, IState, IEntityService, ICrudEntityConfigurator, PagedResult, QueryParams } from "./ra-cruds.models"
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { EntityActions, loadAllEntities, createEntity, updateEntity, deleteEntity, loadWithQueryEntities } from "./ra-cruds.actions";
+import { EntityActions, loadAllEntities, createEntity, updateEntity, deleteEntity, loadWithQueryEntities, loadByIdEntity } from "./ra-cruds.actions";
 import { RaUtils } from "./ra-cruds.utils";
 
 
@@ -47,23 +47,25 @@ export class CrudEntityConfigurator<T extends IEntityBase> implements ICrudEntit
 
   constructor(public singleEntityName:string) {}
 
-  public configure(featureName: string,entitiesName: string)  {
+  public configure(featureName: string, entitiesName: string) {
     this.adapter = createEntityAdapter<T>();
     this.initialState = this.adapter.getInitialState({
       selectedId: null,
       totalCount: 0,
       loading: false,
       hasError: false,
-      error:null
+      error: null
     });
 
     this.entityActions = new EntityActions<T>(entitiesName);
 
-    this.entitySelectors = new EntitySelectors<T>(featureName, entitiesName,this.adapter);
+    this.entitySelectors = new EntitySelectors<T>(featureName, entitiesName, this.adapter);
 
     this.entityReducer = createReducer(
       this.initialState,
-      on(this.entityActions.addEntity, (state, { entity }) => this.adapter.addOne(entity, state)),
+      on(this.entityActions.addEntity, (state, { entity }) => {
+        return this.adapter.addOne(entity, <IState<T>>{ ...state, loading: false });
+      }),
       on(this.entityActions.upsertEntity, (state, { entity }) => {
         return this.adapter.upsertOne(entity, <IState<T>>{ ...state, loading: false });
       }),
@@ -166,6 +168,11 @@ export class EntityService<T extends IEntityBase> implements IEntityService<T> {
     this.store.dispatch(loadWithQueryEntities({ entitiesName: this.entitiesName, queryParams: queryParams }));
   }
 
+  getById(id: string) {
+    this.store.dispatch(this.entityActions.startApiFetch());
+    this.store.dispatch(loadByIdEntity({ entitiesName: this.entitiesName, id: id}));
+  }
+
   add(entity: T) {
     this.store.dispatch(this.entityActions.startApiFetch());
     this.store.dispatch(createEntity({ entitiesName: this.entitiesName, entity:entity }));
@@ -195,7 +202,8 @@ export class EntityServiceFabric {
 
 export interface IEntityApiService{
   getAll(): Observable<PagedResult>;
-  getWithQuery(queryParams:QueryParams): Observable<PagedResult>;
+  getWithQuery(queryParams: QueryParams): Observable<PagedResult>;
+  getById<T extends IEntityBase>(id: string): Observable<T>;
   add<T extends IEntityBase>(newEntity: T): Observable<T>;
   update<T extends IEntityBase>(id: string, entity: T): Observable<T>;
   delete(id: string): Observable<any>;
@@ -211,6 +219,10 @@ class EntityApiService implements IEntityApiService {
   getWithQuery(queryParams: QueryParams): Observable<PagedResult> {
     const httpParams = RaUtils.toHttpParams(queryParams);
     return this.httpClient.get<PagedResult>("api/" + this.entitiesName, { params:httpParams });
+  }
+
+  getById<T extends IEntityBase>(id:string): Observable<T> {
+    return this.httpClient.get<T>("api/" + this.entitySingleName + "/" + id);
   }
 
   add<T extends IEntityBase>(newEntity: T): Observable<T> {

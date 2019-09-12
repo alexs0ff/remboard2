@@ -27,8 +27,9 @@ export class EntityActions<T extends IEntityBase> {
   startApiFetch = createAction('[' + this.entityName + ' Page] Start fetch from API');
 }
 
-export const loadAllEntities = createAction('Load entities from API', props<{ entitiesName: string}>());
+export const loadAllEntities = createAction('Load entities from API', props<{ entitiesName: string }>());
 export const loadWithQueryEntities = createAction('Load with query entities from API', props<{ entitiesName: string,queryParams:QueryParams}>());
+export const loadByIdEntity = createAction('Load an entity from API', props<{ entitiesName: string, id: string }>());
 export const createEntity = createAction('Create entity to API', props < { entitiesName:string,entity:IEntityBase}>());
 export const updateEntity = createAction('Update entity to API', props<{ entitiesName: string,id:string,entity:IEntityBase}>());
 export const deleteEntity = createAction('Delete entity to API', props<{ entitiesName: string,id:string}>());

@@ -16,7 +16,7 @@ export class AutocompleteItemEditComponent implements OnInit {
   constructor(private route: ActivatedRoute) {
     this.id$ = route.paramMap.pipe(map(p => p.get("id")));
     this.model = {
-      entitiesName: "autocompleteKindTitle",
+      entitiesName: "autocompleteItems",
       title: "Пункт автодополнения",
       layout: {
         rows: [

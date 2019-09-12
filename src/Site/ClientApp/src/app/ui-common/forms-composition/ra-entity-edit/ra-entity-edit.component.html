@@ -1,8 +1,11 @@
-<div fxLayout="row" fxLayoutAlign="start start" >
+<div fxLayout="row" fxLayoutAlign="start start">
   <button mat-icon-button matTooltip="navigation back" (click)="goBack()"><mat-icon>arrow_back</mat-icon></button>
   <div class="entity-title">
     <h2>{{model.title}}</h2>
   </div>
-  
 </div>
 <ra-form [layout]="layout"></ra-form>
+<div fxLayout="row" fxLayoutAlign="end center" class="manage-controls">
+  <button mat-raised-button matTooltip="Удалить" (click)="deleteItem()" color="warn"><mat-icon>remove_circle</mat-icon> Удалить</button>
+  <button mat-raised-button matTooltip="Сохранить" (click)="saveItem()" color="primary"><mat-icon>save</mat-icon> Сохранить</button>
+</div>
