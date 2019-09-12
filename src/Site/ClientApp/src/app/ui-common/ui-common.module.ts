@@ -21,6 +21,7 @@ import { MatTableModule } from '@angular/material/table';
 import { RaServerdataGridComponent } from './list-composition/ra-serverdata-grid/ra-serverdata-grid.component';
 import { RaServerDataGridModel } from './list-composition/list-composition.models';
 import { RaControl, RaFormLayout, flexExpressions } from './forms-composition/forms-composition.models';
+import { MatDividerModule } from '@angular/material/divider';
 const commonUi = [
   MatToolbarModule,
   MatIconModule,
@@ -40,7 +41,7 @@ const commonUi = [
   MatTableModule,
   CommonModule,
   MatPaginatorModule,
-
+  MatDividerModule
 ];
 
 const commonUiImport = [...commonUi];

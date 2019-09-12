@@ -10,7 +10,7 @@ import { RaFormLayout, flexExpressions } from "../../../ui-common/ui-common.modu
     <p>
       autocomplete-item id: {{id$|async}}
 
-  <ra-form [layout]="autocompliteControls"></ra-form>
+  <ra-form [layout]="layout"></ra-form>
     </p>
   `,
   styles: []
@@ -54,7 +54,6 @@ export class AutocompleteItemEditComponent implements OnInit {
                   }
                 }
               },
-              ,
               {
                 flexExpression: flexExpressions.threeItemsExpressions,
                 control: {
@@ -71,6 +70,40 @@ export class AutocompleteItemEditComponent implements OnInit {
             ]
           }
         },
+        { content: { kind: 'divider' } },
+        {
+          content: {
+            kind: 'controls',
+            items: [
+              {
+                flexExpression: flexExpressions.twoItemsExpressions,
+                control: {
+                  id: "title3",
+                  kind: 'textbox',
+                  label: 'Название3',
+                  hint: "Название4 пункта автодополнения",
+                  valueKind: 'string',
+                  validators: {
+                    required: true
+                  }
+                }
+              },
+              {
+                flexExpression: flexExpressions.twoItemsExpressions,
+                control: {
+                  id: "title4",
+                  kind: 'textbox',
+                  label: 'Название4',
+                  hint: "Название4 пункта автодополнения",
+                  valueKind: 'string',
+                  validators: {
+                    required: true
+                  }
+                }
+              },
+            ]
+          }
+        }
       ]
     };
 

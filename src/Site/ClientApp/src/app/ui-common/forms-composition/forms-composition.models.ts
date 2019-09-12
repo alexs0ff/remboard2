@@ -23,7 +23,7 @@ export interface RaControl {
 }
 
 interface RaFormLayoutItemBase {
-  kind: 'controls' | 'devider' |'caption';
+  kind: 'controls' | 'divider' |'caption';
 }
 
 export interface RaFormItemFlexExpression {
@@ -37,11 +37,39 @@ export interface RaFormLayoutItem {
   control: RaControl;
 }
 
+
+export interface RaFormLayoutItems  {
+  kind: 'controls',
+  items: RaFormLayoutItem[];
+}
+
+export interface RaFormDivider {
+  kind:'divider'
+}
+
+export interface RaFormCaption {
+  kind: 'caption',
+  title:string;
+}
+export type RaFormLayoutRowContent = RaFormLayoutItems | RaFormDivider | RaFormCaption;
+
+
+
+export interface RaFormLayoutRow {
+  content: RaFormLayoutRowContent;
+}
+
+export interface RaFormLayout {
+  rows: RaFormLayoutRow[];
+}
+
+
+
 export const flexExpressions = {
   oneItemExpressions: {
     fxFlexCommonExpression: "100%",
     fxFlexLtmdExpression: "100%",
-    fxFlexLtsmExpression:"100%"
+    fxFlexLtsmExpression: "100%"
   },
   twoItemsExpressions: {
     fxFlexCommonExpression: "0 1 calc(50% - 32px)",
@@ -53,29 +81,4 @@ export const flexExpressions = {
     fxFlexLtmdExpression: "0 1 calc(50% - 32px)",
     fxFlexLtsmExpression: "100%"
   }
-}
-
-export interface RaFormLayoutItems  {
-  kind: 'controls',
-  items: RaFormLayoutItem[];
-}
-
-export interface RaFormDevider {
-  kind:'devider'
-}
-
-export interface RaFormCaption {
-  kind: 'caption',
-  title:string;
-}
-export type RaFormLayoutRowContent = RaFormLayoutItems | RaFormDevider | RaFormCaption;
-
-
-
-export interface RaFormLayoutRow {
-  content: RaFormLayoutRowContent;
-}
-
-export interface RaFormLayout {
-  rows: RaFormLayoutRow[];
 }
