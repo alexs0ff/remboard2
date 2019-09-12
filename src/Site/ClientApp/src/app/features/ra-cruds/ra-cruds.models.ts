@@ -19,7 +19,7 @@ export interface IEntityBase {
 }
 
 export interface IState<T extends IEntityBase> extends EntityState<T> {
-  selectedId: number | null;
+  selectedId: string | null;
   totalCount: number;
   loading: boolean;
   error: EntityResponse | null;
@@ -38,6 +38,7 @@ export interface QueryParams {
 export interface IEntityService<T extends IEntityBase> {
   entities: Observable<T[]>;
   totalLength: Observable<number>;
+  currentEntity: Observable<T>;
   isLoading: Observable<boolean>;
   getAll();
   getById(id: string);

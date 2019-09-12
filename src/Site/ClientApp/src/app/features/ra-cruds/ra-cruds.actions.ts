@@ -12,6 +12,7 @@ export class EntityActions<T extends IEntityBase> {
   addEntity = createAction('[' + this.entityName + ' Page] Add Entity', props<{ entity: T }>());
 
   upsertEntity = createAction('[' + this.entityName + ' Page] Upsert Entity', props<{ entity: T }>());
+  upsertEntityAndSetCurrentId = createAction('[' + this.entityName + ' Page] Upsert Entity and set current id', props<{ entity: T }>());
   addEntities = createAction('[' + this.entityName + ' Page] Add Entities', props<{ entities: T[] }>());
   upsertEntities = createAction('[' + this.entityName + ' Page] Upsert Entities', props<{ entities: T[] }>());
   updateEntity = createAction('[' + this.entityName + ' Page] Update Entity', props<{ entity: Update<T> }>());

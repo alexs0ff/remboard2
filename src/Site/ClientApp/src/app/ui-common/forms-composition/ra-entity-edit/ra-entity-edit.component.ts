@@ -25,9 +25,16 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.entityService = this.entityServiceFabric.getService(this.model.entitiesName);
 
+    this.entityService.currentEntity.pipe(takeUntil(this.lifeTimeObject)).subscribe(entity => {
+      console.log("loaded form entity",entity);
+    });
+
     this.route.paramMap.pipe(takeUntil(this.lifeTimeObject), map(p => p.get("id"))).subscribe(currentId => {
       this.entityService.getById(currentId);
     });
+
+    
+
     this.layout = this.model.layout;
   }
 

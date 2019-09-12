@@ -11,6 +11,7 @@ import { RaUtils } from "./ra-cruds.utils";
 
 class EntitySelectors<T extends IEntityBase> {
   selectAll: MemoizedSelector<any, T[]>;
+  currentEntity: MemoizedSelector<any, T>;
   totalCount: MemoizedSelector<any, number>;
   isLoading: MemoizedSelector<any, boolean>;
   /*private selectIds: (state: IState<T>) => string[] | number[];
@@ -26,10 +27,16 @@ class EntitySelectors<T extends IEntityBase> {
     const getModuleStateAny = (state: any) => getAppState(state)[entitiesName];
     const getModuleState = (state: any) => <IState<T>>getModuleStateAny(state);
 
+    const getSelectedEntityId = (state: IState<T>) => state.selectedId;
+
+    const getModuleEntities = (state:any)=>selectEntities(getModuleState(state));
+    const getModuleSelectedEntityId = (state: any) => getSelectedEntityId(getModuleState(state));
 
     this.selectAll = createSelector(getModuleState, selectAll);
     this.totalCount = createSelector(getModuleState, (i)=>i.totalCount);
-    this.isLoading = createSelector(getModuleState, (i)=>i.loading);
+    this.isLoading = createSelector(getModuleState, (i) => i.loading);
+
+    this.currentEntity = createSelector(getModuleEntities,getModuleSelectedEntityId,(entities, currentId) => entities[currentId]);
   }
 
 
@@ -68,6 +75,9 @@ export class CrudEntityConfigurator<T extends IEntityBase> implements ICrudEntit
       }),
       on(this.entityActions.upsertEntity, (state, { entity }) => {
         return this.adapter.upsertOne(entity, <IState<T>>{ ...state, loading: false });
+      }),
+      on(this.entityActions.upsertEntityAndSetCurrentId, (state, { entity }) => {
+        return this.adapter.upsertOne(entity, <IState<T>>{ ...state, loading: false, selectedId:entity.id});
       }),
       on(this.entityActions.addEntities, (state, { entities }) => {
         return this.adapter.addMany(entities, state);
@@ -145,13 +155,16 @@ export class EntityService<T extends IEntityBase> implements IEntityService<T> {
 
   totalLength: Observable<number>;
 
-  isLoading:Observable<boolean>;
+  isLoading: Observable<boolean>;
+
+  currentEntity:Observable<T>;
 
   constructor(private configurator: CrudEntityConfigurator<T>, private store: Store<{}>, private entitiesName:string) {
     this.entityActions = configurator.entityActions;
     this.entities = store.pipe(select(configurator.entitySelectors.selectAll));
     this.totalLength = store.pipe(select(configurator.entitySelectors.totalCount));
     this.isLoading = store.pipe(select(configurator.entitySelectors.isLoading));
+    this.currentEntity = store.pipe(select(configurator.entitySelectors.currentEntity));
   }
 
   addMany(entities: T[]) {

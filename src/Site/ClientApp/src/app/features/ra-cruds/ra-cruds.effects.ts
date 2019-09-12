@@ -64,7 +64,7 @@ export class RaCrudsEntityEffects {
   loadByIdEntity$ = createEffect(() => this.actions$.pipe(
     ofType(loadByIdEntity),
     mergeMap((e) => this.getApiService(e.entitiesName).getById(e.id).pipe(
-      map(result => this.getEntityActions(e.entitiesName).upsertEntity({entity:result})),
+      map(result => this.getEntityActions(e.entitiesName).upsertEntityAndSetCurrentId({entity:result})),
       catchError((error) => {
         const parsed = RaUtils.parseHttpError(error);
         return of(this.getEntityActions(e.entitiesName).setApiError({ error: parsed }));
