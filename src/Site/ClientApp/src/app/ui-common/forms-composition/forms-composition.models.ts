@@ -63,6 +63,11 @@ export interface RaFormLayout {
   rows: RaFormLayoutRow[];
 }
 
+export interface RaEntityEdit {
+  entitiesName:string;
+  title: string;
+  layout: RaFormLayout;
+}
 
 
 export const flexExpressions = {
