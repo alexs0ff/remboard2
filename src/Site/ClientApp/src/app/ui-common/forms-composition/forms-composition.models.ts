@@ -1,5 +1,6 @@
-type ControlKind = 'textbox' | 'selectbox';
+import { Dictionary } from "../../app.models";
 type ControlValueType = 'number' | 'string';
+
 
 export interface RaValidators {
   required: boolean;
@@ -7,15 +8,28 @@ export interface RaValidators {
   minLength?: number | null;
 }
 
-export interface RaControl {
-  kind: ControlKind;
+export interface RaTextBox {
+  kind: 'textbox';
   valueKind: ControlValueType;
   id: string;
   label: string;
   validators: RaValidators;
   value?: any | null;
-  hint?: string |null;
+  hint?: string | null;
 }
+
+export interface RaSelectBox {
+  kind: 'selectbox';
+  valueKind: ControlValueType;
+  id: string;
+  label: string;
+  validators: { required: boolean };
+  items: Dictionary<string>;
+  value?: any | null;
+  hint?: string | null;
+}
+
+export type RaControls = RaTextBox | RaSelectBox;
 
 export interface RaFormItemFlexExpression {
   fxFlexCommonExpression: string;
@@ -25,7 +39,7 @@ export interface RaFormItemFlexExpression {
 
 export interface RaFormLayoutItem {
   flexExpression: RaFormItemFlexExpression;
-  control: RaControl;
+  control: RaControls;
 }
 
 export interface RaFormLayoutHiddenItems {

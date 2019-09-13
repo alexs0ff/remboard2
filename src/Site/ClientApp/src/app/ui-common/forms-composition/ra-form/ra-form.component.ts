@@ -1,5 +1,5 @@
 import { Component, OnInit,Input } from '@angular/core';
-import { RaControl, RaFormLayout } from "../forms-composition.models";
+import { RaControls, RaFormLayout } from "../forms-composition.models";
 import { FormsCompositionService } from "../forms-composition-service";
 import { FormGroup } from '@angular/forms';
 

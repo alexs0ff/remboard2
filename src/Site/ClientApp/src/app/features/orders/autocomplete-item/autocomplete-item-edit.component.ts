@@ -20,7 +20,7 @@ export class AutocompleteItemEditComponent implements OnInit {
       title: "Пункт автодополнения",
       layout: {
         rows: [
-          { content: { kind: 'hidden', items: ['id', 'autocompleteKindId','autocompleteKindTitle']  } },
+          { content: { kind: 'hidden', items: ['id','autocompleteKindTitle']  } },
           {
             content: {
               kind: 'controls',
@@ -35,6 +35,22 @@ export class AutocompleteItemEditComponent implements OnInit {
                     valueKind: 'string',
                     validators: {
                       required: true
+                    }
+                  }
+                },
+                {
+                  flexExpression: flexExpressions.twoItemsExpressions,
+                  control: {
+                    kind: 'selectbox',
+                    id: 'autocompleteKindId',
+                    label: 'Тип автодополнения',
+                    hint: 'Тип автодополнения',
+                    validators: { required: true },
+                    valueKind: 'number',
+                    items: {
+                      1: "Бренд",
+                      2: "Комплектация",
+                      3: "Внешний вид"
                     }
                   }
                 }

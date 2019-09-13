@@ -20,11 +20,14 @@ import { RaFormComponent } from './forms-composition/ra-form/ra-form.component'
 import { MatTableModule } from '@angular/material/table';
 import { RaServerdataGridComponent } from './list-composition/ra-serverdata-grid/ra-serverdata-grid.component';
 import { RaServerDataGridModel } from './list-composition/list-composition.models';
-import { RaControl, RaFormLayout, flexExpressions, RaEntityEdit} from './forms-composition/forms-composition.models';
+import { RaFormLayout, flexExpressions, RaEntityEdit} from './forms-composition/forms-composition.models';
 import { MatDividerModule } from '@angular/material/divider';
 import { RaEntityEditComponent } from './forms-composition/ra-entity-edit/ra-entity-edit.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsCompositionService } from "./forms-composition/forms-composition-service";
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+
+
 const commonUi = [
   MatToolbarModule,
   MatIconModule,
@@ -45,7 +48,8 @@ const commonUi = [
   CommonModule,
   MatPaginatorModule,
   MatDividerModule,
-  MatTooltipModule
+  MatTooltipModule,
+  MatAutocompleteModule
 ];
 
 const commonUiImport = [...commonUi];
@@ -59,4 +63,4 @@ const commonUiExport = [...commonUi, RaServerdataGridComponent, RaFormComponent,
 })
 class UiCommonModule { }
 
-export { UiCommonModule, storeMessageValidator, RaServerDataGridModel, RaControl, RaFormLayout, flexExpressions, RaEntityEdit}
+export { UiCommonModule, storeMessageValidator, RaServerDataGridModel, RaFormLayout, flexExpressions, RaEntityEdit}

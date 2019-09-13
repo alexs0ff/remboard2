@@ -53,7 +53,8 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
     this.location.back();
   }
   saveItem() {
-
+    console.log("saved entity",this.form.value);
+    console.log("errors entity",this.form.controls);
   }
 
   deleteItem() {

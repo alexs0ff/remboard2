@@ -1,5 +1,5 @@
 import { Component, OnInit,Input } from '@angular/core';
-import { RaControl } from "../forms-composition.models";
+import { RaControls } from "../forms-composition.models";
 import { FormGroup } from "@angular/forms";
 
 @Component({
@@ -19,7 +19,7 @@ import { FormGroup } from "@angular/forms";
 })
 export class RaTextboxComponent implements OnInit {
 
-  @Input() model: RaControl;
+  @Input() model: RaControls;
 
   @Input()
   form: FormGroup;
