@@ -29,7 +29,18 @@ export interface RaSelectBox {
   hint?: string | null;
 }
 
-export type RaControls = RaTextBox | RaSelectBox;
+export interface RaAutocompleteBox {
+  kind: 'autocompletebox';
+  valueKind: ControlValueType;
+  id: string;
+  label: string;
+  validators: { required: boolean };
+  items: Dictionary<string>;
+  value?: any | null;
+  hint?: string | null;
+}
+
+export type RaControls = RaTextBox | RaSelectBox | RaAutocompleteBox;
 
 export interface RaFormItemFlexExpression {
   fxFlexCommonExpression: string;

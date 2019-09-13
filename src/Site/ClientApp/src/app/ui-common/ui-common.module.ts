@@ -26,6 +26,7 @@ import { RaEntityEditComponent } from './forms-composition/ra-entity-edit/ra-ent
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsCompositionService } from "./forms-composition/forms-composition-service";
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { RaAutocompleteboxComponent } from "./forms-composition/ra-autocompletebox/ra-autocompletebox.component";
 
 
 const commonUi = [
@@ -56,7 +57,7 @@ const commonUiImport = [...commonUi];
 const commonUiExport = [...commonUi, RaServerdataGridComponent, RaFormComponent, RaEntityEditComponent];
 
 @NgModule({
-  declarations: [RaServerdataGridComponent, RaFormComponent, RaControlComponent, RaSelectboxComponent, RaTextboxComponent, RaEntityEditComponent],
+  declarations: [RaServerdataGridComponent, RaFormComponent, RaControlComponent, RaAutocompleteboxComponent, RaSelectboxComponent,RaTextboxComponent, RaEntityEditComponent],
   imports: commonUiImport,
   exports: commonUiExport,
   providers: [FormsCompositionService]
