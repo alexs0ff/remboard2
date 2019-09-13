@@ -1,8 +1,3 @@
-export enum RaControlTypes {
-  Textbox = "TEXTBOX",
-  Selectbox = "SELECTBOX"
-}
-
 type ControlKind = 'textbox' | 'selectbox';
 type ControlValueType = 'number' | 'string';
 
@@ -33,6 +28,10 @@ export interface RaFormLayoutItem {
   control: RaControl;
 }
 
+export interface RaFormLayoutHiddenItems {
+  kind: 'hidden',
+  items: string[];
+}
 
 export interface RaFormLayoutItems  {
   kind: 'controls',
@@ -47,7 +46,7 @@ export interface RaFormCaption {
   kind: 'caption',
   title:string;
 }
-export type RaFormLayoutRowContent = RaFormLayoutItems | RaFormDivider | RaFormCaption;
+export type RaFormLayoutRowContent = RaFormLayoutItems | RaFormDivider | RaFormCaption | RaFormLayoutHiddenItems;
 
 
 

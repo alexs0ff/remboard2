@@ -20,13 +20,13 @@ export class AutocompleteItemEditComponent implements OnInit {
       title: "Пункт автодополнения",
       layout: {
         rows: [
-          { content: { kind: 'caption', title: "Общие поля" } },
+          { content: { kind: 'hidden', items: ['id', 'autocompleteKindId','autocompleteKindTitle']  } },
           {
             content: {
               kind: 'controls',
               items: [
                 {
-                  flexExpression: flexExpressions.threeItemsExpressions,
+                  flexExpression: flexExpressions.twoItemsExpressions,
                   control: {
                     id: "title",
                     kind: 'textbox',
@@ -37,67 +37,7 @@ export class AutocompleteItemEditComponent implements OnInit {
                       required: true
                     }
                   }
-                },
-                {
-                  flexExpression: flexExpressions.threeItemsExpressions,
-                  control: {
-                    id: "title2",
-                    kind: 'textbox',
-                    label: 'Название2',
-                    hint: "Название2 пункта автодополнения",
-                    valueKind: 'string',
-                    validators: {
-                      required: true
-                    }
-                  }
-                },
-                {
-                  flexExpression: flexExpressions.threeItemsExpressions,
-                  control: {
-                    id: "title3",
-                    kind: 'textbox',
-                    label: 'Название3',
-                    hint: "Название3 пункта автодополнения",
-                    valueKind: 'string',
-                    validators: {
-                      required: true
-                    }
-                  }
                 }
-              ]
-            }
-          },
-          { content: { kind: 'divider' } },
-          {
-            content: {
-              kind: 'controls',
-              items: [
-                {
-                  flexExpression: flexExpressions.twoItemsExpressions,
-                  control: {
-                    id: "title3",
-                    kind: 'textbox',
-                    label: 'Название3',
-                    hint: "Название4 пункта автодополнения",
-                    valueKind: 'string',
-                    validators: {
-                      required: true
-                    }
-                  }
-                },
-                {
-                  flexExpression: flexExpressions.twoItemsExpressions,
-                  control: {
-                    id: "title4",
-                    kind: 'textbox',
-                    label: 'Название4',
-                    hint: "Название4 пункта автодополнения",
-                    valueKind: 'string',
-                    validators: {
-                      required: true
-                    }
-                  }
-                },
               ]
             }
           }

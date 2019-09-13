@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators, ValidatorFn } from '@angular/forms';
-import { RaControl, RaFormLayout, RaFormLayoutRowContent, RaFormLayoutItems } from "./forms-composition.models";
+import { RaControl, RaFormLayout, RaFormLayoutRowContent, RaFormLayoutItems, RaFormLayoutHiddenItems } from "./forms-composition.models";
 
 
 @Injectable()
@@ -14,6 +14,12 @@ export class FormsCompositionService  {
       if (this.isLayoutItems(row.content)) {
         row.content.items.forEach(item => {
           group[item.control.id] = this.createFormControl(item.control);  
+        });
+      }
+
+      if (this.isHiddenItems(row.content)) {
+        row.content.items.forEach(hitem => {
+          group[hitem] = new FormControl('');
         });
       }
       
@@ -43,5 +49,9 @@ export class FormsCompositionService  {
 
   private isLayoutItems(content: RaFormLayoutRowContent): content is RaFormLayoutItems {
     return content.kind === "controls";
+  }
+
+  private isHiddenItems(content: RaFormLayoutRowContent): content is RaFormLayoutHiddenItems {
+    return content.kind === "hidden";
   }
 }

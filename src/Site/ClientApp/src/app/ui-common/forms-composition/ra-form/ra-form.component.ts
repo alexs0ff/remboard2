@@ -6,12 +6,14 @@ import { FormGroup } from '@angular/forms';
 @Component({
   selector: 'ra-form',
   template: `
-<form (ngSubmit)="onSubmit()" [formGroup]="form">
-
+<form [formGroup]="form">
   <div *ngFor="let row of layout.rows">
     <div [ngSwitch]="row.content.kind">  
       <h3 *ngSwitchCase="'caption'" class="ra-fields-caption">{{row.content.title}}</h3>
       <mat-divider *ngSwitchCase="'divider'"></mat-divider>
+      <ng-template *ngSwitchCase="'hidden'">
+          <input type="hidden" *ngFor="let hitem of row.content.items" [formControlName]="hitem"/>
+      </ng-template>
       <div *ngSwitchCase="'controls'"
           fxLayout="row wrap" 
           fxLayout.lt-sm="column" 
@@ -30,16 +32,16 @@ import { FormGroup } from '@angular/forms';
 </form>
   `,
   styles: [],
-  providers: [FormsCompositionService]
+  providers: []
 })
 export class RaFormComponent implements OnInit {
   @Input() layout: RaFormLayout;
+
+  @Input()
   form: FormGroup;
-  constructor(private service: FormsCompositionService) { }
+  constructor() { }
   ngOnInit() {
-    this.form = this.service.toFormGroup(this.layout);
-    console.log("form",this.form);
-    console.log("layout", this.layout);
+    
   }
 
   onSubmit() {

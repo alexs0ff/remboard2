@@ -24,6 +24,7 @@ import { RaControl, RaFormLayout, flexExpressions, RaEntityEdit} from './forms-c
 import { MatDividerModule } from '@angular/material/divider';
 import { RaEntityEditComponent } from './forms-composition/ra-entity-edit/ra-entity-edit.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { FormsCompositionService } from "./forms-composition/forms-composition-service";
 const commonUi = [
   MatToolbarModule,
   MatIconModule,
@@ -53,7 +54,8 @@ const commonUiExport = [...commonUi, RaServerdataGridComponent, RaFormComponent,
 @NgModule({
   declarations: [RaServerdataGridComponent, RaFormComponent, RaControlComponent, RaSelectboxComponent, RaTextboxComponent, RaEntityEditComponent],
   imports: commonUiImport,
-  exports: commonUiExport
+  exports: commonUiExport,
+  providers: [FormsCompositionService]
 })
 class UiCommonModule { }
 

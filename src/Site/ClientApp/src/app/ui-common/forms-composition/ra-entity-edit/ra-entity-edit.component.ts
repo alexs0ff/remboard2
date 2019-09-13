@@ -5,6 +5,8 @@ import { takeUntil, map } from "rxjs/operators";
 import { ActivatedRoute } from '@angular/router';
 import { RaEntityEdit, RaFormLayout } from "../forms-composition.models";
 import { EntityServiceFabric, IEntityService } from "../../../features/ra-cruds/ra-cruds.module";
+import { FormsCompositionService } from "../forms-composition-service";
+import { FormGroup } from "@angular/forms";
 
 @Component({
   selector: 'ra-entity-edit',
@@ -16,26 +18,31 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
   private lifeTimeObject: Subject<boolean> = new Subject<boolean>();
 
   @Input() model: RaEntityEdit;
+
   layout: RaFormLayout;
 
+  form: FormGroup;
+
   private entityService: IEntityService<any>;
-  constructor(private location: Location, private route: ActivatedRoute, private entityServiceFabric: EntityServiceFabric) {
+  constructor(private location: Location, private route: ActivatedRoute, private entityServiceFabric: EntityServiceFabric, private compositionService: FormsCompositionService) {
   }
 
   ngOnInit() {
     this.entityService = this.entityServiceFabric.getService(this.model.entitiesName);
 
+    this.layout = this.model.layout;
+    this.form = this.compositionService.toFormGroup(this.layout);
+
     this.entityService.currentEntity.pipe(takeUntil(this.lifeTimeObject)).subscribe(entity => {
-      console.log("loaded form entity",entity);
+      if (entity) {
+        this.form.setValue(entity);
+      }
     });
 
     this.route.paramMap.pipe(takeUntil(this.lifeTimeObject), map(p => p.get("id"))).subscribe(currentId => {
       this.entityService.getById(currentId);
     });
 
-    
-
-    this.layout = this.model.layout;
   }
 
   ngOnDestroy(): void {
