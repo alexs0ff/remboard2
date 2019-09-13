@@ -1,5 +1,5 @@
 import { Dictionary } from "../../app.models";
-type ControlValueType = 'number' | 'string';
+export type ControlValueType = 'number' | 'string';
 
 
 export interface RaValidators {
@@ -18,13 +18,29 @@ export interface RaTextBox {
   hint?: string | null;
 }
 
+
+export interface RaSelectBoxRemoteSource {
+  kind: 'remote',
+  entitiesName: string;
+  displayColumns:Array<string>;
+  keyColumn: string;
+  maItems?: number;
+}
+
+export interface RaSelectBoxItemsSource {
+  kind: 'items',
+  items: Dictionary<string>;
+}
+
+export type RaSelectBoxSources = RaSelectBoxItemsSource | RaSelectBoxRemoteSource;
+
 export interface RaSelectBox {
   kind: 'selectbox';
   valueKind: ControlValueType;
   id: string;
   label: string;
   validators: { required: boolean };
-  items: Dictionary<string>;
+  source: RaSelectBoxSources;
   value?: any | null;
   hint?: string | null;
 }

@@ -1,19 +1,28 @@
 import { Component, OnInit,Input,OnDestroy } from '@angular/core';
-import { RaSelectBox } from "../forms-composition.models";
+import { RaSelectBox, RaSelectBoxSources, RaSelectBoxItemsSource } from "../forms-composition.models";
 import { FormGroup } from "@angular/forms";
 import { Observable, Subject } from 'rxjs';
 import { map, startWith,takeUntil } from 'rxjs/operators';
 import { KeyValue } from "../../../app.models";
 import { FormControl } from '@angular/forms';
 import { DictionaryUtils } from "../../../app.utils";
-import { RedirectedErrorStateMatcher } from "../forms-composition-service";
+import { RedirectedErrorStateMatcher, TypedItemsUtils } from "../forms-composition-service";
 
 @Component({
   selector: 'ra-selectbox',
   template: `
 <div [formGroup]="form">
   <mat-form-field class="ra-mat-field">
-    
+    <mat-label>{{model.label}}</mat-label>
+    <mat-select [formControlName]="model.id">
+<div class="mat-filter">
+      <input matInput type="text" [formControl]="searchControl" placeholder="Поиск…">
+</div>
+      <mat-option>--</mat-option>
+      <mat-option *ngFor="let option of filteredOptions | async" [value]="option.key">
+        {{option.value}}
+      </mat-option>
+    </mat-select>
     <mat-hint>{{model.hint}}</mat-hint>
     <mat-error>
       Error text
@@ -21,14 +30,27 @@ import { RedirectedErrorStateMatcher } from "../forms-composition-service";
   </mat-form-field>
 </div>
   `,
-  styles: []
+  styles: [`
+.mat-filter {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  font-size: inherit;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 16px;
+  box-sizing: border-box;
+  border-bottom: 1px solid grey;
+}
+`]
 })
 export class RaSelectboxComponent implements OnInit, OnDestroy {
 
   private lifeTimeObject: Subject<boolean> = new Subject<boolean>();
 
   @Input() model: RaSelectBox;
-  myControl = new FormControl();
+  searchControl = new FormControl();
 
   @Input()
   form: FormGroup;
@@ -36,19 +58,16 @@ export class RaSelectboxComponent implements OnInit, OnDestroy {
 
   filteredOptions: Observable<KeyValue<string>[]>;
 
-  matcher: RedirectedErrorStateMatcher;
-
   constructor() { }
 
   ngOnInit() {
 
-    this.filteredOptions = this.myControl.valueChanges
+    this.filteredOptions = this.searchControl.valueChanges
       .pipe(
         startWith(''),
         map(value => this.filter(value))
     );
 
-    this.matcher = new RedirectedErrorStateMatcher(this.form.controls[this.model.id]);
   }
 
   ngOnDestroy() {
@@ -58,14 +77,20 @@ export class RaSelectboxComponent implements OnInit, OnDestroy {
 
   private filter(value: string): KeyValue<string>[] {
     const filterValue = value.toLowerCase();
-    return DictionaryUtils.toArray(this.model.items).filter(option => option.value.toLowerCase().includes(filterValue));
+    let array = [];
+    if (this.isItemsSource(this.model.source)) {
+      array = DictionaryUtils.toArray(this.model.source.items)
+        .filter(option => option.value.toLowerCase().includes(filterValue));
+
+      TypedItemsUtils.changeKeyTypeInArray(array, this.model.valueKind);
+    }
+    
+
+    return array;
   }
 
-  onBlur() {
-    //const currentValue = this.form.controls[this.model.id].value;
-    //if (currentValue) {
-    //  const currentTitle = this.model.items[currentValue];
-    //  this.myControl.setValue(currentTitle);
-    //}
+  isItemsSource(source: RaSelectBoxSources): source is RaSelectBoxItemsSource {
+    return source.kind === "items";
   }
+
 }

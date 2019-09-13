@@ -47,10 +47,12 @@ export class AutocompleteItemEditComponent implements OnInit {
                     hint: 'Тип автодополнения',
                     validators: { required: true },
                     valueKind: 'number',
-                    items: {
-                      1: "Бренд",
-                      2: "Комплектация",
-                      3: "Внешний вид"
+                    source: {
+                      kind: 'items', items: {
+                        1: "Бренд",
+                        2: "Комплектация",
+                        3: "Внешний вид"
+                      }
                     }
                   }
                 }

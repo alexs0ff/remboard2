@@ -20,7 +20,7 @@ import { RedirectedErrorStateMatcher } from "../forms-composition-service";
       <mat-icon>close</mat-icon>
     </button>
     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onOptionSelected($event)">
-      <mat-option *ngFor="let option of filteredOptions" [value]="option.value" [id]="option.key">
+      <mat-option *ngFor="let option of filteredOptions | async" [value]="option.value" [id]="option.key">
         {{option.value}}
       </mat-option>
     </mat-autocomplete>

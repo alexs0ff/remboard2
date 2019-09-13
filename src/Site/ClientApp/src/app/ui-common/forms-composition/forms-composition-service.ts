@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators, ValidatorFn, FormGroupDirective, NgForm, AbstractControl  } from '@angular/forms';
-import { RaControls, RaFormLayout, RaFormLayoutRowContent, RaFormLayoutItems, RaFormLayoutHiddenItems, RaTextBox } from "./forms-composition.models";
+import { RaControls, RaFormLayout, RaFormLayoutRowContent, RaFormLayoutItems, RaFormLayoutHiddenItems, RaTextBox, ControlValueType } from "./forms-composition.models";
 import { ErrorStateMatcher } from '@angular/material/core';
+import { KeyValue } from "../../app.models";
 
 
 @Injectable()
@@ -68,5 +69,16 @@ export class RedirectedErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const isSubmitted = form && form.submitted;
     return !!(this.parentControl && this.parentControl.invalid && (control.dirty || control.touched || isSubmitted));
+  }
+}
+
+export class TypedItemsUtils {
+  static changeKeyTypeInArray(array: KeyValue<any>[], controlValueType: ControlValueType) {
+    if (controlValueType === "string") {
+      return;
+    }
+    for (var i = 0; i < array.length; i++) {
+      array[i].key = parseInt(<string>array[i].key, 10);
+    }
   }
 }

@@ -27,6 +27,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsCompositionService } from "./forms-composition/forms-composition-service";
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { RaAutocompleteboxComponent } from "./forms-composition/ra-autocompletebox/ra-autocompletebox.component";
+import { MatSelectModule } from '@angular/material/select';
 
 
 const commonUi = [
@@ -50,7 +51,8 @@ const commonUi = [
   MatPaginatorModule,
   MatDividerModule,
   MatTooltipModule,
-  MatAutocompleteModule
+  MatAutocompleteModule,
+  MatSelectModule
 ];
 
 const commonUiImport = [...commonUi];
