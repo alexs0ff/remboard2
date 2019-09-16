@@ -48,11 +48,11 @@ export class AutocompleteItemEditComponent implements OnInit {
                     validators: { required: true },
                     valueKind: 'number',
                     source: {
-                      kind: 'items', items: {
-                        1: "Бренд",
-                        2: "Комплектация",
-                        3: "Внешний вид"
-                      }
+                      kind: 'items', items: [
+                        { key: 1, value: "Бренд"} ,
+                        { key: 2, value: "Комплектация"} ,
+                        { key: 3, value: "Внешний вид"} 
+                      ]
                     }
                   }
                 }

@@ -1,11 +1,12 @@
 import { NgModule, ModuleWithProviders,Type } from '@angular/core';
 import { StoreModule } from "@ngrx/store";
 import { ActionReducerMap, } from '@ngrx/store';
-import { CrudsEntityMetadata, IEntityBase as IEntityBase1 } from "./ra-cruds.models";
+import { CrudsEntityMetadata, QueryParams} from "./ra-cruds.models";
+import { QueryParamsConfigurator} from "./ra-cruds.utils";
 import { ConfiguratorRegistry, EntityServiceFabric, CrudEntityConfigurator, EntityServiceApiFactory } from "./ra-cruds.services";
-import { IEntityBase, IEntityService, ICrudEntityConfigurator, } from "./ra-cruds.models"
+import { IEntityBase, IEntityService, ICrudEntityConfigurator, PagedResult } from "./ra-cruds.models"
 import { EffectsModule } from '@ngrx/effects';
-import { RaCrudsEntityEffects, RaCrudsEntityEffects2 } from "./ra-cruds.effects";
+import { RaCrudsEntityEffects  } from "./ra-cruds.effects";
 
 
 interface IFeatureState {
@@ -43,4 +44,4 @@ class RaCrudsModule {
   }
 }
 
-export { RaCrudsModule, CrudsEntityMetadata, IEntityBase, IEntityService, CrudEntityConfigurator, EntityServiceFabric}
+export { RaCrudsModule, CrudsEntityMetadata, IEntityBase, IEntityService, CrudEntityConfigurator, EntityServiceFabric, EntityServiceApiFactory, QueryParams, QueryParamsConfigurator, PagedResult}

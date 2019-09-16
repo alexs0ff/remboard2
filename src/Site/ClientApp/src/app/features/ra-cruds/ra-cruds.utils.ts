@@ -32,10 +32,38 @@ export class QueryParamsConfigurator {
     return this;
   }
 
-  setSort(column: string, isAscending:boolean = true) {
+  setSort(column: string, isAscending: boolean = true): QueryParamsConfigurator {
     this.parameters["orderBy"] = column;
     this.parameters["orderKind"] = isAscending?"asc":"desc";
     return this;
+  }
+
+  andContains(column: string, value: string): QueryParamsConfigurator {
+    this.addFilter(column, value, "contains", "and");
+    return this;
+  }
+
+  orContains(column: string, value: string): QueryParamsConfigurator {
+    this.addFilter(column, value, "contains", "or");
+    return this;
+  }
+
+  andEquals(column: string, value: string): QueryParamsConfigurator {
+    this.addFilter(column, value, "equals", "and");
+    return this;
+  }
+
+  orEquals(column: string, value: string): QueryParamsConfigurator {
+    this.addFilter(column, value, "equals", "or");
+    return this;
+  }
+
+  private addFilter(column: string, columnValue: string, operator: string, logicalOperation: string) {
+    this.parameters["filterColumnName"] = column;
+    this.parameters["filterColumn"+column+"Value"] = columnValue;
+    this.parameters["filterColumn" + column + "Operator"] = operator;
+    this.parameters["filterColumn" + column + "Logic"] = logicalOperation;
+
   }
 
   toQueryParams(): QueryParams {

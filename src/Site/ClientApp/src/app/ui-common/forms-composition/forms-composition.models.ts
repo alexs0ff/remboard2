@@ -1,4 +1,4 @@
-import { Dictionary } from "../../app.models";
+import { Dictionary, KeyValue } from "../../app.models";
 export type ControlValueType = 'number' | 'string';
 
 
@@ -24,12 +24,13 @@ export interface RaSelectBoxRemoteSource {
   entitiesName: string;
   displayColumns:Array<string>;
   keyColumn: string;
-  maItems?: number;
+  clientFilter:boolean;
+  maxItems?: number;
 }
 
 export interface RaSelectBoxItemsSource {
   kind: 'items',
-  items: Dictionary<string>;
+  items: Array<KeyValue<string>>;
 }
 
 export type RaSelectBoxSources = RaSelectBoxItemsSource | RaSelectBoxRemoteSource;

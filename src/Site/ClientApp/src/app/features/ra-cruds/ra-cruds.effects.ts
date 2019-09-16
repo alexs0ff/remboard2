@@ -4,7 +4,7 @@ import { map, mergeMap, catchError, tap  } from 'rxjs/operators';
 import { Actions, Effect, ofType, createEffect } from '@ngrx/effects';
 import { loadAllEntities, EntityActions, createEntity, updateEntity, deleteEntity, loadWithQueryEntities, loadByIdEntity } from "./ra-cruds.actions";
 import { EMPTY,of} from 'rxjs';
-import { EntityServiceApiFactory, IEntityApiService } from "./ra-cruds.services";
+import { EntityServiceApiFactory, IEntityApiService, ConfiguratorRegistry } from "./ra-cruds.services";
 import { RaUtils } from "./ra-cruds.utils";
 import { Update} from '@ngrx/entity';
 
@@ -81,10 +81,10 @@ export class RaCrudsEntityEffects {
   }
 
   private getEntityActions(entitiesName: string): EntityActions<any> {
-    return this.entityServiceApiFactory.getEntityActions(entitiesName);
+    return this.configuratorRegistry.getEntityActions(entitiesName);
   }
 
-  constructor(private actions$: Actions, private entityServiceApiFactory: EntityServiceApiFactory) {
+  constructor(private actions$: Actions, private entityServiceApiFactory: EntityServiceApiFactory, private configuratorRegistry: ConfiguratorRegistry) {
     
   }
 

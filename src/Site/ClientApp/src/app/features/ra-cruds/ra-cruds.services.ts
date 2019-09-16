@@ -145,6 +145,11 @@ export class ConfiguratorRegistry {
     return this.configurators[entitiesName];
   }
 
+  getEntityActions(entitiesName: string): EntityActions<any> {
+    const configurator = <CrudEntityConfigurator<any>>this.getCrudEntityConfigurator(entitiesName);
+
+    return configurator.entityActions;
+  }
 }
 
 
@@ -255,15 +260,13 @@ class EntityApiService implements IEntityApiService {
 export class EntityServiceApiFactory{
   constructor(private registry: ConfiguratorRegistry, private httpClient: HttpClient) { }
 
-  getApiService(entitiesName: string): IEntityApiService {
-    const configurator = this.registry.getCrudEntityConfigurator(entitiesName);
-    return new EntityApiService(entitiesName, configurator.singleEntityName, this.httpClient);
-  }
+  getApiService(entitiesName: string, singleEntityName?: string): IEntityApiService {
 
-  getEntityActions(entitiesName: string): EntityActions<any> {
-    const configurator = <CrudEntityConfigurator<any>>this.registry.getCrudEntityConfigurator(entitiesName);
-
-    return configurator.entityActions;
+    if (singleEntityName == null) {
+      const configurator = this.registry.getCrudEntityConfigurator(entitiesName);
+      singleEntityName = configurator.singleEntityName;
+    }
+    return new EntityApiService(entitiesName, singleEntityName, this.httpClient);
   }
   
 }
