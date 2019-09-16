@@ -27,7 +27,7 @@ namespace Remboard.Controllers
     [CrudControllerNameConvention]
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize]
+    [Authorize]
     public class CrudController<TEntity, TEntityDto, TFilterableEntity> :ControllerBase
         where TEntity:BaseEntityGuidKey
         where TFilterableEntity : class
@@ -116,7 +116,7 @@ namespace Remboard.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(EntityResponse),StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<ActionResult<TEntityDto>> Post([FromBody]TEntityDto entityDto)
+        public async Task<ActionResult<TEntityDto>> Post([FromBody] TEntityDto entityDto)
         {
             
             var result = await _authorizationService.AuthorizeAsync(User, typeof(TEntity), CrudOperations.Create);

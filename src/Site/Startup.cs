@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -9,7 +11,9 @@ using System.Text;
 using Autofac;
 using AutoMapper;
 using Common.Data;
+using Common.Extensions;
 using Common.Features;
+using Common.Features.TypeConverters;
 using Common.Features.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -18,11 +22,14 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using Remboard.Auth;
@@ -31,6 +38,7 @@ using Remboard.Infrastructure;
 using Remboard.Infrastructure.BaseControllers;
 using Users;
 using Users.Api;
+using IContainer = Autofac.IContainer;
 
 namespace Remboard
 {
@@ -95,7 +103,11 @@ namespace Remboard
 
                 //config.Conventions.Add();
             }).AddNewtonsoftJson(options =>
-                    options.SerializerSettings.ContractResolver =new CamelCasePropertyNamesContractResolver())
+                    {
+                        options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                        
+                    }
+                )
                 .ConfigureApplicationPartManager(ap =>
                 {
                     ap.FeatureProviders.Add(temporaryContainer.Resolve<GenericControllerFeatureProvider>());
@@ -113,6 +125,8 @@ namespace Remboard
             services.Configure<MvcOptions>(c =>
             {
                 c.Conventions.Add(temporaryContainer.Resolve<PluralActionNameConvention>());
+                //ReplaceFromBodyProvider(c);
+                //c.ModelBinderProviders.Insert(0, new CustomModelBinderProvider());
             });
         }
 
@@ -229,7 +243,32 @@ namespace Remboard
                 }
             });
 
-           
+            //wait for resolving https://github.com/aspnet/AspNetCore/issues/8857
+        }
+
+
+        private static void ReplaceFromBodyProvider(MvcOptions c)
+        {
+            var provider = c.ModelBinderProviders.FirstOrDefault(p =>
+                    p.GetType() == typeof(Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BodyModelBinderProvider)) as
+                Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BodyModelBinderProvider;
+
+            var formatters =
+                SystemHelpers
+                    .GetInstanceField<Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BodyModelBinderProvider,
+                        IList<IInputFormatter>>(provider, "_formatters");
+            var readerFactory =
+                SystemHelpers
+                    .GetInstanceField<Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BodyModelBinderProvider,
+                        IHttpRequestStreamReaderFactory>(provider, "_readerFactory");
+            var loggerFactory =
+                SystemHelpers
+                    .GetInstanceField<Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BodyModelBinderProvider, ILoggerFactory>(
+                        provider, "_loggerFactory");
+            var localProvider =
+                new Common.Features.Binders.BodyModelBinderProvider(formatters, readerFactory, loggerFactory, c);
+            c.ModelBinderProviders.Remove(provider);
+            c.ModelBinderProviders.Insert(1, localProvider);
         }
     }
 }

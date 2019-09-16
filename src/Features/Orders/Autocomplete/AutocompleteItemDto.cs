@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Common.Features.Binders;
+using Common.Features.TypeConverters;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Orders.Autocomplete
 {
     public class AutocompleteItemDto
     {
+        [JsonConverter(typeof(ServerGeneratedGuidConverter))]
         public Guid Id { get; set; }
 
         /// <summary>

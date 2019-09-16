@@ -24,6 +24,9 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
   form: FormGroup;
 
   private entityService: IEntityService<any>;
+
+  isNewEntity:boolean;
+
   constructor(private location: Location, private route: ActivatedRoute, private entityServiceFabric: EntityServiceFabric, private compositionService: FormsCompositionService) {
   }
 
@@ -40,25 +43,44 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
     });
 
     this.route.paramMap.pipe(takeUntil(this.lifeTimeObject), map(p => p.get("id"))).subscribe(currentId => {
-      this.entityService.getById(currentId);
+      if (!currentId) {
+        return;
+      }
+      if (currentId.toLowerCase() === 'new') {
+        this.isNewEntity = true;
+      } else {
+        this.entityService.getById(currentId);
+        this.isNewEntity = false;
+      }
     });
 
   }
 
   ngOnDestroy(): void {
-
+    this.lifeTimeObject.next(true);
+    this.lifeTimeObject.complete();
   }
 
   goBack() {
     this.location.back();
   }
+
   saveItem() {
     console.log("saved entity",this.form.value);
-    console.log("errors entity",this.form.controls);
+    console.log("errors entity", this.form.controls);
+
+    if (!this.form.valid) {
+      return;
+    }
+
+    if (this.isNewEntity) {
+      this.entityService.add({ ...this.form.value, id: "newguid" });
+    } else {
+      this.entityService.update(this.form.value);
+    }
   }
 
   deleteItem() {
-    this.lifeTimeObject.next(true);
-    this.lifeTimeObject.complete();
+    
   }
 }
