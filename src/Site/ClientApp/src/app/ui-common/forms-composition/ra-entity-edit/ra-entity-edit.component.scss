@@ -12,3 +12,10 @@ h2{
 .manage-controls button{
   margin-left:30px;
 }
+
+.server-errors, .server-errors span{
+  color: #f44336;
+}
+mat-list-item:first-child {
+  padding: 0 !important;
+}

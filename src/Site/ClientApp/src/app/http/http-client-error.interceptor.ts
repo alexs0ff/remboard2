@@ -32,7 +32,10 @@ export class HttpErrorInterceptor implements HttpInterceptor {
           //Auth error
           if (error.status == 401) {
              //401 handled in auth module
-          } else {
+          } if (error.status == 400) {
+            //400 handled in crud module
+          }
+          else {
             console.error(`Backend returned code ${error.status}, body was: ${error.error}`);
             this.messageFlowService.showMessage(String(error.status), "Сетевая ошибка", error.error);
           }

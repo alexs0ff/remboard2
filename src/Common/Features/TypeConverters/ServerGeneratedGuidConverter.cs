@@ -30,7 +30,7 @@ namespace Common.Features.TypeConverters
             if (reader.TokenType == JsonToken.String)
             {
                 string? guidText = reader.Value?.ToString();
-                if (!string.IsNullOrWhiteSpace(guidText) && guidText.ToLower() == "newguid")
+                if (StringComparer.OrdinalIgnoreCase.Equals(guidText, "newguid"))
                 {
                     return Guid.NewGuid();
                 }

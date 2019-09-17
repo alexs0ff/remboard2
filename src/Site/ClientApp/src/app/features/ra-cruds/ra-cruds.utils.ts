@@ -6,8 +6,22 @@ import {
 
 export class RaUtils {
   static parseHttpError(error): EntityResponse {
-    console.log("http error:",error);
-    return { validationErrors: [], message: "untyped message" };
+    console.log("http error:", error);
+    const entityError: EntityResponse = { validationErrors: [], message: error.message };
+
+    if (error.error) {
+      if (error.error.message) {
+        entityError.message = error.error.message;
+      }
+
+      if (error.error.validationErrors && error.error.validationErrors.length) {
+        error.error.validationErrors.forEach(verror => {
+          entityError.validationErrors.push({ message: verror.message, property: verror.property});
+        });
+      }
+    }
+
+    return entityError;
   }
 
   static toHttpParams(queryParams: QueryParams): HttpParams {

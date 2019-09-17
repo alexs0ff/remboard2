@@ -4,7 +4,7 @@ import { ActionReducerMap, } from '@ngrx/store';
 import { CrudsEntityMetadata, QueryParams} from "./ra-cruds.models";
 import { QueryParamsConfigurator} from "./ra-cruds.utils";
 import { ConfiguratorRegistry, EntityServiceFabric, CrudEntityConfigurator, EntityServiceApiFactory } from "./ra-cruds.services";
-import { IEntityBase, IEntityService, ICrudEntityConfigurator, PagedResult } from "./ra-cruds.models"
+import { IEntityBase, IEntityService, ICrudEntityConfigurator, PagedResult, EntityResponse, ValidationError } from "./ra-cruds.models"
 import { EffectsModule } from '@ngrx/effects';
 import { RaCrudsEntityEffects  } from "./ra-cruds.effects";
 
@@ -44,4 +44,4 @@ class RaCrudsModule {
   }
 }
 
-export { RaCrudsModule, CrudsEntityMetadata, IEntityBase, IEntityService, CrudEntityConfigurator, EntityServiceFabric, EntityServiceApiFactory, QueryParams, QueryParamsConfigurator, PagedResult}
+export { RaCrudsModule, CrudsEntityMetadata, IEntityBase, IEntityService, CrudEntityConfigurator, EntityServiceFabric, EntityServiceApiFactory, QueryParams, QueryParamsConfigurator, PagedResult, EntityResponse, ValidationError}

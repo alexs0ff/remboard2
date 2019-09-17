@@ -4,7 +4,7 @@ import { Subject, Observable } from "rxjs";
 import { takeUntil, map } from "rxjs/operators";
 import { ActivatedRoute } from '@angular/router';
 import { RaEntityEdit, RaFormLayout } from "../forms-composition.models";
-import { EntityServiceFabric, IEntityService } from "../../../features/ra-cruds/ra-cruds.module";
+import { EntityServiceFabric, IEntityService, EntityResponse, ValidationError } from "../../../features/ra-cruds/ra-cruds.module";
 import { FormsCompositionService } from "../forms-composition-service";
 import { FormGroup } from "@angular/forms";
 
@@ -15,13 +15,18 @@ import { FormGroup } from "@angular/forms";
 })
 export class RaEntityEditComponent implements OnInit, OnDestroy {
 
-  private lifeTimeObject: Subject<boolean> = new Subject<boolean>();
-
   @Input() model: RaEntityEdit;
 
   layout: RaFormLayout;
 
   form: FormGroup;
+
+  hasServerError: Observable<boolean>;
+
+  serverErrors: Observable<ValidationError[]>;
+  serverMessage: Observable<string>;
+
+  private lifeTimeObject: Subject<boolean> = new Subject<boolean>();
 
   private entityService: IEntityService<any>;
 
@@ -35,6 +40,9 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 
     this.layout = this.model.layout;
     this.form = this.compositionService.toFormGroup(this.layout);
+    this.hasServerError = this.entityService.hasError;
+    this.serverErrors = this.entityService.errorResponse.pipe(map(r=>r.validationErrors));
+    this.serverMessage = this.entityService.errorResponse.pipe(map(r=>r.message));
 
     this.entityService.currentEntity.pipe(takeUntil(this.lifeTimeObject)).subscribe(entity => {
       if (entity) {

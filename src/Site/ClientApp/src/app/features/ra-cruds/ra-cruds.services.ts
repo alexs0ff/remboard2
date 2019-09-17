@@ -2,7 +2,9 @@ import { Injectable,Type } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { Action, createAction, props, ActionReducer, on, createReducer, createSelector, MemoizedSelector } from '@ngrx/store';
 import { EntityState, createEntityAdapter } from '@ngrx/entity';
-import { IEntityBase, CrudAdapter, IState, IEntityService, ICrudEntityConfigurator, PagedResult, QueryParams } from "./ra-cruds.models"
+import { IEntityBase, CrudAdapter, IState, IEntityService, ICrudEntityConfigurator, PagedResult, QueryParams,
+  EntityResponse
+} from "./ra-cruds.models"
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { EntityActions, loadAllEntities, createEntity, updateEntity, deleteEntity, loadWithQueryEntities, loadByIdEntity } from "./ra-cruds.actions";
@@ -12,8 +14,10 @@ import { RaUtils } from "./ra-cruds.utils";
 class EntitySelectors<T extends IEntityBase> {
   selectAll: MemoizedSelector<any, T[]>;
   currentEntity: MemoizedSelector<any, T>;
+  hasError: MemoizedSelector<any, boolean>;
   totalCount: MemoizedSelector<any, number>;
   isLoading: MemoizedSelector<any, boolean>;
+  errorResponse: MemoizedSelector<any, EntityResponse>;
   /*private selectIds: (state: IState<T>) => string[] | number[];
   private selectEntities: (state: IState<T>) => { [id: string]: T | undefined;};
   private selectAll: (state: IState<T>) => T[];
@@ -35,6 +39,8 @@ class EntitySelectors<T extends IEntityBase> {
     this.selectAll = createSelector(getModuleState, selectAll);
     this.totalCount = createSelector(getModuleState, (i)=>i.totalCount);
     this.isLoading = createSelector(getModuleState, (i) => i.loading);
+    this.hasError = createSelector(getModuleState, (i) => i.hasError);
+    this.errorResponse = createSelector(getModuleState, (i) => i.error);
 
     this.currentEntity = createSelector(getModuleEntities,getModuleSelectedEntityId,(entities, currentId) => entities[currentId]);
   }
@@ -162,7 +168,11 @@ export class EntityService<T extends IEntityBase> implements IEntityService<T> {
 
   isLoading: Observable<boolean>;
 
-  currentEntity:Observable<T>;
+  currentEntity: Observable<T>;
+
+  hasError: Observable<boolean>;
+
+  errorResponse: Observable<EntityResponse>;
 
   constructor(private configurator: CrudEntityConfigurator<T>, private store: Store<{}>, private entitiesName:string) {
     this.entityActions = configurator.entityActions;
@@ -170,6 +180,8 @@ export class EntityService<T extends IEntityBase> implements IEntityService<T> {
     this.totalLength = store.pipe(select(configurator.entitySelectors.totalCount));
     this.isLoading = store.pipe(select(configurator.entitySelectors.isLoading));
     this.currentEntity = store.pipe(select(configurator.entitySelectors.currentEntity));
+    this.hasError = store.pipe(select(configurator.entitySelectors.hasError));
+    this.errorResponse = store.pipe(select(configurator.entitySelectors.errorResponse));
   }
 
   addMany(entities: T[]) {
