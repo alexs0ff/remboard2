@@ -18,7 +18,7 @@
 </div>
 <ra-form [layout]="layout" [form]="form"></ra-form>
 <div fxLayout="row" fxLayoutAlign="end center" class="manage-controls">
-  <button mat-raised-button matTooltip="Удалить" (click)="deleteItem()" color="warn"><mat-icon>remove_circle</mat-icon> Удалить</button>
+  <button mat-raised-button matTooltip="Удалить" (click)="deleteItem()" color="warn" *ngIf="!isNewEntity"><mat-icon>remove_circle</mat-icon> Удалить</button>
   <button mat-raised-button matTooltip="Сохранить" (click)="saveItem()" color="primary">
     <mat-icon>save</mat-icon>
     <ng-template [ngIf]="isNewEntity">

@@ -3,10 +3,12 @@ import { Location } from '@angular/common';
 import { Subject, Observable } from "rxjs";
 import { takeUntil, map } from "rxjs/operators";
 import { ActivatedRoute } from '@angular/router';
-import { RaEntityEdit, RaFormLayout } from "../forms-composition.models";
+import { RaEntityEdit, RaFormLayout, RemoveDialogData } from "../forms-composition.models";
 import { EntityServiceFabric, IEntityService, EntityResponse, ValidationError } from "../../../features/ra-cruds/ra-cruds.module";
 import { FormsCompositionService } from "../forms-composition-service";
 import { FormGroup } from "@angular/forms";
+import { MatDialog, MatDialogRef} from '@angular/material/dialog';
+import { RaEntityEditRemoveDialog } from "./ra-entity-edit-remove-dialog";
 
 @Component({
   selector: 'ra-entity-edit',
@@ -32,7 +34,7 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 
   isNewEntity:boolean;
 
-  constructor(private location: Location, private route: ActivatedRoute, private entityServiceFabric: EntityServiceFabric, private compositionService: FormsCompositionService) {
+  constructor(private location: Location, private route: ActivatedRoute, private entityServiceFabric: EntityServiceFabric, private compositionService: FormsCompositionService, private dialog: MatDialog) {
   }
 
   ngOnInit() {
@@ -89,6 +91,17 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
   }
 
   deleteItem() {
-    
+    let dialogData: RemoveDialogData = { name: "Пунтктыы", title: "Назвв" };
+    const dialogRef = this.dialog.open(RaEntityEditRemoveDialog,
+      {
+        data: dialogData
+      });
+
+    dialogRef.afterClosed().pipe(takeUntil(this.lifeTimeObject)).subscribe((result: boolean) => {
+      if (result) {
+        console.log("deleted");
+      }
+    });
+
   }
 }

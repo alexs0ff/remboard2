@@ -124,3 +124,9 @@ export const flexExpressions = {
     fxFlexLtsmExpression: "100%"
   }
 }
+
+export interface RemoveDialogData {
+    title: string;
+    name:string;
+}
+

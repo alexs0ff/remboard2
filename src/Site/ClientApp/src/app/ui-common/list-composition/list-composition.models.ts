@@ -6,5 +6,6 @@ export interface RaGridColumn {
 export interface RaServerDataGridModel {
   entitiesName: string;
   columns: RaGridColumn[];
-  pageSize:number|null;
+  pageSize: number | null;
+  showAddButton: boolean;
 }

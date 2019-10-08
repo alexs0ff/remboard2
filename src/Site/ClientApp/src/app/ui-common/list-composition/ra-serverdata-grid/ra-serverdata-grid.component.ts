@@ -6,6 +6,7 @@ import { QueryParamsConfigurator } from "../../../features/ra-cruds/ra-cruds.uti
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 import { RaServerDataGridModel } from "../list-composition.models";
+import { Router, ActivatedRoute } from '@angular/router'
 
 @Component({
   selector: 'ra-serverdata-grid',
@@ -29,7 +30,7 @@ export class RaServerdataGridComponent implements OnInit {
   @Input()
   model: RaServerDataGridModel;
 
-  constructor(private entityServiceFabric: EntityServiceFabric) {
+    constructor(private entityServiceFabric: EntityServiceFabric, private router: Router, private route: ActivatedRoute) {
     
   }
 
@@ -38,7 +39,12 @@ export class RaServerdataGridComponent implements OnInit {
     this.dataSource$ = this.entityService.entities;
     this.totalLength$ = this.entityService.totalLength;
     this.isLoading$ = this.entityService.isLoading;
-    this.displayedColumns = this.model.columns.map(i => i.id);
+      this.displayedColumns = this.model.columns.map(i => i.id);
+
+      if (this.model.showAddButton) {
+          this.displayedColumns.splice(0, 0, "addButton");
+      }
+
 
     if (this.model.pageSize) {
         this.pageSize = this.model.pageSize;
@@ -69,4 +75,12 @@ export class RaServerdataGridComponent implements OnInit {
     }
     this.entityService.getWithQuery(qConfig.toQueryParams());
   }
+
+    selectRow(row:any) {
+        this.router.navigate([row.id], { relativeTo: this.route });
+    }
+
+    addNew() {
+      this.router.navigate(['new'], { relativeTo: this.route });
+    }
 }

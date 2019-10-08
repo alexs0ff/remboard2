@@ -16,3 +16,13 @@ table {
 .table-content {
   position: relative;
 }
+
+tr.element-row:hover {
+  background: rgb(247, 247, 247);
+  cursor:pointer;
+}
+
+.add-button-column {
+  width: 35px;
+  padding-left: 0 !important;
+}
