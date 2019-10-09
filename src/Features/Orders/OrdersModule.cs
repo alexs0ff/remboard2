@@ -9,6 +9,7 @@ using Common.Features.Cruds.Filterable;
 using Common.Features.PermissibleValues;
 using Microsoft.EntityFrameworkCore;
 using Orders.Autocomplete;
+using Orders.OrderStatus;
 
 namespace Orders
 {
@@ -24,14 +25,23 @@ namespace Orders
             modelBuilder.ApplyConfiguration(new AutocompleteItemConfiguration());
             modelBuilder.ApplyConfiguration(new AutocompleteKindConfiguration());
             modelBuilder.ApplyConfiguration(new EntityDtoConfiguration<AutocompleteItemDto>());
-        }
+
+            modelBuilder.ApplyConfiguration(new OrderStatusConfiguration());
+            modelBuilder.ApplyConfiguration(new OrderStatusKindConfiguration());
+            modelBuilder.ApplyConfiguration(new EntityDtoConfiguration<OrderStatusDto>());
+
+		}
 
         protected override IEnumerable<IPermissibleValuesControllerConfigurator> RegisterPermissibleValuesControllers()
         {
             yield return new PermissibleValuesControllerConfigurator<AutocompleteKind, AutocompleteKinds>()
                 .AddValuesProvider<ReflectionPermissibleValuesProvider<AutocompleteKind, AutocompleteKinds>>()
                 .AddReadRoles();
-        }
+
+            yield return new PermissibleValuesControllerConfigurator<OrderStatusKind, OrderStatusKinds>()
+	            .AddValuesProvider<ReflectionPermissibleValuesProvider<OrderStatusKind, OrderStatusKinds>>()
+	            .AddReadRoles();
+		}
 
         protected override IEnumerable<ICrudControllerConfigurator> RegisterCrudControllers()
         {
@@ -63,6 +73,16 @@ namespace Orders
 
                     })*/
                 .AddModifyRoles();
-        }
+
+            yield return new CrudControllerConfigurator<OrderStatus.OrderStatus, OrderStatusDto, OrderStatusDto>()
+	            .UseValidator<OrderStatusDtoValidator>()
+	            .UseFilterableEntityOperation<EntityContextFilterOperation<OrderStatus.OrderStatus, OrderStatusDto>>(
+		            parameters =>
+		            {
+			            parameters.AddSortFieldsMapping(nameof(OrderStatusDto.OrderStatusKindTitle), nameof(OrderStatus.OrderStatus.OrderStatusKind) + "." + nameof(OrderStatus.OrderStatus.OrderStatusKind.Name));
+		            })
+	            .AddModifyRoles();
+
+		}
     }
 }
