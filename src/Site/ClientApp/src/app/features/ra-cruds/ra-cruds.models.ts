@@ -23,7 +23,8 @@ export interface IState<T extends IEntityBase> extends EntityState<T> {
   totalCount: number;
   loading: boolean;
   error: EntityResponse | null;
-  hasError:boolean;
+  hasError: boolean;
+  lastRemovedIds: string[] | null;
 }
 
 export interface CrudAdapter<T extends IEntityBase> extends EntityAdapter<T> {
@@ -42,6 +43,7 @@ export interface IEntityService<T extends IEntityBase> {
   isLoading: Observable<boolean>;
   hasError: Observable<boolean>;
   errorResponse: Observable<EntityResponse>;
+  lastRemovedIds: Observable<string[] | null>;
   getAll();
   getById(id: string);
   getWithQuery(queryParams: QueryParams);

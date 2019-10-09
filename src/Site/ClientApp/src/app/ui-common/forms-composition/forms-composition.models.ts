@@ -103,7 +103,10 @@ export interface RaFormLayout {
 export interface RaEntityEdit {
   entitiesName:string;
   title: string;
-  layout: RaFormLayout;
+	layout: RaFormLayout;
+	removeDialog: {
+    valueId:string;
+  };
 }
 
 

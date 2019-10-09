@@ -11,7 +11,7 @@ namespace Orders.Autocomplete
     {
         public AutocompleteItemDtoValidator()
         {
-            RuleFor(i => i.Title).NotEmpty().MaximumLength(10);
+            RuleFor(i => i.Title).NotEmpty();
             RuleFor(i => i.AutocompleteKindId).IsInEnum();
         }
     }

@@ -2,7 +2,7 @@ import { Component, OnInit,OnDestroy,Input } from '@angular/core';
 import { Location } from '@angular/common';
 import { Subject, Observable } from "rxjs";
 import { takeUntil, map } from "rxjs/operators";
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RaEntityEdit, RaFormLayout, RemoveDialogData } from "../forms-composition.models";
 import { EntityServiceFabric, IEntityService, EntityResponse, ValidationError } from "../../../features/ra-cruds/ra-cruds.module";
 import { FormsCompositionService } from "../forms-composition-service";
@@ -32,9 +32,12 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 
   private entityService: IEntityService<any>;
 
-  isNewEntity:boolean;
+	isNewEntity: boolean;
 
-  constructor(private location: Location, private route: ActivatedRoute, private entityServiceFabric: EntityServiceFabric, private compositionService: FormsCompositionService, private dialog: MatDialog) {
+  currentId:string;
+  
+
+	constructor(private location: Location, private route: ActivatedRoute, private router: Router, private entityServiceFabric: EntityServiceFabric, private compositionService: FormsCompositionService, private dialog: MatDialog) {
   }
 
   ngOnInit() {
@@ -49,17 +52,36 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
     this.entityService.currentEntity.pipe(takeUntil(this.lifeTimeObject)).subscribe(entity => {
       if (entity) {
         this.form.setValue(entity);
+	  } 
+	});
+
+    this.entityService.lastRemovedIds.pipe(takeUntil(this.lifeTimeObject)).subscribe(removedIds => {
+		if (removedIds != null) {
+			let res: boolean = false;
+			
+			for (var i = 0; i < removedIds.length; i++) {
+				if (removedIds[i] === this.currentId) {
+					res = true;
+          break;
+        }
+			}
+
+			if (res) {
+				this.router.navigate(["../"], { relativeTo: this.route });
       }
+    }
     });
 
     this.route.paramMap.pipe(takeUntil(this.lifeTimeObject), map(p => p.get("id"))).subscribe(currentId => {
       if (!currentId) {
         return;
-      }
+	  }
       if (currentId.toLowerCase() === 'new') {
-        this.isNewEntity = true;
+		    this.isNewEntity = true;
+        this.form.reset();
       } else {
         this.entityService.getById(currentId);
+        this.currentId = currentId;
         this.isNewEntity = false;
       }
     });
@@ -77,9 +99,9 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 
   saveItem() {
     console.log("saved entity",this.form.value);
-    console.log("errors entity", this.form.controls);
-
-    if (!this.form.valid) {
+	  console.log("errors entity", this.form.controls);
+	  if (!this.form.valid) {
+      this.form.markAllAsTouched();
       return;
     }
 
@@ -90,8 +112,11 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  deleteItem() {
-    let dialogData: RemoveDialogData = { name: "Пунтктыы", title: "Назвв" };
+	deleteItem() {
+
+		let entity: any = this.form.value || {};
+		let dialogData: RemoveDialogData = { name: entity[this.model.removeDialog.valueId], title: this.model.title };
+
     const dialogRef = this.dialog.open(RaEntityEditRemoveDialog,
       {
         data: dialogData
@@ -99,9 +124,8 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().pipe(takeUntil(this.lifeTimeObject)).subscribe((result: boolean) => {
       if (result) {
-        console.log("deleted");
+        this.entityService.delete(entity.id);
       }
     });
-
   }
 }

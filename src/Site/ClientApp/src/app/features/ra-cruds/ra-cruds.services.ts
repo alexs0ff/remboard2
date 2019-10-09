@@ -18,10 +18,8 @@ class EntitySelectors<T extends IEntityBase> {
   totalCount: MemoizedSelector<any, number>;
   isLoading: MemoizedSelector<any, boolean>;
   errorResponse: MemoizedSelector<any, EntityResponse>;
-  /*private selectIds: (state: IState<T>) => string[] | number[];
-  private selectEntities: (state: IState<T>) => { [id: string]: T | undefined;};
-  private selectAll: (state: IState<T>) => T[];
-  private selectTotal: (state: IState<T>) => number;*/
+	lastRemovedIds: MemoizedSelector<any, string[] | null>;
+  
 
   constructor(featureName: string,private entitiesName: string, adapter: CrudAdapter<T>) {
     const { selectIds, selectEntities, selectAll, selectTotal, } = adapter.getSelectors();
@@ -40,7 +38,8 @@ class EntitySelectors<T extends IEntityBase> {
     this.totalCount = createSelector(getModuleState, (i)=>i.totalCount);
     this.isLoading = createSelector(getModuleState, (i) => i.loading);
     this.hasError = createSelector(getModuleState, (i) => i.hasError);
-    this.errorResponse = createSelector(getModuleState, (i) => i.error);
+	  this.errorResponse = createSelector(getModuleState, (i) => i.error);
+	  this.lastRemovedIds = createSelector(getModuleState, (i) => i.lastRemovedIds);
 
     this.currentEntity = createSelector(getModuleEntities,getModuleSelectedEntityId,(entities, currentId) => entities[currentId]);
   }
@@ -67,7 +66,8 @@ export class CrudEntityConfigurator<T extends IEntityBase> implements ICrudEntit
       totalCount: 0,
       loading: false,
       hasError: false,
-      error: null
+		  error: null,
+      lastRemovedIds:null
     });
 
     this.entityActions = new EntityActions<T>(entitiesName);
@@ -101,10 +101,10 @@ export class CrudEntityConfigurator<T extends IEntityBase> implements ICrudEntit
         return this.adapter.map(entityMap, state);
       }),
       on(this.entityActions.deleteEntity, (state, { id }) => {
-        return this.adapter.removeOne(id, <IState<T>>{ ...state, loading: false });
+        return this.adapter.removeOne(id, <IState<T>>{ ...state, loading: false,lastRemovedIds:[id] });
       }),
       on(this.entityActions.deleteEntities, (state, { ids }) => {
-        return this.adapter.removeMany(ids, state);
+		  return this.adapter.removeMany(ids, <IState<T>>{ ...state, loading: false, lastRemovedIds: ids});
       }),
       on(this.entityActions.deleteEntitiesByPredicate, (state, { predicate }) => {
         return this.adapter.removeMany(predicate, state);
@@ -172,7 +172,9 @@ export class EntityService<T extends IEntityBase> implements IEntityService<T> {
 
   hasError: Observable<boolean>;
 
-  errorResponse: Observable<EntityResponse>;
+	errorResponse: Observable<EntityResponse>;
+
+  lastRemovedIds: Observable<string[]|null>;
 
   constructor(private configurator: CrudEntityConfigurator<T>, private store: Store<{}>, private entitiesName:string) {
     this.entityActions = configurator.entityActions;
@@ -182,6 +184,7 @@ export class EntityService<T extends IEntityBase> implements IEntityService<T> {
     this.currentEntity = store.pipe(select(configurator.entitySelectors.currentEntity));
     this.hasError = store.pipe(select(configurator.entitySelectors.hasError));
     this.errorResponse = store.pipe(select(configurator.entitySelectors.errorResponse));
+	  this.lastRemovedIds = store.pipe(select(configurator.entitySelectors.lastRemovedIds));
   }
 
   addMany(entities: T[]) {

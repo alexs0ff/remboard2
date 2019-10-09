@@ -8,9 +8,9 @@ import { RemoveDialogData } from "../forms-composition.models";
 <h1 mat-dialog-title>Удаление записи</h1>
 <div mat-dialog-content>
   <p>Вы действительно хотите удалить из <strong>{{data.title}}</strong>?</p>  
-    {{data.name}}  
+    <i>{{data.name}}</i>
 </div>
-<div mat-dialog-actions>
+<div mat-dialog-actions  fxLayout="row" fxLayoutAlign="end center">
   <button mat-button (click)="onNoClick();" cdkFocusInitial color="primary">Нет</button>
   <button mat-button (click)="onYesClick();">Да</button>
 </div>

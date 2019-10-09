@@ -17,7 +17,8 @@ export class AutocompleteItemEditComponent implements OnInit {
     this.id$ = route.paramMap.pipe(map(p => p.get("id")));
     this.model = {
       entitiesName: "autocompleteItems",
-      title: "Пункт автодополнения",
+		  title: "Пункт автодополнения",
+		  removeDialog: { valueId:"title"},
       layout: {
         rows: [
           { content: { kind: 'hidden', items: ['id','autocompleteKindTitle']  } },
