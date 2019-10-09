@@ -84,6 +84,7 @@ namespace Orders
                 .AddModifyRoles();
 
             yield return new CrudControllerConfigurator<OrderStatus.OrderStatus, OrderStatusDto, OrderStatusDto>()
+	            .SetEntityPluralName("OrderStatuses")
 	            .UseValidator<OrderStatusDtoValidator>()
 	            .UseFilterableEntityOperation<EntityContextFilterOperation<OrderStatus.OrderStatus, OrderStatusDto>>(
 		            parameters =>

@@ -16,10 +16,16 @@ namespace Common.Features.Cruds
 
         private readonly TypeInfo _filterableEntityTypeInfo;
 
-        public CrudEntityDescriptor()
+        public CrudEntityDescriptor(string pluralName)
         {
             _entityName = typeof(TEntity).Name;
-            _entityPluralName = _entityName + "s";
+
+            _entityPluralName = pluralName;
+
+			if (string.IsNullOrWhiteSpace(_entityPluralName))
+            {
+				_entityPluralName = _entityName + "s";
+            }
 
             _entityTypeInfo = typeof(TEntity).GetTypeInfo();
             _entityDtoTypeInfo = typeof(TEntityDto).GetTypeInfo();

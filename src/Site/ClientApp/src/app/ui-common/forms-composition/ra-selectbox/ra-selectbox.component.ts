@@ -34,7 +34,6 @@ import { PagedResult } from "../../../features/ra-cruds/ra-cruds.models";
   `,
   styles: [`
 .mat-filter {
-  position: -webkit-sticky;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -44,6 +43,7 @@ import { PagedResult } from "../../../features/ra-cruds/ra-cruds.models";
   padding: 16px;
   box-sizing: border-box;
   border-bottom: 1px solid grey;
+  background-color: white;
 }
 `]
 })

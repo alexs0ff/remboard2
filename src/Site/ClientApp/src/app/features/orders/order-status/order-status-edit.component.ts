@@ -2,21 +2,21 @@ import { Component, OnInit } from '@angular/core';
 import { flexExpressions, RaEntityEdit } from "../../../ui-common/ui-common.module";
 
 @Component({
-  selector: 'autocomplete-item-edit',
+  selector: 'order-status-edit',
   template: `<ra-entity-edit [model]="model"></ra-entity-edit>`,
   styles: []
 })
-export class AutocompleteItemEditComponent implements OnInit {
+export class OrderStatusEditComponent implements OnInit {
   model: RaEntityEdit;
 
   constructor() {
     this.model = {
-      entitiesName: "autocompleteItems",
-		  title: "Пункт автодополнения",
-		  removeDialog: { valueId:"title"},
+      entitiesName: "orderStatuses",
+      title: "Статус заказа",
+      removeDialog: { valueId: "title" },
       layout: {
         rows: [
-          { content: { kind: 'hidden', items: ['id','autocompleteKindTitle']  } },
+			  { content: { kind: 'hidden', items: ['id', 'orderStatusKindTitle'] } },
           {
             content: {
               kind: 'controls',
@@ -27,7 +27,7 @@ export class AutocompleteItemEditComponent implements OnInit {
                     id: "title",
                     kind: 'textbox',
                     label: 'Название',
-                    hint: "Название пункта автодополнения",
+                    hint: "Название статуса",
                     valueKind: 'string',
                     validators: {
                       required: true
@@ -37,17 +37,19 @@ export class AutocompleteItemEditComponent implements OnInit {
                 {
                   flexExpression: flexExpressions.twoItemsExpressions,
                   control: {
-                    kind: 'selectbox',
-                    id: 'autocompleteKindId',
-                    label: 'Тип автодополнения',
-                    hint: 'Тип автодополнения',
+					kind: 'selectbox',
+                    id: 'orderStatusKindId',
+                    label: 'Тип статуса',
+                    hint: 'Тип статуса',
                     validators: { required: true },
                     valueKind: 'number',
                     source: {
                       kind: 'items', items: [
-                        { key: 1, value: "Бренд"} ,
-                        { key: 2, value: "Комплектация"} ,
-                        { key: 3, value: "Внешний вид"} 
+							{ key: 1, value: "Новые" },
+							{ key: 2, value: "На исполнении" },
+							{ key: 3, value: "Отложенные" },
+							{ key: 4, value: "Исполненные" },
+							{ key: 5, value: "Закрытые" }
                       ]
                     }
                   }

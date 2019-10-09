@@ -13,11 +13,13 @@ namespace Orders
         {
             CreateMap<AutocompleteItem, AutocompleteItemDto>()
                 .ForMember(i=>i.AutocompleteKindTitle,m=>m.MapFrom(i=>i.AutocompleteKind.Name))
-                .ReverseMap();
+                .ReverseMap()
+				.ForMember(i => i.AutocompleteKind, m => m.Ignore()); ;
 
             CreateMap<OrderStatus.OrderStatus, OrderStatus.OrderStatusDto>()
-	            .ForMember(i => i.OrderStatusKindTitle, m => m.MapFrom(p => p.Title))
-	            .ReverseMap();
+	            .ForMember(i => i.OrderStatusKindTitle, m => m.MapFrom(p => p.OrderStatusKind.Name))
+	            .ReverseMap()
+	            .ForMember(i=>i.OrderStatusKind,m=>m.Ignore());
         }
     }
 }

@@ -23,10 +23,12 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 
   form: FormGroup;
 
-  hasServerError: Observable<boolean>;
+	hasServerError$: Observable<boolean>;
 
-  serverErrors: Observable<ValidationError[]>;
-  serverMessage: Observable<string>;
+  isLoading$: Observable<boolean>;
+
+  serverErrors$: Observable<ValidationError[]>;
+  serverMessage$: Observable<string>;
 
   private lifeTimeObject: Subject<boolean> = new Subject<boolean>();
 
@@ -45,9 +47,10 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 
     this.layout = this.model.layout;
     this.form = this.compositionService.toFormGroup(this.layout);
-    this.hasServerError = this.entityService.hasError;
-    this.serverErrors = this.entityService.errorResponse.pipe(map(r=>r.validationErrors));
-    this.serverMessage = this.entityService.errorResponse.pipe(map(r=>r.message));
+    this.hasServerError$ = this.entityService.hasError;
+    this.isLoading$ = this.entityService.isLoading;
+    this.serverErrors$ = this.entityService.errorResponse.pipe(map(r=>r.validationErrors));
+    this.serverMessage$ = this.entityService.errorResponse.pipe(map(r=>r.message));
 
     this.entityService.currentEntity.pipe(takeUntil(this.lifeTimeObject)).subscribe(entity => {
       if (entity) {
@@ -98,8 +101,6 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
   }
 
   saveItem() {
-    console.log("saved entity",this.form.value);
-	  console.log("errors entity", this.form.controls);
 	  if (!this.form.valid) {
       this.form.markAllAsTouched();
       return;

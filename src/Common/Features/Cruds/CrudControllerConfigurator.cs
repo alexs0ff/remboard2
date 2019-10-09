@@ -33,6 +33,8 @@ namespace Common.Features.Cruds
 
         private EntityFilterOperationParameters _filterableEntityOperationParameters = EntityFilterOperationParameters.Empty;
 
+        private string _entityPluralName;
+
         public CrudControllerConfigurator()
         {
             AddMandatorySpecification<IsNotDeletedSpecification<TEntity>>();
@@ -110,8 +112,13 @@ namespace Common.Features.Cruds
             _filterableEntityOperationParameters = parameters;
             return this;
         }
+        public CrudControllerConfigurator<TEntity, TEntityDto, TFilterableEntity> SetEntityPluralName(string pluralName)
+        {
+	        _entityPluralName = pluralName;
+	        return this;
+        }
 
-        public void Finish(ContainerBuilder builder)
+		public void Finish(ContainerBuilder builder)
         {
             if (_filterableEntityOperation==null)
             {
@@ -125,7 +132,7 @@ namespace Common.Features.Cruds
             
             builder.RegisterType<CrudControllerDescriptor<TEntity,TEntityDto,TFilterableEntity>>()
                 .As<ICrudControllerDescriptor>()
-                .WithParameter("entityDescriptor", new CrudEntityDescriptor<TEntity, TEntityDto, TFilterableEntity>())
+                .WithParameter("entityDescriptor", new CrudEntityDescriptor<TEntity, TEntityDto, TFilterableEntity>(_entityPluralName))
                 .WithParameter("accessRuleMap", new AccessRuleMap(_readRoles.ToArray(),_modifyRoles.ToArray()))
                 .WithParameter("mandatorySpecificationTypes", _mandatorySpecifications)
                 .WithParameter("entityValidatorType", _entityValidator)

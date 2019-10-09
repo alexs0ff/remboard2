@@ -2,23 +2,23 @@ import { Component, OnInit } from '@angular/core';
 import { RaServerDataGridModel } from "../../../ui-common/ui-common.module";
 
 @Component({
-  selector: 'autocomplete-item-list',
+  selector: 'order-status-list',
   template: `
  
 <ra-serverdata-grid [model]="dataGrid"></ra-serverdata-grid>
   `,
   styles: []
 })
-export class AutocompleteItemListComponent implements OnInit {
+export class OrderStatusListComponent implements OnInit {
 
   dataGrid:RaServerDataGridModel;
 
   constructor() {
     this.dataGrid = {
-      entitiesName: "autocompleteItems",
+      entitiesName: "orderStatuses",
       columns: [
-        { canOrder: true, id: "title", name: "Название" },
-        { canOrder: false, id: "autocompleteKindTitle", name: "Тип" },
+		  { canOrder: true, id: "title", name: "Название" },
+          { canOrder: true, id: "orderStatusKindTitle", name: "Тип" },
       ],
       pageSize: 10,
       showAddButton:true
