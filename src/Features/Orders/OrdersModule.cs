@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Autofac;
+using Common.Data;
 using Common.Features;
 using Common.Features.Cruds;
 using Common.Features.Cruds.Filterable;
@@ -20,16 +21,24 @@ namespace Orders
             AddMapperProfile<OrdersProfile>(builder);
         }
 
-        public void OnContextFeatureCreating(ModelBuilder modelBuilder)
+
+        public void OnContextFeatureCreating(ModelBuilder modelBuilder, RemboardContextParameters contextParameters)
         {
-            modelBuilder.ApplyConfiguration(new AutocompleteItemConfiguration());
-            modelBuilder.ApplyConfiguration(new AutocompleteKindConfiguration());
-            modelBuilder.ApplyConfiguration(new EntityDtoConfiguration<AutocompleteItemDto>());
+			modelBuilder.ApplyConfiguration(new AutocompleteItemConfiguration());
+			modelBuilder.ApplyConfiguration(new AutocompleteKindConfiguration());
 
-            modelBuilder.ApplyConfiguration(new OrderStatusConfiguration());
-            modelBuilder.ApplyConfiguration(new OrderStatusKindConfiguration());
-            modelBuilder.ApplyConfiguration(new EntityDtoConfiguration<OrderStatusDto>());
+			if (!contextParameters.IsDesignTime)
+			{
+				modelBuilder.ApplyConfiguration(new EntityDtoConfiguration<AutocompleteItemDto>());
+			}
 
+			modelBuilder.ApplyConfiguration(new OrderStatusConfiguration());
+			modelBuilder.ApplyConfiguration(new OrderStatusKindConfiguration());
+
+			if (!contextParameters.IsDesignTime)
+			{
+				modelBuilder.ApplyConfiguration(new EntityDtoConfiguration<OrderStatusDto>());
+			}
 		}
 
         protected override IEnumerable<IPermissibleValuesControllerConfigurator> RegisterPermissibleValuesControllers()

@@ -172,8 +172,10 @@ namespace Remboard
 
             builder.RegisterType<CurrentIdentityInfoProvider>().As<ICurrentIdentityInfoProvider>();
 
+            builder.RegisterInstance(new RemboardContextParameters { IsDesignTime = false });
 
-            builder.Register<AutoMapper.IConfigurationProvider>(ctx =>
+
+			builder.Register<AutoMapper.IConfigurationProvider>(ctx =>
             {
                 var profiles = ctx.Resolve <IEnumerable<FeatureMapperProfile>>();
                 return new MapperConfiguration(cfg => cfg.AddProfiles(profiles));

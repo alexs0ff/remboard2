@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Common.Features;
 using Microsoft.EntityFrameworkCore;
@@ -10,18 +11,22 @@ namespace Common.Data
     {
         private readonly IEnumerable<IConfigureModelFeature> _features;
 
-        public RemboardContext(DbContextOptions<RemboardContext> options, IEnumerable<IConfigureModelFeature> features)
+        private readonly RemboardContextParameters _contextParameters;
+
+        public RemboardContext(DbContextOptions<RemboardContext> options, IEnumerable<IConfigureModelFeature> features, RemboardContextParameters contextParameters)
             : base(options)
         {
-            _features = features;
+	        _features = features;
+	        _contextParameters = contextParameters;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-           
-            foreach (var feature in _features)
+	        var features = _features;
+
+			foreach (var feature in features)
             {
-                feature.OnContextFeatureCreating(modelBuilder);
+                feature.OnContextFeatureCreating(modelBuilder,_contextParameters);
             }
         }
     }

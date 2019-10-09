@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Autofac;
+using Common.Data;
 using Common.Features;
 using Common.Features.BaseEntity;
 using Common.Features.Cruds;
@@ -39,9 +40,9 @@ namespace Common
             builder.RegisterType<TenantedEntityCorrector>().AsSelf().SingleInstance();
         }
 
-        public void OnContextFeatureCreating(ModelBuilder modelBuilder)
+        public void OnContextFeatureCreating(ModelBuilder modelBuilder, RemboardContextParameters contextParameters)
         {
-            modelBuilder.ApplyConfiguration(new TenantEntityConfiguration());
-        }
+			modelBuilder.ApplyConfiguration(new TenantEntityConfiguration());
+		}
     }
 }

@@ -31,6 +31,7 @@ namespace Database.Base
             container.RegisterInstance(optionsBuilder.Options);
             container.RegisterModule<ComposerModule>();
             container.RegisterType<RemboardContext>();
+            container.RegisterInstance(new RemboardContextParameters{IsDesignTime = true});
 
             return container.Build().Resolve<RemboardContext>();
         }
