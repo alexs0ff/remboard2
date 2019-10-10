@@ -4,7 +4,7 @@ using System.Text;
 using Common.Features.TypeConverters;
 using Newtonsoft.Json;
 
-namespace Orders.OrderStatus
+namespace Orders.OrderStatuses
 {
 	public class OrderStatusDto
 	{

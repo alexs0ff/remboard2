@@ -4,7 +4,7 @@ using System.Text;
 using Common.Features;
 using FluentValidation;
 
-namespace Orders.OrderStatus
+namespace Orders.OrderStatuses
 {
 	public class OrderStatusDtoValidator : BaseEntityDtoValidator<OrderStatusDto>
 	{

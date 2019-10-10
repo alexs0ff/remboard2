@@ -4,7 +4,7 @@ using System.Text;
 using Common.Features;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Orders.OrderStatus
+namespace Orders.OrderStatuses
 {
 	public class OrderStatusKindConfiguration : BasePermissibleValueConfiguration<OrderStatusKind, OrderStatusKinds>
 	{

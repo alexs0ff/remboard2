@@ -10,7 +10,7 @@ using Common.Features.Cruds.Filterable;
 using Common.Features.PermissibleValues;
 using Microsoft.EntityFrameworkCore;
 using Orders.Autocomplete;
-using Orders.OrderStatus;
+using Orders.OrderStatuses;
 
 namespace Orders
 {
@@ -83,13 +83,13 @@ namespace Orders
                     })*/
                 .AddModifyRoles();
 
-            yield return new CrudControllerConfigurator<OrderStatus.OrderStatus, OrderStatusDto, OrderStatusDto>()
+            yield return new CrudControllerConfigurator<OrderStatus, OrderStatusDto, OrderStatusDto>()
 	            .SetEntityPluralName("OrderStatuses")
 	            .UseValidator<OrderStatusDtoValidator>()
-	            .UseFilterableEntityOperation<EntityContextFilterOperation<OrderStatus.OrderStatus, OrderStatusDto>>(
+	            .UseFilterableEntityOperation<EntityContextFilterOperation<OrderStatus, OrderStatusDto>>(
 		            parameters =>
 		            {
-			            parameters.AddSortFieldsMapping(nameof(OrderStatusDto.OrderStatusKindTitle), nameof(OrderStatus.OrderStatus.OrderStatusKind) + "." + nameof(OrderStatus.OrderStatus.OrderStatusKind.Name));
+			            parameters.AddSortFieldsMapping(nameof(OrderStatusDto.OrderStatusKindTitle), nameof(OrderStatus.OrderStatusKind) + "." + nameof(OrderStatus.OrderStatusKind.Name));
 		            })
 	            .AddModifyRoles();
 

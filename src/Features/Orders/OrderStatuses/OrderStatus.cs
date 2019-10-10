@@ -4,7 +4,7 @@ using System.Text;
 using Common.Features.BaseEntity;
 using Common.Features.Tenant;
 
-namespace Orders.OrderStatus
+namespace Orders.OrderStatuses
 {
 	public class OrderStatus : BaseEntityGuidKey, ITenantedEntity
 	{

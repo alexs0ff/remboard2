@@ -4,6 +4,7 @@ using System.Text;
 using AutoMapper;
 using Common.Features;
 using Orders.Autocomplete;
+using Orders.OrderStatuses;
 
 namespace Orders
 {
@@ -16,7 +17,7 @@ namespace Orders
                 .ReverseMap()
 				.ForMember(i => i.AutocompleteKind, m => m.Ignore()); ;
 
-            CreateMap<OrderStatus.OrderStatus, OrderStatus.OrderStatusDto>()
+            CreateMap<OrderStatus, OrderStatusDto>()
 	            .ForMember(i => i.OrderStatusKindTitle, m => m.MapFrom(p => p.OrderStatusKind.Name))
 	            .ReverseMap()
 	            .ForMember(i=>i.OrderStatusKind,m=>m.Ignore());
