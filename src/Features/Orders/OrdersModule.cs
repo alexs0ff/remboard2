@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Autofac;
 using Common.Data;
+using Common.Extensions;
 using Common.Features;
 using Common.Features.Cruds;
 using Common.Features.Cruds.Filterable;
@@ -26,19 +27,12 @@ namespace Orders
         {
 			modelBuilder.ApplyConfiguration(new AutocompleteItemConfiguration());
 			modelBuilder.ApplyConfiguration(new AutocompleteKindConfiguration());
-
-			if (!contextParameters.IsDesignTime)
-			{
-				modelBuilder.ApplyConfiguration(new EntityDtoConfiguration<AutocompleteItemDto>());
-			}
+			modelBuilder.ApplyEntityDtoConfiguration<AutocompleteItemDto>(contextParameters);
+			
 
 			modelBuilder.ApplyConfiguration(new OrderStatusConfiguration());
 			modelBuilder.ApplyConfiguration(new OrderStatusKindConfiguration());
-
-			if (!contextParameters.IsDesignTime)
-			{
-				modelBuilder.ApplyConfiguration(new EntityDtoConfiguration<OrderStatusDto>());
-			}
+			modelBuilder.ApplyEntityDtoConfiguration<OrderStatusDto>(contextParameters);
 		}
 
         protected override IEnumerable<IPermissibleValuesControllerConfigurator> RegisterPermissibleValuesControllers()
