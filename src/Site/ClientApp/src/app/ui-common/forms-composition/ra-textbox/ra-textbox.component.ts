@@ -1,6 +1,7 @@
 import { Component, OnInit,Input } from '@angular/core';
 import { RaControls } from "../forms-composition.models";
 import { FormGroup } from "@angular/forms";
+import { FormErrorService } from "../form-error-service";
 
 @Component({
   selector: 'ra-textbox',
@@ -9,8 +10,8 @@ import { FormGroup } from "@angular/forms";
   <mat-form-field class="ra-mat-field">
     <input matInput placeholder="{{model.label}}" name="{{model.id}}" [formControlName]="model.id">
     <mat-hint>{{model.hint}}</mat-hint>
-    <mat-error>
-      Error text
+    <mat-error  *ngIf="form.controls[model.id].invalid">
+      {{formErrorService.getErrorMessage(form,model.id)}}
     </mat-error>
   </mat-form-field>
 </div>
@@ -24,9 +25,10 @@ export class RaTextboxComponent implements OnInit {
   @Input()
   form: FormGroup;
 
-  constructor() { }
+	constructor(public formErrorService: FormErrorService) { }
 
-  ngOnInit() {
+	ngOnInit() {
+    
   }
 
 }

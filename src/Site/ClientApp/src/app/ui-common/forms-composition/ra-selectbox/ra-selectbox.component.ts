@@ -9,6 +9,7 @@ import { DictionaryUtils } from "../../../app.utils";
 import { RedirectedErrorStateMatcher, TypedItemsUtils } from "../forms-composition-service";
 import { EntityServiceApiFactory, QueryParams, QueryParamsConfigurator } from "../../../features/ra-cruds/ra-cruds.module";
 import { PagedResult } from "../../../features/ra-cruds/ra-cruds.models";
+import { FormErrorService } from "../form-error-service";
 
 @Component({
   selector: 'ra-selectbox',
@@ -26,8 +27,8 @@ import { PagedResult } from "../../../features/ra-cruds/ra-cruds.models";
       </mat-option>
     </mat-select>
     <mat-hint>{{model.hint}}</mat-hint>
-    <mat-error>
-      Error text
+    <mat-error  *ngIf="form.controls[model.id].invalid">
+      {{formErrorService.getErrorMessage(form,model.id)}}
     </mat-error>
   </mat-form-field>
 </div>
@@ -60,7 +61,7 @@ export class RaSelectboxComponent implements OnInit, OnDestroy {
 
   filteredOptions: Observable<KeyValue<string>[]>;
 
-  constructor(private entityServiceApiFactory: EntityServiceApiFactory) {
+	constructor(private entityServiceApiFactory: EntityServiceApiFactory, public formErrorService: FormErrorService) {
     
   }
 

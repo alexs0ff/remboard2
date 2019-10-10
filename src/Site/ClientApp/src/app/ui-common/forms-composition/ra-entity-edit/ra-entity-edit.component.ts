@@ -9,6 +9,7 @@ import { FormsCompositionService } from "../forms-composition-service";
 import { FormGroup } from "@angular/forms";
 import { MatDialog, MatDialogRef} from '@angular/material/dialog';
 import { RaEntityEditRemoveDialog } from "./ra-entity-edit-remove-dialog";
+import { FormErrorService } from "../../ui-common.module";
 
 @Component({
   selector: 'ra-entity-edit',
