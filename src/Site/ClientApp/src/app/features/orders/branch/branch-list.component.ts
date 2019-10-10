@@ -22,7 +22,8 @@ export class BranchListComponent implements OnInit {
         { canOrder: true, id: "address", name: "Адрес" },
       ],
       pageSize: 10,
-      showAddButton: true
+		showAddButton: true,
+      filter: null
     };
   }
 

@@ -21,7 +21,8 @@ export class OrderStatusListComponent implements OnInit {
           { canOrder: true, id: "orderStatusKindTitle", name: "Тип" },
       ],
       pageSize: 10,
-      showAddButton:true
+		showAddButton: true,
+      filter: null
     };
   }
 

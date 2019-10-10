@@ -20,7 +20,8 @@ export class OrderTypeListComponent implements OnInit {
 		  { canOrder: true, id: "title", name: "Название" },
       ],
       pageSize: 10,
-      showAddButton:true
+		showAddButton: true,
+      filter: null
     };
   }
 

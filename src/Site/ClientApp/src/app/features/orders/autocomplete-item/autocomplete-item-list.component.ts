@@ -21,7 +21,8 @@ export class AutocompleteItemListComponent implements OnInit {
         { canOrder: false, id: "autocompleteKindTitle", name: "Тип" },
       ],
       pageSize: 10,
-      showAddButton:true
+		  showAddButton: true,
+      filter:null
     };
   }
 
