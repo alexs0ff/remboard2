@@ -30,6 +30,7 @@ import { RaAutocompleteboxComponent } from "./forms-composition/ra-autocompleteb
 import { MatSelectModule } from '@angular/material/select';
 import { RaEntityEditRemoveDialog } from "./forms-composition/ra-entity-edit/ra-entity-edit-remove-dialog";
 import { FormErrorService } from "./forms-composition/form-error-service";
+import { RaTextareaComponent } from "./forms-composition/ra-textarea/ra-textarea.component";
 
 
 const commonUi = [
@@ -62,7 +63,7 @@ const commonUiExport = [...commonUi, RaServerdataGridComponent, RaFormComponent,
 
 @NgModule({
   entryComponents: [RaEntityEditRemoveDialog],
-    declarations: [RaServerdataGridComponent, RaFormComponent, RaControlComponent, RaAutocompleteboxComponent, RaSelectboxComponent, RaTextboxComponent, RaEntityEditComponent, RaEntityEditRemoveDialog],
+	declarations: [RaServerdataGridComponent, RaFormComponent, RaControlComponent, RaTextareaComponent,RaAutocompleteboxComponent, RaSelectboxComponent, RaTextboxComponent, RaEntityEditComponent, RaEntityEditRemoveDialog],
   imports: commonUiImport,
   exports: commonUiExport,
 	providers: [FormsCompositionService, FormErrorService]

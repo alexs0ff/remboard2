@@ -9,7 +9,7 @@ export interface RaValidators {
 }
 
 export interface RaTextBox {
-  kind: 'textbox';
+	kind: 'textbox' | 'textarea';
   valueKind: ControlValueType;
   id: string;
   label: string;

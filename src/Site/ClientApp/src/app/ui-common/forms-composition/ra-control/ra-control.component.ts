@@ -8,6 +8,7 @@ import { FormGroup } from '@angular/forms';
 <div [ngSwitch]="control.kind">
 <ra-textbox *ngSwitchCase="'textbox'"  [model]="control" [form]="form"></ra-textbox>  
 <ra-selectbox *ngSwitchCase="'selectbox'"  [model]="control" [form]="form"></ra-selectbox>  
+<ra-textarea *ngSwitchCase="'textarea'"  [model]="control" [form]="form"></ra-textarea>  
 </div>
   `,
   styles: []

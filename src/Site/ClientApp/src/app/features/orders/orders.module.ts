@@ -9,6 +9,8 @@ import { OrderStatusListComponent } from './order-status/order-status-list.compo
 import { UiCommonModule } from "../../ui-common/ui-common.module";
 import { CrudsEntityMetadata, CrudEntityConfigurator, RaCrudsModule } from "../ra-cruds/ra-cruds.module";
 import { AutocompleteItem } from "./autocomplete-item/autocomplete-item.models";
+import { BranchListComponent } from "./branch/branch-list.component";
+import { BranchEditComponent } from "./branch/branch-edit.component";
 
 
 const routes: Routes = [
@@ -16,17 +18,20 @@ const routes: Routes = [
   { path: 'autocomplete-item', component: AutocompleteItemListComponent },
 	{ path: 'autocomplete-item/:id', component: AutocompleteItemEditComponent },
 	{ path: 'order-status', component: OrderStatusListComponent },
-	{ path: 'order-status/:id', component: OrderStatusEditComponent }
+	{ path: 'order-status/:id', component: OrderStatusEditComponent },
+	{ path: 'branch', component: BranchListComponent },
+	{ path: 'branch/:id', component: BranchEditComponent }
 ];
 
 
 const config: CrudsEntityMetadata = {
   "autocompleteItems": new CrudEntityConfigurator<AutocompleteItem>("autocompleteItem"),
 	"orderStatuses": new CrudEntityConfigurator<AutocompleteItem>("orderStatus"),
+	"branches": new CrudEntityConfigurator<AutocompleteItem>("branch"),
 }
 
 @NgModule({
-	declarations: [OrdersComponent, AutocompleteItemEditComponent, AutocompleteItemListComponent, OrderStatusEditComponent, OrderStatusListComponent],
+	declarations: [OrdersComponent, AutocompleteItemEditComponent, AutocompleteItemListComponent, OrderStatusEditComponent, OrderStatusListComponent, BranchListComponent, BranchEditComponent],
   imports: [
     CommonModule,
     UiCommonModule,
