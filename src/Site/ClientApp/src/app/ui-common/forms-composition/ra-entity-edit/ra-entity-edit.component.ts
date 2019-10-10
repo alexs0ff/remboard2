@@ -10,6 +10,7 @@ import { FormGroup } from "@angular/forms";
 import { MatDialog, MatDialogRef} from '@angular/material/dialog';
 import { RaEntityEditRemoveDialog } from "./ra-entity-edit-remove-dialog";
 import { FormErrorService } from "../../ui-common.module";
+import { EntityCorrelationIds } from "../../../features/ra-cruds/ra-cruds.models";
 
 @Component({
   selector: 'ra-entity-edit',
@@ -35,10 +36,11 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 
   private entityService: IEntityService<any>;
 
-	isNewEntity: boolean;
+  private isNewEntity: boolean;
 
-  currentId:string;
-  
+  private currentId:string;
+
+  private lastAddedEntityCorrelationId:string;
 
 	constructor(private location: Location, private route: ActivatedRoute, private router: Router, private entityServiceFabric: EntityServiceFabric, private compositionService: FormsCompositionService, private dialog: MatDialog) {
   }
@@ -60,20 +62,38 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 	});
 
     this.entityService.lastRemovedIds.pipe(takeUntil(this.lifeTimeObject)).subscribe(removedIds => {
-		if (removedIds != null) {
-			let res: boolean = false;
-			
-			for (var i = 0; i < removedIds.length; i++) {
-				if (removedIds[i] === this.currentId) {
-					res = true;
-          break;
-        }
-			}
+      if (removedIds != null) {
+        let res: boolean = false;
 
-			if (res) {
-				this.router.navigate(["../"], { relativeTo: this.route });
+        for (var i = 0; i < removedIds.length; i++) {
+          if (removedIds[i] === this.currentId) {
+            res = true;
+            break;
+          }
+        }
+
+        if (res) {
+          this.router.navigate(["../"], { relativeTo: this.route });
+        }
       }
-    }
+	});
+
+	  this.entityService.lastAddedIds.pipe(takeUntil(this.lifeTimeObject)).subscribe(addedIds => {
+
+      if (addedIds != null) {
+		    let res: EntityCorrelationIds = null;
+
+        for (var i = 0; i < addedIds.length; i++) {
+          if (addedIds[i].correlationId === this.lastAddedEntityCorrelationId) {
+			    res = addedIds[i];
+            break;
+          }
+        }
+
+        if (res!=null) {
+			    this.router.navigate(["../", res.entityId], { relativeTo: this.route });
+        }
+      }
     });
 
     this.route.paramMap.pipe(takeUntil(this.lifeTimeObject), map(p => p.get("id"))).subscribe(currentId => {
@@ -98,7 +118,7 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
   }
 
   goBack() {
-    this.location.back();
+    this.router.navigate(["../"], { relativeTo: this.route });
   }
 
   saveItem() {
@@ -108,7 +128,7 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
     }
 
     if (this.isNewEntity) {
-      this.entityService.add({ ...this.form.value, id: "newguid" });
+      this.lastAddedEntityCorrelationId = this.entityService.add({ ...this.form.value, id: "newguid" });
     } else {
       this.entityService.update(this.form.value);
     }

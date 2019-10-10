@@ -9,7 +9,7 @@ export class EntityActions<T extends IEntityBase> {
   }
 
   loadEntities = createAction('[' + this.entityName + ' Page] Load Entities', props<{ entities: T[],totalCount:number }>());
-  addEntity = createAction('[' + this.entityName + ' Page] Add Entity', props<{ entity: T }>());
+	addEntity = createAction('[' + this.entityName + ' Page] Add Entity', props<{ entity: T, correlationId:string }>());
 
   upsertEntity = createAction('[' + this.entityName + ' Page] Upsert Entity', props<{ entity: T }>());
   upsertEntityAndSetCurrentId = createAction('[' + this.entityName + ' Page] Upsert Entity and set current id', props<{ entity: T }>());
@@ -31,6 +31,6 @@ export class EntityActions<T extends IEntityBase> {
 export const loadAllEntities = createAction('Load entities from API', props<{ entitiesName: string }>());
 export const loadWithQueryEntities = createAction('Load with query entities from API', props<{ entitiesName: string,queryParams:QueryParams}>());
 export const loadByIdEntity = createAction('Load an entity from API', props<{ entitiesName: string, id: string }>());
-export const createEntity = createAction('Create entity to API', props < { entitiesName:string,entity:IEntityBase}>());
+export const createEntity = createAction('Create entity to API', props < { entitiesName:string,entity:IEntityBase,correlationId:string}>());
 export const updateEntity = createAction('Update entity to API', props<{ entitiesName: string,id:string,entity:IEntityBase}>());
 export const deleteEntity = createAction('Delete entity to API', props<{ entitiesName: string,id:string}>());

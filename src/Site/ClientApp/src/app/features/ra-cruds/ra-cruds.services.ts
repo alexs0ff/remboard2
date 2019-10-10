@@ -1,9 +1,11 @@
 import { Injectable,Type } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
+import * as uuid from 'uuid';
 import { Action, createAction, props, ActionReducer, on, createReducer, createSelector, MemoizedSelector } from '@ngrx/store';
 import { EntityState, createEntityAdapter } from '@ngrx/entity';
 import { IEntityBase, CrudAdapter, IState, IEntityService, ICrudEntityConfigurator, PagedResult, QueryParams,
-  EntityResponse
+  EntityResponse,
+  EntityCorrelationIds
 } from "./ra-cruds.models"
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
@@ -19,6 +21,7 @@ class EntitySelectors<T extends IEntityBase> {
   isLoading: MemoizedSelector<any, boolean>;
   errorResponse: MemoizedSelector<any, EntityResponse>;
 	lastRemovedIds: MemoizedSelector<any, string[] | null>;
+	lastAddedIds: MemoizedSelector<any, EntityCorrelationIds[] | null>;
   
 
   constructor(featureName: string,private entitiesName: string, adapter: CrudAdapter<T>) {
@@ -40,6 +43,7 @@ class EntitySelectors<T extends IEntityBase> {
     this.hasError = createSelector(getModuleState, (i) => i.hasError);
 	  this.errorResponse = createSelector(getModuleState, (i) => i.error);
 	  this.lastRemovedIds = createSelector(getModuleState, (i) => i.lastRemovedIds);
+	  this.lastAddedIds = createSelector(getModuleState, (i) => i.lastAddedIds);
 
     this.currentEntity = createSelector(getModuleEntities,getModuleSelectedEntityId,(entities, currentId) => entities[currentId]);
   }
@@ -67,7 +71,8 @@ export class CrudEntityConfigurator<T extends IEntityBase> implements ICrudEntit
       loading: false,
       hasError: false,
 		  error: null,
-      lastRemovedIds:null
+		  lastRemovedIds: null,
+      lastAddedIds:null
     });
 
     this.entityActions = new EntityActions<T>(entitiesName);
@@ -76,8 +81,8 @@ export class CrudEntityConfigurator<T extends IEntityBase> implements ICrudEntit
 
     this.entityReducer = createReducer(
       this.initialState,
-      on(this.entityActions.addEntity, (state, { entity }) => {
-        return this.adapter.addOne(entity, <IState<T>>{ ...state, loading: false });
+		on(this.entityActions.addEntity, (state, { entity, correlationId }) => {
+			return this.adapter.addOne(entity, <IState<T>>{ ...state, loading: false, lastAddedIds: [{ entityId: entity.id, correlationId: correlationId}] });
       }),
       on(this.entityActions.upsertEntity, (state, { entity }) => {
         return this.adapter.upsertOne(entity, <IState<T>>{ ...state, loading: false });
@@ -174,7 +179,9 @@ export class EntityService<T extends IEntityBase> implements IEntityService<T> {
 
 	errorResponse: Observable<EntityResponse>;
 
-  lastRemovedIds: Observable<string[]|null>;
+	lastRemovedIds: Observable<string[] | null>;
+
+  lastAddedIds: Observable<EntityCorrelationIds[] | null>;
 
   constructor(private configurator: CrudEntityConfigurator<T>, private store: Store<{}>, private entitiesName:string) {
     this.entityActions = configurator.entityActions;
@@ -185,6 +192,7 @@ export class EntityService<T extends IEntityBase> implements IEntityService<T> {
     this.hasError = store.pipe(select(configurator.entitySelectors.hasError));
     this.errorResponse = store.pipe(select(configurator.entitySelectors.errorResponse));
 	  this.lastRemovedIds = store.pipe(select(configurator.entitySelectors.lastRemovedIds));
+	  this.lastAddedIds = store.pipe(select(configurator.entitySelectors.lastAddedIds));
   }
 
   addMany(entities: T[]) {
@@ -206,9 +214,11 @@ export class EntityService<T extends IEntityBase> implements IEntityService<T> {
     this.store.dispatch(loadByIdEntity({ entitiesName: this.entitiesName, id: id}));
   }
 
-  add(entity: T) {
+	add(entity: T): string {
+		const correlationId = uuid.v4();
     this.store.dispatch(this.entityActions.startApiFetch());
-    this.store.dispatch(createEntity({ entitiesName: this.entitiesName, entity:entity }));
+		this.store.dispatch(createEntity({ entitiesName: this.entitiesName, entity: entity, correlationId:correlationId}));
+    return correlationId;
   }
 
   update(entity: T) {

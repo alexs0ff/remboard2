@@ -1,5 +1,5 @@
 <div fxLayout="row" fxLayoutAlign="start start">
-  <button mat-icon-button matTooltip="navigation back" (click)="goBack()"><mat-icon>arrow_back</mat-icon></button>
+  <button mat-icon-button matTooltip="К списку" (click)="goBack()"><mat-icon>arrow_back</mat-icon></button>
   <div class="entity-title">
     <h2>{{model.title}}</h2>
   </div>
@@ -18,8 +18,8 @@
 </div>
 <ra-form [layout]="layout" [form]="form"></ra-form>
 <div fxLayout="row" fxLayoutAlign="end center" class="manage-controls">
-    <button mat-raised-button matTooltip="Удалить" (click)="deleteItem()" color="warn" *ngIf="!isNewEntity" [class.spinner]="isLoading$ | async"><mat-icon>remove_circle</mat-icon> Удалить</button>
-    <button mat-raised-button matTooltip="Сохранить" (click)="saveItem()" color="primary" [class.spinner]="isLoading$ | async">
+    <button mat-raised-button matTooltip="Удалить" (click)="deleteItem()" color="warn" *ngIf="!isNewEntity" [class.spinner]="isLoading$ | async" [disabled]="isLoading$ | async"><mat-icon>remove_circle</mat-icon> Удалить</button>
+    <button mat-raised-button matTooltip="Сохранить" (click)="saveItem()" color="primary" [class.spinner]="isLoading$ | async" [disabled]="isLoading$ | async">
       <mat-icon>save</mat-icon>
       <ng-template [ngIf]="isNewEntity">
         Добавить

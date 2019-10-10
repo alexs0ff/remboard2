@@ -18,13 +18,19 @@ export interface IEntityBase {
   id: string;
 }
 
+export interface EntityCorrelationIds {
+	entityId: string;
+  correlationId:string;
+}
+
 export interface IState<T extends IEntityBase> extends EntityState<T> {
   selectedId: string | null;
   totalCount: number;
   loading: boolean;
   error: EntityResponse | null;
   hasError: boolean;
-  lastRemovedIds: string[] | null;
+	lastRemovedIds: string[] | null;
+	lastAddedIds: EntityCorrelationIds[] |null;
 }
 
 export interface CrudAdapter<T extends IEntityBase> extends EntityAdapter<T> {
@@ -43,12 +49,14 @@ export interface IEntityService<T extends IEntityBase> {
   isLoading: Observable<boolean>;
   hasError: Observable<boolean>;
   errorResponse: Observable<EntityResponse>;
-  lastRemovedIds: Observable<string[] | null>;
+	lastRemovedIds: Observable<string[] | null>;
+	lastAddedIds: Observable<EntityCorrelationIds[] | null>;
+
   getAll();
   getById(id: string);
   getWithQuery(queryParams: QueryParams);
   addMany(entities: T[]);
-  add(entity: T);
+  add(entity: T):string;
   update(entity: T);
   delete(id: string);
 }

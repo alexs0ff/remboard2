@@ -33,7 +33,7 @@ export class RaCrudsEntityEffects {
   createEntity$ = createEffect(() => this.actions$.pipe(
     ofType(createEntity),
     mergeMap((e) => this.getApiService(e.entitiesName).add(e.entity).pipe(
-      map(result => this.getEntityActions(e.entitiesName).addEntity({ entity: result})),
+		map(result => this.getEntityActions(e.entitiesName).addEntity({ entity: result, correlationId: e.correlationId})),
       catchError((error) => {
         const parsed = RaUtils.parseHttpError(error);
         return of(this.getEntityActions(e.entitiesName).setApiError({ error: parsed }));

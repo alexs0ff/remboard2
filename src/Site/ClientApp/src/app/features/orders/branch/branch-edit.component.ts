@@ -48,7 +48,7 @@ export class BranchEditComponent implements OnInit {
                   }
 								},
                 {
-                  flexExpression: flexExpressions.twoItemsExpressions,
+                  flexExpression: flexExpressions.oneItemExpressions,
                   control: {
 					id: "address",
                     kind: 'textarea',
