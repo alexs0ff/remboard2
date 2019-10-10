@@ -29,8 +29,4 @@ export class BranchListComponent implements OnInit {
   ngOnInit() {
 
   }
-
-  test() {
-
-  }
 }

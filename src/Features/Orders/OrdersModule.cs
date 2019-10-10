@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Orders.Autocomplete;
 using Orders.Branches;
 using Orders.OrderStatuses;
+using Orders.OrderTypes;
 
 namespace Orders
 {
@@ -22,7 +23,6 @@ namespace Orders
         {
             AddMapperProfile<OrdersProfile>(builder);
         }
-
 
         public void OnContextFeatureCreating(ModelBuilder modelBuilder, RemboardContextParameters contextParameters)
         {
@@ -36,6 +36,7 @@ namespace Orders
 			modelBuilder.ApplyEntityDtoConfiguration<OrderStatusDto>(contextParameters);
 
 			modelBuilder.ApplyConfiguration(new BranchConfiguration());
+			modelBuilder.ApplyConfiguration(new OrderTypeConfiguration());
         }
 
         protected override IEnumerable<IPermissibleValuesControllerConfigurator> RegisterPermissibleValuesControllers()
@@ -97,6 +98,16 @@ namespace Orders
 		            parameters =>
 		            {
 			            
+		            })
+	            .AddModifyRoles();
+
+            yield return new CrudControllerConfigurator<OrderType, OrderTypeDto, OrderTypeDto>()
+	            .SetEntityPluralName("OrderTypes")
+	            .UseValidator<OrderTypeDtoValidator>()
+	            .UseFilterableEntityOperation<EntityContextFilterOperation<OrderType, OrderTypeDto>>(
+		            parameters =>
+		            {
+
 		            })
 	            .AddModifyRoles();
 

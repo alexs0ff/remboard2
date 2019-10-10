@@ -6,6 +6,7 @@ using Common.Features;
 using Orders.Autocomplete;
 using Orders.Branches;
 using Orders.OrderStatuses;
+using Orders.OrderTypes;
 
 namespace Orders
 {
@@ -25,6 +26,9 @@ namespace Orders
 
             CreateMap<Branch, BranchDto>()
 	            .ReverseMap();
-        }
+
+            CreateMap<OrderType, OrderTypeDto>()
+	            .ReverseMap();
+		}
     }
 }
