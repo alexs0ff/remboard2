@@ -4,6 +4,7 @@ using System.Text;
 using AutoMapper;
 using Common.Features;
 using Orders.Autocomplete;
+using Orders.Branches;
 using Orders.OrderStatuses;
 
 namespace Orders
@@ -21,6 +22,9 @@ namespace Orders
 	            .ForMember(i => i.OrderStatusKindTitle, m => m.MapFrom(p => p.OrderStatusKind.Name))
 	            .ReverseMap()
 	            .ForMember(i=>i.OrderStatusKind,m=>m.Ignore());
+
+            CreateMap<Branch, BranchDto>()
+	            .ReverseMap();
         }
     }
 }

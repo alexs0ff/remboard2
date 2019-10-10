@@ -11,6 +11,7 @@ using Common.Features.Cruds.Filterable;
 using Common.Features.PermissibleValues;
 using Microsoft.EntityFrameworkCore;
 using Orders.Autocomplete;
+using Orders.Branches;
 using Orders.OrderStatuses;
 
 namespace Orders
@@ -33,7 +34,9 @@ namespace Orders
 			modelBuilder.ApplyConfiguration(new OrderStatusConfiguration());
 			modelBuilder.ApplyConfiguration(new OrderStatusKindConfiguration());
 			modelBuilder.ApplyEntityDtoConfiguration<OrderStatusDto>(contextParameters);
-		}
+
+			modelBuilder.ApplyConfiguration(new BranchConfiguration());
+        }
 
         protected override IEnumerable<IPermissibleValuesControllerConfigurator> RegisterPermissibleValuesControllers()
         {
@@ -84,6 +87,16 @@ namespace Orders
 		            parameters =>
 		            {
 			            parameters.AddSortFieldsMapping(nameof(OrderStatusDto.OrderStatusKindTitle), nameof(OrderStatus.OrderStatusKind) + "." + nameof(OrderStatus.OrderStatusKind.Name));
+		            })
+	            .AddModifyRoles();
+
+            yield return new CrudControllerConfigurator<Branch, BranchDto, BranchDto>()
+	            .SetEntityPluralName("Branches")
+	            .UseValidator<BranchDtoValidator>()
+	            .UseFilterableEntityOperation<EntityContextFilterOperation<Branch, BranchDto>>(
+		            parameters =>
+		            {
+			            
 		            })
 	            .AddModifyRoles();
 

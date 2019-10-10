@@ -15,8 +15,4 @@
     <ProjectReference Include="..\Users\Users.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Branches\" />
-  </ItemGroup>
-
 </Project>

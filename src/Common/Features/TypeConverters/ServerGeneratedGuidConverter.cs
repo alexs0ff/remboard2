@@ -29,7 +29,7 @@ namespace Common.Features.TypeConverters
         {
             if (reader.TokenType == JsonToken.String)
             {
-                string? guidText = reader.Value?.ToString();
+                string guidText = reader.Value?.ToString();
                 if (StringComparer.OrdinalIgnoreCase.Equals(guidText, "newguid"))
                 {
                     return Guid.NewGuid();
