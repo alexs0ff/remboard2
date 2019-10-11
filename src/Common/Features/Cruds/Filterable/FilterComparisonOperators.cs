@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Common.Features.Cruds.Filterable
 {
-    public enum FilterСomparisonOperators
+    public enum FilterComparisonOperators
     {
         None,
         Equals,

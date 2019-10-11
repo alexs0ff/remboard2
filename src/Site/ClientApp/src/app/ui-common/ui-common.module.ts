@@ -64,7 +64,16 @@ const commonUiExport = [...commonUi, RaServerdataGridComponent, RaFormComponent,
 
 @NgModule({
   entryComponents: [RaEntityEditRemoveDialog],
-	declarations: [RaServerdataGridComponent, RaFormComponent, RaControlComponent, RaTextareaComponent,RaAutocompleteboxComponent, RaSelectboxComponent, RaTextboxComponent, RaEntityEditComponent, RaEntityEditRemoveDialog, RaGridFilterComponent],
+	declarations: [RaServerdataGridComponent,
+		RaFormComponent,
+		RaControlComponent,
+		RaTextareaComponent,
+		RaAutocompleteboxComponent,
+		RaSelectboxComponent,
+		RaTextboxComponent,
+		RaEntityEditComponent,
+		RaEntityEditRemoveDialog,
+		RaGridFilterComponent],
   imports: commonUiImport,
   exports: commonUiExport,
 	providers: [FormsCompositionService, FormErrorService]

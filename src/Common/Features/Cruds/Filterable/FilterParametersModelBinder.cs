@@ -78,16 +78,16 @@ namespace Common.Features.Cruds.Filterable
                 }
 
                 var operatorParameter = string.Format(FilterParameterOperator, name);
-                var comparisonOperator = ParseEnum(queryParameters, operatorParameter, FilterСomparisonOperators.None);
+                var comparisonOperator = ParseEnum(queryParameters, operatorParameter, FilterComparisonOperators.None);
                 var logicalParameter = string.Format(FilterParameterNext, name);
                 var logicalOperator = ParseEnum(queryParameters, logicalParameter, FilterLogicalOperators.None);
 
-                if (!string.IsNullOrWhiteSpace(value) && comparisonOperator!=FilterСomparisonOperators.None)
+                if (!string.IsNullOrWhiteSpace(value) && comparisonOperator!=FilterComparisonOperators.None)
                 {
                     var filterStatement = new FilterStatement();
                     filterStatement.ParameterName = name;
                     filterStatement.ParameterValue = value;
-                    filterStatement.СomparisonOperator = comparisonOperator;
+                    filterStatement.ComparisonOperator = comparisonOperator;
                     filterStatement.LogicalOperator = logicalOperator;
                     filter.Statements.Add(filterStatement);
                 }

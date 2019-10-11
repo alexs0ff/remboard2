@@ -81,29 +81,29 @@ namespace Common.Features.Cruds.Filterable
 
             var columnName = CreateColumnName(filterStatement.ParameterName, operationParameters);
 
-            CreateLogicalOperation(whereBuilder,columnName, currentIndex, filterStatement.СomparisonOperator);
+            CreateLogicalOperation(whereBuilder,columnName, currentIndex, filterStatement.ComparisonOperator);
 
             return true;
         }
 
-        private void CreateLogicalOperation(StringBuilder whereBuilder, string columnName, in int currentIndex, FilterСomparisonOperators сomparisonOperator)
+        private void CreateLogicalOperation(StringBuilder whereBuilder, string columnName, in int currentIndex, FilterComparisonOperators comparisonOperator)
         {
-            switch (сomparisonOperator)
+            switch (comparisonOperator)
             {
-                case FilterСomparisonOperators.Equals:
+                case FilterComparisonOperators.Equals:
                     whereBuilder.Append(columnName+"={"+currentIndex+"} ");
                     break;
-                case FilterСomparisonOperators.Contains:
+                case FilterComparisonOperators.Contains:
                     whereBuilder.Append("CHARINDEX({"+currentIndex+"},"+ columnName + ") > 0 ");
                     break;
-                case FilterСomparisonOperators.LessThan:
+                case FilterComparisonOperators.LessThan:
                     whereBuilder.Append(columnName + "< {" + currentIndex + "} ");
                     break;
-                case FilterСomparisonOperators.GreaterThan:
+                case FilterComparisonOperators.GreaterThan:
                     whereBuilder.Append(columnName + "> {" + currentIndex + "} ");
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(сomparisonOperator), сomparisonOperator, null);
+                    throw new ArgumentOutOfRangeException(nameof(comparisonOperator), comparisonOperator, null);
             }
         }
 

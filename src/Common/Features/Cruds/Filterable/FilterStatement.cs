@@ -10,7 +10,7 @@ namespace Common.Features.Cruds.Filterable
 
         public string ParameterValue { get; set; }
 
-        public FilterСomparisonOperators СomparisonOperator { get; set; }
+        public FilterComparisonOperators ComparisonOperator { get; set; }
 
         public FilterLogicalOperators LogicalOperator { get; set; }
     }

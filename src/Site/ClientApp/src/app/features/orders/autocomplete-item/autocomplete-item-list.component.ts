@@ -22,7 +22,7 @@ export class AutocompleteItemListComponent implements OnInit {
       ],
       pageSize: 10,
 		  showAddButton: true,
-      filter:null
+		  filter: { columns: [{kind:"text",id:"title",title:"название"}] }
     };
   }
 

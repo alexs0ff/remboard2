@@ -102,22 +102,22 @@ namespace Common.Features.Cruds.Filterable
                 return null;
             }
 
-            if (filter.СomparisonOperator == FilterСomparisonOperators.Equals)
+            if (filter.ComparisonOperator == FilterComparisonOperators.Equals)
             {
                 return new EqualsSpecification<TEntity>(targetType,value,filter.ParameterName);
             }
 
-            if (filter.СomparisonOperator == FilterСomparisonOperators.GreaterThan)
+            if (filter.ComparisonOperator == FilterComparisonOperators.GreaterThan)
             {
                 return new GreaterThanSpecification<TEntity>(targetType, value, filter.ParameterName);
             }
 
-            if (filter.СomparisonOperator == FilterСomparisonOperators.LessThan)
+            if (filter.ComparisonOperator == FilterComparisonOperators.LessThan)
             {
                 return new LessThanSpecification<TEntity>(targetType, value, filter.ParameterName);
             }
 
-            if (filter.СomparisonOperator == FilterСomparisonOperators.Contains)
+            if (filter.ComparisonOperator == FilterComparisonOperators.Contains)
             {
                 return new ContainsSpecification<TEntity>(filter.ParameterValue, filter.ParameterName);
             }
