@@ -1,4 +1,5 @@
 import { Dictionary } from "../../app.models";
+import { RaTextBox, RaSelectBox } from "../forms-composition/forms-composition.models";
 
 export interface RaGridColumn {
   id:string;
@@ -13,18 +14,7 @@ export interface RaServerDataGridModel {
 	filter: RaGridFilterModel|null;
 }
 
-
-export interface FilterTextControl {
-	kind: 'text';
-	id: string;
-  title: string;
-}
-
-export interface FilterSelectboxControl {
-  kind: 'selectbox';
-}
-
-type FilterControlKinds = FilterTextControl | FilterSelectboxControl;
+export type FilterControlKinds = RaTextBox | RaSelectBox;
 
 
 export interface RaGridFilterModel {

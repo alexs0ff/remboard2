@@ -22,15 +22,11 @@ export class AutocompleteItemListComponent implements OnInit {
       ],
       pageSize: 10,
 		  showAddButton: true,
-		  filter: { columns: [{kind:"text",id:"title",title:"название"}] }
+		filter: { columns: [{ id: "title", kind: 'textbox', label: "Название", valueKind: "string", validators: { required:true}}] }
     };
   }
 
   ngOnInit() {
-    
-  }
-
-  test() {
     
   }
 }

@@ -22,7 +22,7 @@ export interface RaTextBox {
 export interface RaSelectBoxRemoteSource {
   kind: 'remote',
   entitiesName: string;
-  displayColumns:Array<string>;
+  displayColumns:string[];
   keyColumn: string;
   clientFilter:boolean;
   maxItems?: number;
@@ -30,7 +30,7 @@ export interface RaSelectBoxRemoteSource {
 
 export interface RaSelectBoxItemsSource {
   kind: 'items',
-  items: Array<KeyValue<string>>;
+  items: KeyValue<string>[];
 }
 
 export type RaSelectBoxSources = RaSelectBoxItemsSource | RaSelectBoxRemoteSource;

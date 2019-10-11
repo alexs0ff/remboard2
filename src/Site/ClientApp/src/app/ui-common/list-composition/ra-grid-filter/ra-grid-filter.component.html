@@ -1,38 +1,49 @@
-<form [formGroup]="filtersForm" class="filter-form">
+<form [formGroup]="filtersForm" class="filter-form" (ngSubmit)="startRefreshData()">
   <div formArrayName="filters">
-    <div div fxLayout="row" fxLayoutAlign="start center" *ngFor="let filter of filters.controls; let i=index">
-      <button mat-icon-button color="warn" aria-label="" (click)="clearFilter(i)" matTooltip="Удалить условие">
-        <mat-icon>clear</mat-icon>
-      </button>
-      <mat-form-field class="filter-control">
-        <mat-label>Оператор</mat-label>
-        <mat-select>
-          <mat-option *ngFor="let lop of logicalOperators" [value]="lop.key">
-            {{lop.value}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+    <div *ngFor="let filter of filters.controls; let i=index">
+      <div fxLayout="row" fxLayoutAlign="start center" [formGroupName]="i">
+        <button class="remove-filter-button" mat-icon-button color="warn" aria-label="" (click)="clearFilter(i)" matTooltip="Удалить условие">
+          <mat-icon>clear</mat-icon>
+        </button>
+        <mat-form-field class="filter-control">
+          <mat-label>Оператор</mat-label>
+          <mat-select formControlName="logicalOperator">
+            <mat-option *ngFor="let lop of logicalOperators" [value]="lop.key">
+              {{lop.value}}
+            </mat-option>
+          </mat-select>
+          <mat-error>
+              Необходимо выбрать значение
+          </mat-error>
+        </mat-form-field>
 
-      <mat-form-field class="filter-control">
-        <mat-label>Поле</mat-label>
-        <mat-select>
-          <mat-option *ngFor="let column of columns" [value]="column.key">
-            {{column.value}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field class="filter-control">
-        <mat-label>Сравнение</mat-label>
-        <mat-select>
-          <mat-option *ngFor="let cop of comparisonOperators" [value]="cop.key">
-            {{cop.value}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field class="filter-control">
-        <input matInput [formControlName]="i" placeholder="Значение">
-      </mat-form-field>
+        <mat-form-field class="filter-control">
+          <mat-label>Поле</mat-label>
+          <mat-select formControlName="column">
+            <mat-option *ngFor="let column of columns" [value]="column.key">
+              {{column.value}}
+            </mat-option>
+          </mat-select>
+          <mat-error>
+            Необходимо выбрать значение
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="filter-control">
+          <mat-label>Сравнение</mat-label>
+          <mat-select formControlName="comparison">
+            <mat-option *ngFor="let cop of comparisonOperators" [value]="cop.key">
+              {{cop.value}}
+            </mat-option>
+          </mat-select>
+          <mat-error>
+            Необходимо выбрать значение
+          </mat-error>
+        </mat-form-field>
+        <ra-control class="filter-control" *ngIf="getValueModel(i)" [control]="getValueModel(i)" [form]="getFormGroupByIndex(i)"></ra-control>
+      </div>
     </div>
+  </div>
+
     <div div fxLayout="row" fxLayoutAlign="space-between center" class="operations-panel">
       <div>
         <button class="filter-button" mat-stroked-button color="primary" aria-label="" (click)="addFilter()">
@@ -40,10 +51,9 @@
         </button>
       </div>
       <div>
-        <button class="refresh-button" mat-stroked-button color="accent" aria-label="" (click)="startRefreshData()">
+        <button type="submit" class="refresh-button" mat-stroked-button color="accent" aria-label="">
           <mat-icon>refresh</mat-icon> Обновить
         </button>
       </div>
     </div>
-  </div>
 </form>
