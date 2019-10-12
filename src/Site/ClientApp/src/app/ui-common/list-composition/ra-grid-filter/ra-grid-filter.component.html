@@ -1,7 +1,7 @@
 <form [formGroup]="filtersForm" class="filter-form" (ngSubmit)="startRefreshData()">
   <div formArrayName="filters">
-    <div *ngFor="let filter of filters.controls; let i=index">
-      <div fxLayout="row" fxLayoutAlign="start center" [formGroupName]="i">
+    <div *ngFor="let filter of filters.controls; let i=index" class="filter-form-item">
+      <div fxLayout="row" fxLayoutAlign="start center" [formGroupName]="i" [formGroup]="getFormGroupByIndex(i)">
         <button class="remove-filter-button" mat-icon-button color="warn" aria-label="" (click)="clearFilter(i)" matTooltip="Удалить условие">
           <mat-icon>clear</mat-icon>
         </button>
@@ -28,10 +28,10 @@
             Необходимо выбрать значение
           </mat-error>
         </mat-form-field>
-        <mat-form-field class="filter-control">
+        <mat-form-field class="filter-control" *ngIf="getValueModel(i)">
           <mat-label>Сравнение</mat-label>
           <mat-select formControlName="comparison">
-            <mat-option *ngFor="let cop of comparisonOperators" [value]="cop.key">
+            <mat-option *ngFor="let cop of getComparisonOperators(i)" [value]="cop.key">
               {{cop.value}}
             </mat-option>
           </mat-select>
@@ -46,7 +46,7 @@
 
     <div div fxLayout="row" fxLayoutAlign="space-between center" class="operations-panel">
       <div>
-        <button class="filter-button" mat-stroked-button color="primary" aria-label="" (click)="addFilter()">
+        <button type="button" class="filter-button" mat-stroked-button color="primary" aria-label="" (click)="addFilter()">
           <mat-icon>filter_list</mat-icon> Добавить фильтр
         </button>
       </div>

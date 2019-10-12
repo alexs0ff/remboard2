@@ -21,8 +21,27 @@ export class AutocompleteItemListComponent implements OnInit {
         { canOrder: false, id: "autocompleteKindTitle", name: "Тип" },
       ],
       pageSize: 10,
-		  showAddButton: true,
-		filter: { columns: [{ id: "title", kind: 'textbox', label: "Название", valueKind: "string", validators: { required:true}}] }
+      showAddButton: true,
+      filter: {
+        columns: [
+			  { id: "title", kind: 'textbox', label: "Название", valueKind: "string", validators: { required: true } },
+          {
+            kind: 'selectbox',
+            id: 'autocompleteKindId',
+            label: 'Тип автодополнения',
+            hint: 'Тип автодополнения',
+            validators: { required: true },
+            valueKind: 'number',
+            source: {
+              kind: 'items', items: [
+                { key: 1, value: "Бренд" },
+                { key: 2, value: "Комплектация" },
+                { key: 3, value: "Внешний вид" }
+              ]
+            }
+          }
+        ]
+      }
     };
   }
 
