@@ -19,7 +19,7 @@
 
         <mat-form-field class="filter-control">
           <mat-label>Поле</mat-label>
-          <mat-select formControlName="column">
+          <mat-select formControlName="column" (selectionChange)="columnSelectionChange($event,i)">
             <mat-option *ngFor="let column of columns" [value]="column.key">
               {{column.value}}
             </mat-option>
@@ -28,10 +28,10 @@
             Необходимо выбрать значение
           </mat-error>
         </mat-form-field>
-        <mat-form-field class="filter-control" *ngIf="getValueModel(i)">
+        <mat-form-field class="filter-control" *ngIf="comparisonOperators[i]">
           <mat-label>Сравнение</mat-label>
           <mat-select formControlName="comparison">
-            <mat-option *ngFor="let cop of getComparisonOperators(i)" [value]="cop.key">
+            <mat-option *ngFor="let cop of comparisonOperators[i]" [value]="cop.key">
               {{cop.value}}
             </mat-option>
           </mat-select>
@@ -39,7 +39,7 @@
             Необходимо выбрать значение
           </mat-error>
         </mat-form-field>
-        <ra-control class="filter-control" *ngIf="getValueModel(i)" [control]="getValueModel(i)" [form]="getFormGroupByIndex(i)"></ra-control>
+        <ra-control class="filter-control" *ngIf="comparisonOperators[i]" [control]="getValueModel(i)" [form]="getFormGroupByIndex(i)"></ra-control>
       </div>
     </div>
   </div>

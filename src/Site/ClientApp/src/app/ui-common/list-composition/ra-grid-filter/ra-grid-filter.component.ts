@@ -4,6 +4,7 @@ import { KeyValue } from "../../../app.models";
 import { RaGridFilterModel, FilterControlKinds } from "../list-composition.models";
 import { FormErrorService } from "../../forms-composition/form-error-service";
 import { GridFilterCompositionService } from "./ra-grid-filter.services";
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
 	selector: 'ra-grid-filter',
@@ -21,6 +22,8 @@ export class RaGridFilterComponent implements OnInit {
 	@Input()
 	model: RaGridFilterModel;
 
+	comparisonOperators = [];
+
 	constructor(private formBuilder: FormBuilder, private filterCompositionService: GridFilterCompositionService) {
 		this.filtersForm = this.formBuilder.group({
 			filters: this.formBuilder.array([])
@@ -35,13 +38,6 @@ export class RaGridFilterComponent implements OnInit {
 		return this.filtersForm.get('filters') as FormArray;
 	}
 
-	getComparisonOperators(index: number): KeyValue<string>[] {
-		let columnId = this.filters.value[index].column;
-		console.log("ddd",columnId);
-		//return this.filterCompositionService.toComparisonOperators(this.model, columnId);
-		return [];
-	}
-
 	private createItem(): FormGroup {
 		return this.formBuilder.group({
 			"logicalOperator": this.formBuilder.control('', Validators.required),
@@ -51,7 +47,11 @@ export class RaGridFilterComponent implements OnInit {
 		});
 	}
 
-	//<ra-control *ngIf="getValueModel(i)" [model]="getValueModel(i)" [form]="getFormGroupByIndex(i)"></ra-control>
+	columnSelectionChange(event: MatSelectChange, index: number) {
+		let columnId = event.value;
+		this.comparisonOperators[index] = this.filterCompositionService.toComparisonOperators(this.model, columnId);;
+	}
+	
 	getValueModel(index: number): FilterControlKinds {
 		if (this.filters.value.length < index) {
 			return null;
@@ -69,10 +69,12 @@ export class RaGridFilterComponent implements OnInit {
 
 	addFilter() {
 		this.filters.push(this.createItem());
+		this.comparisonOperators.push(null);
 	}
 
 	clearFilter(i: number) {
 		this.filters.removeAt(i);
+		this.comparisonOperators.splice(i, 1);
 	}
 
 	startRefreshData() {
