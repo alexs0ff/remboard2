@@ -34,53 +34,61 @@ export class RaUtils {
 }
 
 export class QueryParamsConfigurator {
-  private parameters = {};
+	private parameters = { "filterColumnName":[]};
 
-  setPageSize(size: number): QueryParamsConfigurator {
-    this.parameters["pageSize"] = size;
-    return this;
-  }
+	setPageSize(size: number): QueryParamsConfigurator {
+		this.parameters["pageSize"] = size;
+		return this;
+	}
 
-  setCurrentPage(page: number): QueryParamsConfigurator {
-    this.parameters["page"] = page;
-    return this;
-  }
+	setCurrentPage(page: number): QueryParamsConfigurator {
+		this.parameters["page"] = page;
+		return this;
+	}
 
-  setSort(column: string, isAscending: boolean = true): QueryParamsConfigurator {
-    this.parameters["orderBy"] = column;
-    this.parameters["orderKind"] = isAscending?"asc":"desc";
-    return this;
-  }
+	setSort(column: string, isAscending: boolean = true): QueryParamsConfigurator {
+		this.parameters["orderBy"] = column;
+		this.parameters["orderKind"] = isAscending ? "asc" : "desc";
+		return this;
+	}
 
-  andContains(column: string, value: string): QueryParamsConfigurator {
-    this.addFilter(column, value, "contains", "and");
-    return this;
-  }
+	andContains(column: string, value: string): QueryParamsConfigurator {
+		this.addFilter(column, value, "contains", "and");
+		return this;
+	}
 
-  orContains(column: string, value: string): QueryParamsConfigurator {
-    this.addFilter(column, value, "contains", "or");
-    return this;
-  }
+	orContains(column: string, value: string): QueryParamsConfigurator {
+		this.addFilter(column, value, "contains", "or");
+		return this;
+	}
 
-  andEquals(column: string, value: string): QueryParamsConfigurator {
-    this.addFilter(column, value, "equals", "and");
-    return this;
-  }
+	andEquals(column: string, value: string): QueryParamsConfigurator {
+		this.addFilter(column, value, "equals", "and");
+		return this;
+	}
 
-  orEquals(column: string, value: string): QueryParamsConfigurator {
-    this.addFilter(column, value, "equals", "or");
-    return this;
-  }
+	orEquals(column: string, value: string): QueryParamsConfigurator {
+		this.addFilter(column, value, "equals", "or");
+		return this;
+	}
 
-  addFilter(column: string, columnValue: string|number, operator: string, logicalOperation: string) {
-    this.parameters["filterColumnName"] = column;
-    this.parameters["filterColumn"+column+"Value"] = columnValue;
-    this.parameters["filterColumn" + column + "Operator"] = operator;
-    this.parameters["filterColumn" + column + "Logic"] = logicalOperation;
+	addFilter(column: string, columnValue: string | number, operator: string, logicalOperation: string) {
+		this.parameters["filterColumnName"].push(column);
 
-  }
+		if (this.parameters["filterColumn" + column + "Value"]) {
+			this.parameters["filterColumn" + column + "Value"].push(columnValue);
+			this.parameters["filterColumn" + column + "Operator"].push(operator);
+			this.parameters["filterColumn" + column + "Logic"].push(logicalOperation);	
+		} else {
+			this.parameters["filterColumn" + column + "Value"] = [columnValue];
+			this.parameters["filterColumn" + column + "Operator"] = [operator];
+			this.parameters["filterColumn" + column + "Logic"] = [logicalOperation];	
+		}
+		
 
-  toQueryParams(): QueryParams {
-    return this.parameters;
-  }
+	}
+
+	toQueryParams(): QueryParams {
+		return this.parameters;
+	}
 }
