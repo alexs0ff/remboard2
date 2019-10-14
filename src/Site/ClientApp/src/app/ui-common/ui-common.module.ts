@@ -32,6 +32,7 @@ import { RaEntityEditRemoveDialog } from "./forms-composition/ra-entity-edit/ra-
 import { FormErrorService } from "./forms-composition/form-error-service";
 import { RaTextareaComponent } from "./forms-composition/ra-textarea/ra-textarea.component";
 import { RaGridFilterComponent } from './list-composition/ra-grid-filter/ra-grid-filter.component';
+import { FilterData, FilterStatement } from "./ra-filter.models";
 
 
 const commonUi = [
@@ -80,4 +81,4 @@ const commonUiExport = [...commonUi, RaServerdataGridComponent, RaFormComponent,
 })
 class UiCommonModule { }
 
-export { UiCommonModule, storeMessageValidator, RaServerDataGridModel, RaFormLayout, flexExpressions, RaEntityEdit, FormErrorService}
+export { UiCommonModule, storeMessageValidator, RaServerDataGridModel, RaFormLayout, flexExpressions, RaEntityEdit, FormErrorService, FilterData, FilterStatement}

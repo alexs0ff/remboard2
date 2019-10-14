@@ -7,80 +7,100 @@ import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 import { RaServerDataGridModel } from "../list-composition.models";
 import { Router, ActivatedRoute } from '@angular/router'
+import { FilterData,FilterStatement } from "../../ra-filter.models";
 
 @Component({
-  selector: 'ra-serverdata-grid',
-  templateUrl: './ra-serverdata-grid.component.html',
-  styleUrls: ['./ra-serverdata-grid.component.scss']
+	selector: 'ra-serverdata-grid',
+	templateUrl: './ra-serverdata-grid.component.html',
+	styleUrls: ['./ra-serverdata-grid.component.scss']
 })
 export class RaServerdataGridComponent implements OnInit {
 
-  dataSource$: Observable<AutocompleteItem[]>;
-  totalLength$: Observable<number>;
-  isLoading$: Observable<boolean>;
+	dataSource$: Observable<AutocompleteItem[]>;
+	totalLength$: Observable<number>;
+	isLoading$: Observable<boolean>;
 
-  displayedColumns: string[] = [];
+	displayedColumns: string[] = [];
 
-  pageSize = 10;
-  private currentPage: number = 1;
-  private sortedColumn: string = "";
-  private sortDirection: string = "";
-  private entityService: IEntityService<any>;
+	pageSize = 10;
+	private currentPage: number = 1;
+	private sortedColumn: string = "";
+	private sortDirection: string = "";
+	private entityService: IEntityService<any>;
+	private currentFilter: FilterData = null;
 
-  @Input()
-  model: RaServerDataGridModel;
+	@Input()
+	model: RaServerDataGridModel;
 
-    constructor(private entityServiceFabric: EntityServiceFabric, private router: Router, private route: ActivatedRoute) {
-    
-  }
+	constructor(private entityServiceFabric: EntityServiceFabric,
+		private router: Router,
+		private route: ActivatedRoute) {
 
-  ngOnInit() {
-    this.entityService = this.entityServiceFabric.getService(this.model.entitiesName);
-    this.dataSource$ = this.entityService.entities;
-    this.totalLength$ = this.entityService.totalLength;
-    this.isLoading$ = this.entityService.isLoading;
-      this.displayedColumns = this.model.columns.map(i => i.id);
+	}
 
-      if (this.model.showAddButton) {
-          this.displayedColumns.splice(0, 0, "addButton");
-      }
+	ngOnInit() {
+		this.entityService = this.entityServiceFabric.getService(this.model.entitiesName);
+		this.dataSource$ = this.entityService.entities;
+		this.totalLength$ = this.entityService.totalLength;
+		this.isLoading$ = this.entityService.isLoading;
+		this.displayedColumns = this.model.columns.map(i => i.id);
+
+		if (this.model.showAddButton) {
+			this.displayedColumns.splice(0, 0, "addButton");
+		}
 
 
-    if (this.model.pageSize) {
-        this.pageSize = this.model.pageSize;
-    }
+		if (this.model.pageSize) {
+			this.pageSize = this.model.pageSize;
+		}
 
-    this.refreshData();
-  }
-  onPaginateChange(event: PageEvent) {
-    this.currentPage = event.pageIndex + 1;
-    this.pageSize = event.pageSize;
-    this.refreshData();
-  }
+		this.refreshData();
+	}
 
-  onSortChange(event: Sort) {
-    this.sortedColumn = event.active;
-    this.sortDirection = event.direction;
-    this.refreshData();
-  }
+	onPaginateChange(event: PageEvent) {
+		this.currentPage = event.pageIndex + 1;
+		this.pageSize = event.pageSize;
+		this.refreshData();
+	}
 
-  refreshData() {
-    const qConfig: QueryParamsConfigurator = new QueryParamsConfigurator();
-    qConfig.setCurrentPage(this.currentPage);
-    qConfig.setPageSize(this.pageSize);
+	onSortChange(event: Sort) {
+		this.sortedColumn = event.active;
+		this.sortDirection = event.direction;
+		this.refreshData();
+	}
 
-    if (this.sortedColumn.length > 0) {
-      let isAscending = this.sortDirection === 'asc' || this.sortDirection === '';
-      qConfig.setSort(this.sortedColumn, isAscending);
-    }
-    this.entityService.getWithQuery(qConfig.toQueryParams());
-  }
+	onFilterChanged($event: FilterData) {
+		this.currentFilter = $event;
+		this.currentPage = 1;
+		this.refreshData();
+	}
 
-    selectRow(row:any) {
-        this.router.navigate([row.id], { relativeTo: this.route });
-    }
+	refreshData() {
+		const qConfig: QueryParamsConfigurator = new QueryParamsConfigurator();
+		qConfig.setCurrentPage(this.currentPage);
+		qConfig.setPageSize(this.pageSize);
 
-    addNew() {
-      this.router.navigate(['new'], { relativeTo: this.route });
-    }
+		if (this.sortedColumn.length > 0) {
+			let isAscending = this.sortDirection === 'asc' || this.sortDirection === '';
+			qConfig.setSort(this.sortedColumn, isAscending);
+		}
+
+		if (this.currentFilter && this.currentFilter.statements.length>0) {
+			for (let i = 0; i < this.currentFilter.statements.length; i++) {
+				let statement: FilterStatement = this.currentFilter.statements[i];
+
+				qConfig.addFilter(statement.field,statement.value,statement.comparison,statement.logicalOperator);
+			}
+		}
+
+		this.entityService.getWithQuery(qConfig.toQueryParams());
+	}
+
+	selectRow(row: any) {
+		this.router.navigate([row.id], { relativeTo: this.route });
+	}
+
+	addNew() {
+		this.router.navigate(['new'], { relativeTo: this.route });
+	}
 }

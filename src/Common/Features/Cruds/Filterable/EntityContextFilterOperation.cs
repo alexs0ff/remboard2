@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -88,12 +89,14 @@ namespace Common.Features.Cruds.Filterable
 
         private ISpecification<TEntity> Create(FilterStatement filter)
         {
-            var targetType = typeof(TEntity).GetPropertyType(filter.ParameterName);
+	        var property = typeof(TEntity).GetProperty(filter.ParameterName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
 
-            if (targetType == null)
-            {
-                return null;
-            }
+	        if (property == null)
+	        {
+		        return null;
+	        }
+
+			var targetType = property.PropertyType;
 
             object value = FilterTypeCorrector.ChangeType<TEntity>(filter.ParameterName, filter.ParameterValue);
 

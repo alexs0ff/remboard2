@@ -11,3 +11,14 @@ export enum ComparisonOperators {
 	LessThan = "lessthan",
 	GreaterThan = "greaterthan"
 }
+
+export interface FilterStatement {
+	field: string;
+	comparison: ComparisonOperators;
+	logicalOperator: LogicalOperators;
+	value:number|string;
+}
+
+export interface FilterData {
+	statements: FilterStatement[]
+}

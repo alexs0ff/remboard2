@@ -72,7 +72,7 @@ export class QueryParamsConfigurator {
     return this;
   }
 
-  private addFilter(column: string, columnValue: string, operator: string, logicalOperation: string) {
+  addFilter(column: string, columnValue: string|number, operator: string, logicalOperation: string) {
     this.parameters["filterColumnName"] = column;
     this.parameters["filterColumn"+column+"Value"] = columnValue;
     this.parameters["filterColumn" + column + "Operator"] = operator;

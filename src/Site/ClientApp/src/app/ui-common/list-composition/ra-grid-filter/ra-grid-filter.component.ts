@@ -1,10 +1,11 @@
-import { Component, OnInit,Input } from '@angular/core';
+import { Component, OnInit,Input,Output,EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, FormArray, Validators } from "@angular/forms";
 import { KeyValue } from "../../../app.models";
 import { RaGridFilterModel, FilterControlKinds } from "../list-composition.models";
 import { FormErrorService } from "../../forms-composition/form-error-service";
 import { GridFilterCompositionService } from "./ra-grid-filter.services";
 import { MatSelectChange } from '@angular/material/select';
+import { FilterData, FilterStatement } from "../../ra-filter.models";
 
 @Component({
 	selector: 'ra-grid-filter',
@@ -21,6 +22,9 @@ export class RaGridFilterComponent implements OnInit {
 
 	@Input()
 	model: RaGridFilterModel;
+
+	@Output()
+	filterChanged: EventEmitter<FilterData> = new EventEmitter <FilterData>();
 
 	comparisonOperators = [];
 
@@ -79,6 +83,22 @@ export class RaGridFilterComponent implements OnInit {
 
 	startRefreshData() {
 		this.filtersForm.markAllAsTouched();
-		console.log(this.filtersForm.value);
+		//this.filtersForm.value
+		let data: FilterData = { statements: [] };
+
+		for (var i = 0; i < this.filtersForm.value.filters.length; i++) {
+			let filter: any = this.filtersForm.value.filters[i];
+			let statement: FilterStatement = {
+				field: filter.column,
+				comparison: filter.comparison,
+				logicalOperator: filter.logicalOperator,
+				value: filter.value
+			};
+
+			data.statements.push(statement);
+
+		}
+
+		this.filterChanged.emit(data);
 	}
 }
