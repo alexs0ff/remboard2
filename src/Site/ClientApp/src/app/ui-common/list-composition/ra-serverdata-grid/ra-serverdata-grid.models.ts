@@ -1,4 +1,4 @@
-import { GridContentOptions, RaGridFilterModel } from "../list-composition.models";
+import { GridContentOptions, RaGridFilterModel, GridControlPanel } from "../list-composition.models";
 
 export interface RaGridInternalColumn {
 	id: string;
@@ -15,6 +15,6 @@ export interface RaGridFlatModel {
 	headers: Array<Array<string>>;
 	columns: RaGridInternalColumn[];
 	pageSize?: number;
-	showAddButton: boolean;
+	panel?: GridControlPanel;
 	filter: RaGridFilterModel | null;
 }

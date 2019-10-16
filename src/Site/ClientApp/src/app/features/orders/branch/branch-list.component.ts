@@ -17,7 +17,7 @@ export class BranchListComponent implements OnInit {
 		this.dataGrid = {
 			entitiesName: "branches",
 			columns: [
-				{
+				/*{
 					id: 'totalHeader',
 					name: 'Общий заголовок',
 					columns: [
@@ -34,11 +34,31 @@ export class BranchListComponent implements OnInit {
 							columns: [{ id: "address", name: "Адрес", options: { canOrder: true } }]
 						}
 					]
-				}
+				}*/
+				{ id: "title", name: "Название", options: { canOrder: true } },
+				{ id: "legalName", name: "Юр наименование", options: { canOrder: true } },
+				{ id: "address", name: "Адрес", options: { canOrder: true } }
 			],
-			pageSize: 10,
-			showAddButton: true,
-			filter: null
+			panel: {showAddButton: true,},
+			filter: {
+				columns: [
+					{
+						id: "legalName",
+						kind: 'textbox',
+						label: "Юр название",
+						valueKind: "string",
+						validators: { required: true }
+					},
+					{
+						id: "title",
+						kind: 'textbox',
+						label: "Название филиала",
+						valueKind: "string",
+						validators: { required: true }
+					},
+					
+				]
+			}
 		};
 	}
 

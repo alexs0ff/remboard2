@@ -3,6 +3,11 @@ import { RaTextBox, RaSelectBox } from "../forms-composition/forms-composition.m
 export interface GridContentOptions {
  canOrder: boolean; 
 }
+
+export interface GridControlPanel {
+	showAddButton:boolean;
+}
+
 export interface RaGridColumn {
 	id: string;
 	name: string;
@@ -16,7 +21,7 @@ export interface RaServerDataGridModel {
 	entitiesName: string;
 	columns: RaGridColumn[];
 	pageSize?: number;
-	showAddButton: boolean;
+	panel?: GridControlPanel;
 	filter: RaGridFilterModel | null;
 }
 

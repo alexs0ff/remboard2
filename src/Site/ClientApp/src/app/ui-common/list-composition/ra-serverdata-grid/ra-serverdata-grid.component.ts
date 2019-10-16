@@ -24,7 +24,7 @@ export class RaServerdataGridComponent implements OnInit {
 
 	//displayedColumns: string[] = [];
 
-	pageSize = 10;
+	pageSize = 50;
 	private currentPage: number = 1;
 	private sortedColumn: string = "";
 	private sortDirection: string = "";
@@ -50,8 +50,14 @@ export class RaServerdataGridComponent implements OnInit {
 		this.isLoading$ = this.entityService.isLoading;
 		this.flatModel = this.gridModelComposer.toFlatModel(this.model);
 
-		if (this.model.showAddButton) {
-			//this.displayedColumns.splice(0, 0, "addButton");
+		if (this.model.panel) {
+			this.flatModel.displayedColumns.splice(0, 0, "gridControlPanel");
+			this.flatModel.headers[0].splice(0, 0, "gridControlPanel");
+
+			for (let i = 1; i < this.flatModel.headers.length; i++) {
+				this.flatModel.headers[i].splice(0, 0, "gridHiddenColumn");
+			}
+
 		}
 
 
