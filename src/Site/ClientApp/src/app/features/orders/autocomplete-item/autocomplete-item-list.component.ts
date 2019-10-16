@@ -2,50 +2,57 @@ import { Component, OnInit } from '@angular/core';
 import { RaServerDataGridModel } from "../../../ui-common/ui-common.module";
 
 @Component({
-  selector: 'autocomplete-item-list',
-  template: `
+	selector: 'autocomplete-item-list',
+	template: `
  
 <ra-serverdata-grid [model]="dataGrid"></ra-serverdata-grid>
   `,
-  styles: []
+	styles: []
 })
 export class AutocompleteItemListComponent implements OnInit {
 
-  dataGrid:RaServerDataGridModel;
+	dataGrid: RaServerDataGridModel;
 
-  constructor() {
-    this.dataGrid = {
-      entitiesName: "autocompleteItems",
-      columns: [
-        { canOrder: true, id: "title", name: "Название" },
-        { canOrder: false, id: "autocompleteKindTitle", name: "Тип" },
-      ],
-      pageSize: 10,
-      showAddButton: true,
-      filter: {
-        columns: [
-			  { id: "title", kind: 'textbox', label: "Название", valueKind: "string", validators: { required: true } },
-          {
-            kind: 'selectbox',
-            id: 'autocompleteKindId',
-            label: 'Тип автодополнения',
-            hint: 'Тип автодополнения',
-            validators: { required: true },
-            valueKind: 'number',
-            source: {
-              kind: 'items', items: [
-                { key: 1, value: "Бренд" },
-                { key: 2, value: "Комплектация" },
-                { key: 3, value: "Внешний вид" }
-              ]
-            }
-          }
-        ]
-      }
-    };
-  }
+	constructor() {
+		/*this.dataGrid = {
+			entitiesName: "autocompleteItems",
+			columns: [
+				{ kind: 'content', canOrder: true, id: "title", name: "Название" },
+				{ kind: 'content', canOrder: false, id: "autocompleteKindTitle", name: "Тип" },
+			],
+			pageSize: 10,
+			showAddButton: true,
+			filter: {
+				columns: [
+					{
+						id: "title",
+						kind: 'textbox',
+						label: "Название",
+						valueKind: "string",
+						validators: { required: true }
+					},
+					{
+						kind: 'selectbox',
+						id: 'autocompleteKindId',
+						label: 'Тип автодополнения',
+						hint: 'Тип автодополнения',
+						validators: { required: true },
+						valueKind: 'number',
+						source: {
+							kind: 'items',
+							items: [
+								{ key: 1, value: "Бренд" },
+								{ key: 2, value: "Комплектация" },
+								{ key: 3, value: "Внешний вид" }
+							]
+						}
+					}
+				]
+			}
+		};*/
+	}
 
-  ngOnInit() {
-    
-  }
+	ngOnInit() {
+
+	}
 }

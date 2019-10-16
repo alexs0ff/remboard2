@@ -8,6 +8,8 @@ import { Sort } from '@angular/material/sort';
 import { RaServerDataGridModel } from "../list-composition.models";
 import { Router, ActivatedRoute } from '@angular/router'
 import { FilterData,FilterStatement } from "../../ra-filter.models";
+import { GridModelComposer } from "./ra-serverdata-grid.services";
+import { RaGridFlatModel } from "./ra-serverdata-grid.models";
 
 @Component({
 	selector: 'ra-serverdata-grid',
@@ -20,7 +22,7 @@ export class RaServerdataGridComponent implements OnInit {
 	totalLength$: Observable<number>;
 	isLoading$: Observable<boolean>;
 
-	displayedColumns: string[] = [];
+	//displayedColumns: string[] = [];
 
 	pageSize = 10;
 	private currentPage: number = 1;
@@ -32,9 +34,12 @@ export class RaServerdataGridComponent implements OnInit {
 	@Input()
 	model: RaServerDataGridModel;
 
+	flatModel: RaGridFlatModel;
+
 	constructor(private entityServiceFabric: EntityServiceFabric,
 		private router: Router,
-		private route: ActivatedRoute) {
+		private route: ActivatedRoute,
+		private gridModelComposer: GridModelComposer) {
 
 	}
 
@@ -43,10 +48,10 @@ export class RaServerdataGridComponent implements OnInit {
 		this.dataSource$ = this.entityService.entities;
 		this.totalLength$ = this.entityService.totalLength;
 		this.isLoading$ = this.entityService.isLoading;
-		this.displayedColumns = this.model.columns.map(i => i.id);
+		this.flatModel = this.gridModelComposer.toFlatModel(this.model);
 
 		if (this.model.showAddButton) {
-			this.displayedColumns.splice(0, 0, "addButton");
+			//this.displayedColumns.splice(0, 0, "addButton");
 		}
 
 

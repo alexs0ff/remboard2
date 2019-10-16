@@ -33,6 +33,7 @@ import { FormErrorService } from "./forms-composition/form-error-service";
 import { RaTextareaComponent } from "./forms-composition/ra-textarea/ra-textarea.component";
 import { RaGridFilterComponent } from './list-composition/ra-grid-filter/ra-grid-filter.component';
 import { FilterData, FilterStatement } from "./ra-filter.models";
+import { GridModelComposer } from "./list-composition/ra-serverdata-grid/ra-serverdata-grid.services";
 
 
 const commonUi = [
@@ -77,7 +78,7 @@ const commonUiExport = [...commonUi, RaServerdataGridComponent, RaFormComponent,
 		RaGridFilterComponent],
   imports: commonUiImport,
   exports: commonUiExport,
-	providers: [FormsCompositionService, FormErrorService]
+	providers: [FormsCompositionService, FormErrorService, GridModelComposer]
 })
 class UiCommonModule { }
 

@@ -2,31 +2,31 @@ import { Component, OnInit } from '@angular/core';
 import { RaServerDataGridModel } from "../../../ui-common/ui-common.module";
 
 @Component({
-  selector: 'order-status-list',
-  template: `
+	selector: 'order-status-list',
+	template: `
  
 <ra-serverdata-grid [model]="dataGrid"></ra-serverdata-grid>
   `,
-  styles: []
+	styles: []
 })
 export class OrderStatusListComponent implements OnInit {
 
-  dataGrid:RaServerDataGridModel;
+	dataGrid: RaServerDataGridModel;
 
-  constructor() {
-    this.dataGrid = {
-      entitiesName: "orderStatuses",
-      columns: [
-		  { canOrder: true, id: "title", name: "Название" },
-          { canOrder: true, id: "orderStatusKindTitle", name: "Тип" },
-      ],
-      pageSize: 10,
-		showAddButton: true,
-      filter: null
-    };
-  }
+	constructor() {
+		/*this.dataGrid = {
+			entitiesName: "orderStatuses",
+			columns: [
+				{ kind: 'content',canOrder: true, id: "title", name: "Название" },
+				{ kind: 'content',canOrder: true, id: "orderStatusKindTitle", name: "Тип" },
+			],
+			pageSize: 10,
+			showAddButton: true,
+			filter: null
+		};*/
+	}
 
-  ngOnInit() {
-    
- }
+	ngOnInit() {
+
+	}
 }

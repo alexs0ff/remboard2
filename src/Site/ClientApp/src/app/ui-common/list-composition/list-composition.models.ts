@@ -1,17 +1,23 @@
-import { Dictionary } from "../../app.models";
 import { RaTextBox, RaSelectBox } from "../forms-composition/forms-composition.models";
 
-export interface RaGridColumn {
-  id:string;
-  name: string;
-  canOrder:boolean;
+export interface GridContentOptions {
+ canOrder: boolean; 
 }
+export interface RaGridColumn {
+	id: string;
+	name: string;
+	options?: GridContentOptions;
+	columns?: RaGridColumn[];
+}
+
+
+
 export interface RaServerDataGridModel {
-  entitiesName: string;
-  columns: RaGridColumn[];
-  pageSize: number | null;
+	entitiesName: string;
+	columns: RaGridColumn[];
+	pageSize?: number;
 	showAddButton: boolean;
-	filter: RaGridFilterModel|null;
+	filter: RaGridFilterModel | null;
 }
 
 export type FilterControlKinds = RaTextBox | RaSelectBox;
