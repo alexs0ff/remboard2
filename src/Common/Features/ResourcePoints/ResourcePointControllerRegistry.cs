@@ -16,6 +16,10 @@ namespace Common.Features.ResourcePoints
 			_resourcePointControllerDescriptors = new ReadOnlyDictionary<string, IResourcePointControllerFactory>(resourcePointControllerDescriptors.ToDictionary(descriptor => descriptor.EntityName)); ;
 		}
 
+		public bool HasEntity(string name)
+		{
+			return _resourcePointControllerDescriptors.ContainsKey(name);
+		}
 		public IEnumerable<IResourcePointControllerFactory> ResourcePointControllerDescriptors => _resourcePointControllerDescriptors.Values;
 
 		public IResourcePointControllerFactory this[string name] => _resourcePointControllerDescriptors[name];

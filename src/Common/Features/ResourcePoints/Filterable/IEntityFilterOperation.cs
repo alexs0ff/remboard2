@@ -11,6 +11,6 @@ namespace Common.Features.ResourcePoints.Filterable
         where TEntity : BaseEntity<TKey>
         where TKey : struct
 	{
-        Task<PagedResult<TFilterableEntity>> FilterAsync(DbContext context, IResourcePredicateFeature<TEntity,TKey> predicateFactory, FilterParameters filterParameters);
+        Task<PagedResult<TFilterableEntity>> FilterAsync(DbContext context, IResourceMandatoryPredicateFactory<TEntity,TKey> mandatoryPredicateFactory, FilterParameters filterParameters);
     }
 }

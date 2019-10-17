@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Common.Features.Cruds;
 
 namespace Common.Features.ResourcePoints
 {
@@ -11,5 +12,7 @@ namespace Common.Features.ResourcePoints
 		Type ControllerType { get; }
 
 		string EntityName { get; }
+
+		AccessRuleMap AccessRules { get; }
 	}
 }

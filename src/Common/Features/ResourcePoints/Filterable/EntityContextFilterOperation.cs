@@ -32,9 +32,9 @@ namespace Common.Features.ResourcePoints.Filterable
             _parameters = (EntityContextFilterOperationParameters)parameters;
         }
 
-        public async Task<PagedResult<TFilterableEntity>> FilterAsync(DbContext context, IResourcePredicateFeature<TEntity,TKey> predicateFactory, FilterParameters filterParameters)
+        public async Task<PagedResult<TFilterableEntity>> FilterAsync(DbContext context, IResourceMandatoryPredicateFactory<TEntity,TKey> mandatoryPredicateFactory, FilterParameters filterParameters)
         {
-            var mandatoryPredicate = predicateFactory.GetMandatoryPredicate();
+            var mandatoryPredicate = mandatoryPredicateFactory.GetMandatoryPredicates();
 
             var predicate = LinqKit.PredicateBuilder.New<TEntity>(true);
 

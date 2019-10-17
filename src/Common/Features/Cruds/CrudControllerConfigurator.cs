@@ -37,11 +37,11 @@ namespace Common.Features.Cruds
 
         public CrudControllerConfigurator()
         {
-            AddMandatorySpecification<IsNotDeletedSpecification<TEntity>>();
+            AddMandatorySpecification<IsNotDeletedSpecificationGuid<TEntity>>();
 
             if (typeof(TEntity).HasImplementation<ITenantedEntity>())
             {
-                AddMandatorySpecification<OnlyTenantEntitiesSpecification<TEntity>>();
+                AddMandatorySpecification<OnlyTenantEntitiesSpecificationGuid<TEntity>>();
                 _entityCorrectorTypes.Add(typeof(TenantedEntityCorrector));
             }
 

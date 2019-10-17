@@ -16,7 +16,12 @@ namespace Common.Features.PermissibleValues
             _permissibleValuesControllerDescriptors = new ReadOnlyDictionary<string, IPermissibleValuesControllerDescriptor>(permissibleValuesControllerDescriptors.ToDictionary(descriptor => descriptor.EntityName));
         }
 
-        public IEnumerable<IPermissibleValuesControllerDescriptor> PermissibleValuesControllerDescriptors => _permissibleValuesControllerDescriptors.Values;
+        public bool HasEntity(string name)
+        {
+	        return _permissibleValuesControllerDescriptors.ContainsKey(name);
+        }
+
+		public IEnumerable<IPermissibleValuesControllerDescriptor> PermissibleValuesControllerDescriptors => _permissibleValuesControllerDescriptors.Values;
 
         public IPermissibleValuesControllerDescriptor this[string name] => _permissibleValuesControllerDescriptors[name];
 

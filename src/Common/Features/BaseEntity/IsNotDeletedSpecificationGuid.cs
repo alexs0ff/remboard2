@@ -6,9 +6,9 @@ using Common.Features.Specifications;
 
 namespace Common.Features.BaseEntity
 {
-	public class IsNotDeletedSpecification<TEntity,TKey> : ISpecification<TEntity>
-		where TEntity : BaseEntity<TKey>
-		where TKey:struct
+	[Obsolete]
+	public class IsNotDeletedSpecificationGuid<TEntity> : ISpecification<TEntity>
+		where TEntity : BaseEntityGuidKey
 	{
 		public Expression<Func<TEntity, bool>> IsSatisfiedBy()
 		{

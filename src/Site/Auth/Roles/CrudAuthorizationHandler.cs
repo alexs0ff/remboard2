@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Common.Features.Auth;
 using Common.Features.Cruds;
 using Common.Features.PermissibleValues;
+using Common.Features.ResourcePoints;
 using Common.Features.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
@@ -20,27 +21,37 @@ namespace Remboard.Auth.Roles
 
         private readonly PermissibleValuesControllerRegistry _permissibleValuesControllerRegistry;
 
+        private readonly ResourcePointControllerRegistry _resourcePointControllerRegistry;
+
         private readonly ICurrentIdentityInfoProvider _currentIdentityInfoProvider;
 
-        public CrudAuthorizationHandler(EntityControllerRegistry entityControllerRegistry, ICurrentIdentityInfoProvider currentIdentityInfoProvider, PermissibleValuesControllerRegistry permissibleValuesControllerRegistry)
+        public CrudAuthorizationHandler(EntityControllerRegistry entityControllerRegistry, ICurrentIdentityInfoProvider currentIdentityInfoProvider, PermissibleValuesControllerRegistry permissibleValuesControllerRegistry, ResourcePointControllerRegistry resourcePointControllerRegistry)
         {
             _entityControllerRegistry = entityControllerRegistry;
             _currentIdentityInfoProvider = currentIdentityInfoProvider;
             _permissibleValuesControllerRegistry = permissibleValuesControllerRegistry;
+            _resourcePointControllerRegistry = resourcePointControllerRegistry;
         }
 
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, OperationAuthorizationRequirement requirement, Type resource)
         {
-            AccessRuleMap accessRules;
+            AccessRuleMap accessRules = null;
 
-            if (_entityControllerRegistry.HasEntity(resource.Name)==false)
+            if (_resourcePointControllerRegistry.HasEntity(resource.Name))
             {
-                accessRules = _permissibleValuesControllerRegistry[resource.Name].AccessRules;
-            }
-            else
+	            accessRules = _resourcePointControllerRegistry[resource.Name].AccessRules;
+            }else
+
+			if (_entityControllerRegistry.HasEntity(resource.Name))
             {
-                accessRules = _entityControllerRegistry[resource.Name].AccessRules;
-            }
+				accessRules = _entityControllerRegistry[resource.Name].AccessRules;
+			}else
+
+            if (_permissibleValuesControllerRegistry.HasEntity(resource.Name))
+            {
+	            accessRules = _permissibleValuesControllerRegistry[resource.Name].AccessRules;
+			}
+
 
             var roles = _currentIdentityInfoProvider.GetRoles();
             if (requirement.Name == CrudOperations.Read.Name)

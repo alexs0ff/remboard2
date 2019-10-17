@@ -25,15 +25,20 @@ namespace Common
             builder.RegisterType<ResourcePointControllerRegistry>();
 
             builder.RegisterGeneric(typeof(EntityContextFilterOperation<,>));
+            builder.RegisterGeneric(typeof(Common.Features.ResourcePoints.Filterable.EntityContextFilterOperation<,,>));
             builder.RegisterGeneric(typeof(EntitySqlFilterOperation<,>));
+            builder.RegisterGeneric(typeof(Common.Features.ResourcePoints.Filterable.EntitySqlFilterOperation<,,>));
             builder.RegisterGeneric(typeof(SqlFilterStatementParser<,>));
+            builder.RegisterGeneric(typeof(Common.Features.ResourcePoints.Filterable.SqlFilterStatementParser<,,>));
             builder.RegisterGeneric(typeof(ReflectionPermissibleValuesProvider<,>));
             builder.RegisterType<TenantInfoProvider>().As<ITenantInfoProvider>();
 
 
             //specifications
-            builder.RegisterGeneric(typeof(OnlyTenantEntitiesSpecification<>));
-            builder.RegisterGeneric(typeof(IsNotDeletedSpecification<>));
+            builder.RegisterGeneric(typeof(OnlyTenantEntitiesSpecificationGuid<>));
+            builder.RegisterGeneric(typeof(OnlyTenantEntitiesSpecification<,>));
+            builder.RegisterGeneric(typeof(IsNotDeletedSpecification<,>));
+            builder.RegisterGeneric(typeof(IsNotDeletedSpecificationGuid<>));
 
             //common validators
             builder.RegisterType<EmptyValidator>().AsSelf().SingleInstance();

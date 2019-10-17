@@ -5,10 +5,10 @@ using LinqKit;
 
 namespace Common.Features.ResourcePoints
 {
-	public interface IResourcePredicateFeature<TEntity,TKey>
+	public interface IResourceMandatoryPredicateFactory<TEntity,TKey>
 		where TEntity : Common.Features.BaseEntity.BaseEntity<TKey>
 		where TKey:struct
 	{
-		ExpressionStarter<TEntity> GetMandatoryPredicate();
+		ExpressionStarter<TEntity> GetMandatoryPredicates();
 	}
 }

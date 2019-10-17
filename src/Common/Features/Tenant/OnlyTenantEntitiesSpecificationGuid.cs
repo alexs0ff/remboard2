@@ -7,13 +7,13 @@ using Common.Features.Specifications;
 
 namespace Common.Features.Tenant
 {
-    public class OnlyTenantEntitiesSpecification<TEntity,TKey> : ISpecification<TEntity>
-        where TEntity : BaseEntity<TKey>
-		where TKey:struct
+	[Obsolete]
+	public class OnlyTenantEntitiesSpecificationGuid<TEntity> : ISpecification<TEntity>
+        where TEntity : BaseEntityGuidKey
     {
         private readonly ITenantInfoProvider _tenantInfoProvider;
 
-        public OnlyTenantEntitiesSpecification(ITenantInfoProvider tenantInfoProvider)
+        public OnlyTenantEntitiesSpecificationGuid(ITenantInfoProvider tenantInfoProvider)
         {
             _tenantInfoProvider = tenantInfoProvider;
         }

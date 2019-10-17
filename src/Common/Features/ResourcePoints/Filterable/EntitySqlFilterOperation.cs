@@ -28,7 +28,7 @@ namespace Common.Features.ResourcePoints.Filterable
             ShouldContains(_parameters.Sql, PaggingClause);
         }
 
-        public async Task<PagedResult<TFilterableEntity>> FilterAsync(DbContext context, IResourcePredicateFeature<TEntity, TKey> predicateFactory, FilterParameters filterParameters)
+        public async Task<PagedResult<TFilterableEntity>> FilterAsync(DbContext context, IResourceMandatoryPredicateFactory<TEntity, TKey> mandatoryPredicateFactory, FilterParameters filterParameters)
         {
             var orderByClause = CreateOrderBy(filterParameters);
             var paggingClause = CreatePagging(filterParameters);

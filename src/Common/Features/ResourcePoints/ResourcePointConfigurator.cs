@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Autofac;
+using Common.Extensions;
 using Common.FeatureEntities;
 using Common.Features.BaseEntity;
 using Common.Features.Cruds;
 using Common.Features.ResourcePoints.Filterable;
+using Common.Features.Specifications;
+using Common.Features.Tenant;
 
 namespace Common.Features.ResourcePoints
 {
@@ -24,8 +27,22 @@ namespace Common.Features.ResourcePoints
 
 		private readonly HashSet<ProjectRoles> _readRoles = new HashSet<ProjectRoles>();
 
+		private readonly IList<Type> _mandatorySpecifications = new List<Type>();
+
+		/// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
+		public ResourcePointConfigurator()
+		{
+			AddMandatorySpecification<IsNotDeletedSpecification<TEntity,TKey>>();
+
+			if (typeof(TEntity).HasImplementation<ITenantedEntity>())
+			{
+				AddMandatorySpecification<OnlyTenantEntitiesSpecification<TEntity,TKey>>();
+				//_entityCorrectorTypes.Add(typeof(TenantedEntityCorrector));
+			}
+		}
+
 		public ResourcePointConfigurator<TEntity, TEntityDto, TFilterableEntity, TKey> UseFilterableEntityOperation<TFilterableOperation>(Action<EntityContextFilterOperationParameters> config)
-			where TFilterableOperation : EntityContextFilterOperation<TEntity, TFilterableEntity,TKey>
+			where TFilterableOperation : IEntityFilterOperation<TEntity, TFilterableEntity,TKey>
 		{
 			var parameters = new EntityContextFilterOperationParameters();
 			config(parameters);
@@ -44,6 +61,13 @@ namespace Common.Features.ResourcePoints
 		public ResourcePointConfigurator<TEntity, TEntityDto, TFilterableEntity, TKey> AddReadRoles(params ProjectRoles[] roles)
 		{
 			AppendRoles(_readRoles, roles);
+			return this;
+		}
+
+		public ResourcePointConfigurator<TEntity, TEntityDto, TFilterableEntity, TKey> AddMandatorySpecification<TMandatorySpec>()
+			where TMandatorySpec : ISpecification<TEntity>
+		{
+			_mandatorySpecifications.Add(typeof(TMandatorySpec));
 			return this;
 		}
 
@@ -81,6 +105,7 @@ namespace Common.Features.ResourcePoints
 				.WithParameter("accessRuleMap", new AccessRuleMap(_readRoles.ToArray()))
 				.WithParameter("filterableEntityOperationType", _filterableEntityOperation)
 				.WithParameter("filterableEntityOperationParameters", _filterableEntityOperationParameters)
+				.WithParameter("mandatorySpecificationTypes", _mandatorySpecifications)
 				.SingleInstance();
 		}
 

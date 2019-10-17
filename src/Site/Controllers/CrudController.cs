@@ -211,7 +211,7 @@ namespace Remboard.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> Delete([FromRoute]Guid id, [FromServices]OnlyTenantEntitiesSpecification<TEntity> onlyTenantEntitiesSpecification)
+        public async Task<IActionResult> Delete([FromRoute]Guid id, [FromServices]OnlyTenantEntitiesSpecificationGuid<TEntity> onlyTenantEntitiesSpecification)
         {
             var result = await _authorizationService.AuthorizeAsync(User, typeof(TEntity), CrudOperations.Delete);
 

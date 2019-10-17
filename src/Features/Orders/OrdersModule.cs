@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Autofac;
 using Common.Data;
 using Common.Extensions;
+using Common.FeatureEntities;
 using Common.Features;
 using Common.Features.Cruds;
 using Common.Features.Cruds.Filterable;
@@ -58,7 +59,7 @@ namespace Orders
 		        .UseFilterableEntityOperation<Common.Features.ResourcePoints.Filterable.EntityContextFilterOperation<
 			        OrderType, OrderTypeDto, Guid>>(
 			        parameters => { })
-		        .AddReadRoles();
+		        .AddReadRoles(ProjectRoles.Admin,ProjectRoles.Engineer,ProjectRoles.Manager);
 
         }
 
