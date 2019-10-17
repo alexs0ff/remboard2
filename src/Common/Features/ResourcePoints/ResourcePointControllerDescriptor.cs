@@ -32,5 +32,7 @@ namespace Common.Features.ResourcePoints
 		public Type ControllerType { get; }
 
 		public AccessRuleMap AccessRules { get; }
+
+		public string EntityName => ResourcePoint.EntityName;
 	}
 }

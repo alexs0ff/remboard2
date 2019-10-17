@@ -1,8 +1,9 @@
 ﻿using System;
+using Common.Extensions;
+using Common.Features.ResourcePoints;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
-using Remboard.Controllers;
 
-namespace Remboard.Infrastructure.BaseControllers
+namespace Common.Infrastructure
 {
     // Used to set the controller name for routing purposes. Without this convention the
     // names would be like 'GenericController`1[Widget]' instead of 'Widget'.
@@ -13,15 +14,17 @@ namespace Remboard.Infrastructure.BaseControllers
     {
         public void Apply(ControllerModel controller)
         {
-            if (controller.ControllerType.GetGenericTypeDefinition() !=
-                typeof(CrudController<,,>))
+	        var name = controller.ControllerType.GetGenericTypeDefinition().Name;
+			if (name =="CrudController`3")
             {
-                // Not a GenericController, ignore.
-                return;
-            }
-
-            var entityType = controller.ControllerType.GenericTypeArguments[0];
-            controller.ControllerName = entityType.Name;
+				var entityType = controller.ControllerType.GenericTypeArguments[0];
+				controller.ControllerName = entityType.Name;
+            }else if (controller.ControllerType.InheritsOrImplements(typeof(ResourcePointBaseController<,,,>)))
+			{
+				var entityType = controller.ControllerType.GetEntityTypeOrNull();
+				controller.ControllerName = entityType.Name;
+			}
+            
         }
     }
 }

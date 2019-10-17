@@ -8,6 +8,7 @@ using Common.Features.BaseEntity;
 using Common.Features.Cruds;
 using Common.Features.Cruds.Filterable;
 using Common.Features.PermissibleValues;
+using Common.Features.ResourcePoints;
 using Common.Features.Tenant;
 using Common.Tenant;
 using FluentValidation.Validators;
@@ -21,6 +22,7 @@ namespace Common
         {
             builder.RegisterType<EntityControllerRegistry>();
             builder.RegisterType<PermissibleValuesControllerRegistry>();
+            builder.RegisterType<ResourcePointControllerRegistry>();
 
             builder.RegisterGeneric(typeof(EntityContextFilterOperation<,>));
             builder.RegisterGeneric(typeof(EntitySqlFilterOperation<,>));

@@ -9,5 +9,7 @@ namespace Common.Features.ResourcePoints
 		IResourcePointDescriptor ResourcePoint { get; }
 
 		Type ControllerType { get; }
+
+		string EntityName { get; }
 	}
 }

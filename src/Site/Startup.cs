@@ -15,6 +15,7 @@ using Common.Extensions;
 using Common.Features;
 using Common.Features.TypeConverters;
 using Common.Features.Users;
+using Common.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;

@@ -9,6 +9,7 @@ using Common.Features;
 using Common.Features.Cruds;
 using Common.Features.Cruds.Filterable;
 using Common.Features.PermissibleValues;
+using Common.Features.ResourcePoints;
 using Microsoft.EntityFrameworkCore;
 using Orders.Autocomplete;
 using Orders.Branches;
@@ -49,6 +50,17 @@ namespace Orders
 	            .AddValuesProvider<ReflectionPermissibleValuesProvider<OrderStatusKind, OrderStatusKinds>>()
 	            .AddReadRoles();
 		}
+
+        protected override IEnumerable<IResourcePointConfigurator> RegisterResourcePoints()
+        {
+	        yield return new ResourcePointConfigurator<OrderType, OrderTypeDto, OrderTypeDto, Guid>()
+		        .SetEntityPluralName("OrderTypes")
+		        .UseFilterableEntityOperation<Common.Features.ResourcePoints.Filterable.EntityContextFilterOperation<
+			        OrderType, OrderTypeDto, Guid>>(
+			        parameters => { })
+		        .AddReadRoles();
+
+        }
 
         protected override IEnumerable<ICrudControllerConfigurator> RegisterCrudControllers()
         {
@@ -101,15 +113,15 @@ namespace Orders
 		            })
 	            .AddModifyRoles();
 
-            yield return new CrudControllerConfigurator<OrderType, OrderTypeDto, OrderTypeDto>()
-	            .SetEntityPluralName("OrderTypes")
-	            .UseValidator<OrderTypeDtoValidator>()
-	            .UseFilterableEntityOperation<EntityContextFilterOperation<OrderType, OrderTypeDto>>(
-		            parameters =>
-		            {
+            //yield return new CrudControllerConfigurator<OrderType, OrderTypeDto, OrderTypeDto>()
+	           // .SetEntityPluralName("OrderTypes")
+	           // .UseValidator<OrderTypeDtoValidator>()
+	           // .UseFilterableEntityOperation<EntityContextFilterOperation<OrderType, OrderTypeDto>>(
+		          //  parameters =>
+		          //  {
 
-		            })
-	            .AddModifyRoles();
+		          //  })
+	           // .AddModifyRoles();
 
 		}
     }

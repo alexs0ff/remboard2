@@ -13,6 +13,7 @@ using Common.Features.Cruds;
 using Common.Features.Cruds.Filterable;
 using Common.Features.ErrorFlow;
 using Common.Features.Tenant;
+using Common.Infrastructure;
 using LinqKit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -57,7 +58,7 @@ namespace Remboard.Controllers
 
         }
         
-        [PluralActionNameConvention]
+        [PluralActionNameConvention()]
         [HttpGet("/api/[action]")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult<PagedResult<TFilterableEntity>>> Get(FilterParameters filterParameters)

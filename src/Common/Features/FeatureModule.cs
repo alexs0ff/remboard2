@@ -3,6 +3,7 @@ using System.Linq;
 using Autofac;
 using Common.Features.Cruds;
 using Common.Features.PermissibleValues;
+using Common.Features.ResourcePoints;
 
 namespace Common.Features
 {
@@ -31,14 +32,24 @@ namespace Common.Features
             {
                 permissibleValuesControllerConfigurator.Finish(builder);
             }
-        }
+
+            foreach (var pointConfigurator in RegisterResourcePoints())
+            {
+	            pointConfigurator.Finish(builder);
+            }
+		}
 
         protected virtual IEnumerable<ICrudControllerConfigurator> RegisterCrudControllers()
         {
             return Enumerable.Empty<ICrudControllerConfigurator>();
         }
 
-        protected virtual IEnumerable<IPermissibleValuesControllerConfigurator> RegisterPermissibleValuesControllers()
+        protected virtual IEnumerable<IResourcePointConfigurator> RegisterResourcePoints()
+        {
+	        return Enumerable.Empty<IResourcePointConfigurator>();
+        }
+		
+		protected virtual IEnumerable<IPermissibleValuesControllerConfigurator> RegisterPermissibleValuesControllers()
         {
             return Enumerable.Empty<IPermissibleValuesControllerConfigurator>();
         }

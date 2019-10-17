@@ -25,7 +25,9 @@ export class HomeComponent {
   }
 
   test() {
-    this.router.navigateByUrl("orders/autocomplete-item/8948a322-20e4-42c8-86cf-0a48806bad8a");
+    //this.router.navigateByUrl("orders/autocomplete-item/8948a322-20e4-42c8-86cf-0a48806bad8a");
+    //this.router.navigateByUrl("orders/autocomplete-item/8948a322-20e4-42c8-86cf-0a48806bad8a");
+	this.response$ = this.httpClient.get<string>("api/OrderTypes");
   }
 
   test2() {

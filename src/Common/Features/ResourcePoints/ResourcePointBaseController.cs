@@ -6,12 +6,14 @@ using AutoMapper;
 using Common.Features.Auth;
 using Common.Features.BaseEntity;
 using Common.Features.ResourcePoints.Filterable;
+using Common.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Common.Features.ResourcePoints
 {
+	[CrudControllerNameConvention]
 	[ApiController]
 	[Route("api/[controller]")]
 	[Authorize]
@@ -34,7 +36,7 @@ namespace Common.Features.ResourcePoints
 			_mapper = mapper;
 		}
 
-		//[PluralActionNameConvention]
+		[PluralActionNameConvention]
 		[HttpGet("/api/[action]")]
 		[ProducesResponseType(StatusCodes.Status403Forbidden)]
 		public async Task<ActionResult<PagedResult<TFilterableEntity>>> Get(/*FilterParameters filterParameters*/)
