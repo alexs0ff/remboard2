@@ -73,8 +73,8 @@ namespace Common.Features.ResourcePoints
 			var controllerType = typeof(ResourcePointBaseController<,,,>).MakeGenericType(typeof(TEntity), typeof(TEntityDto),
 				typeof(TFilterableEntity), typeof(TKey));
 
-			builder.RegisterType<ResourcePointControllerDescriptor<TEntity,TEntityDto,TFilterableEntity,TKey>>()
-				.As<IResourcePointControllerDescriptor>()
+			builder.RegisterType<ResourcePointControllerFactory<TEntity,TEntityDto,TFilterableEntity,TKey>>()
+				.As<IResourcePointControllerFactory>()
 				.AsSelf()
 				.WithParameter("resourcePoint", resourcePointDescriptor)
 				.WithParameter("controllerType", controllerType)

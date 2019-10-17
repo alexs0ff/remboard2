@@ -8,16 +8,16 @@ namespace Common.Features.ResourcePoints
 {
 	public class ResourcePointControllerRegistry
 	{
-		private readonly IReadOnlyDictionary<string,IResourcePointControllerDescriptor> _resourcePointControllerDescriptors;
+		private readonly IReadOnlyDictionary<string,IResourcePointControllerFactory> _resourcePointControllerDescriptors;
 
 		/// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
-		public ResourcePointControllerRegistry(IEnumerable<IResourcePointControllerDescriptor> resourcePointControllerDescriptors)
+		public ResourcePointControllerRegistry(IEnumerable<IResourcePointControllerFactory> resourcePointControllerDescriptors)
 		{
-			_resourcePointControllerDescriptors = new ReadOnlyDictionary<string, IResourcePointControllerDescriptor>(resourcePointControllerDescriptors.ToDictionary(descriptor => descriptor.EntityName)); ;
+			_resourcePointControllerDescriptors = new ReadOnlyDictionary<string, IResourcePointControllerFactory>(resourcePointControllerDescriptors.ToDictionary(descriptor => descriptor.EntityName)); ;
 		}
 
-		public IEnumerable<IResourcePointControllerDescriptor> ResourcePointControllerDescriptors => _resourcePointControllerDescriptors.Values;
+		public IEnumerable<IResourcePointControllerFactory> ResourcePointControllerDescriptors => _resourcePointControllerDescriptors.Values;
 
-		public IResourcePointControllerDescriptor this[string name] => _resourcePointControllerDescriptors[name];
+		public IResourcePointControllerFactory this[string name] => _resourcePointControllerDescriptors[name];
 	}
 }

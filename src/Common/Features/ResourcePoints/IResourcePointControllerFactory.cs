@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Common.Features.ResourcePoints
 {
-	public interface IResourcePointControllerDescriptor
+	public interface IResourcePointControllerFactory
 	{
 		IResourcePointDescriptor ResourcePoint { get; }
 

@@ -23,15 +23,15 @@ namespace Common.Features.ResourcePoints
 		where TKey:struct
 		where TEntityDto :class
 	{
-		private readonly ResourcePointControllerDescriptor<TEntity, TEntityDto, TFilterableEntity, TKey> _controllerDescriptor;
+		private readonly ResourcePointControllerFactory<TEntity, TEntityDto, TFilterableEntity, TKey> _controllerFactory;
 
 		private readonly IAuthorizationService _authorizationService;
 
 		private readonly IMapper _mapper;
 
-		public ResourcePointBaseController(ResourcePointControllerDescriptor<TEntity, TEntityDto, TFilterableEntity, TKey> controllerDescriptor, IAuthorizationService authorizationService, IMapper mapper)
+		public ResourcePointBaseController(ResourcePointControllerFactory<TEntity, TEntityDto, TFilterableEntity, TKey> controllerFactory, IAuthorizationService authorizationService, IMapper mapper)
 		{
-			_controllerDescriptor = controllerDescriptor;
+			_controllerFactory = controllerFactory;
 			_authorizationService = authorizationService;
 			_mapper = mapper;
 		}
