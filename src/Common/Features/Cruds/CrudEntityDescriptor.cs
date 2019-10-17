@@ -41,5 +41,6 @@ namespace Common.Features.Cruds
         public TypeInfo EntityDtoTypeInfo => _entityDtoTypeInfo;
 
         public TypeInfo FilterableEntityTypeInfo => _filterableEntityTypeInfo;
+
     }
 }

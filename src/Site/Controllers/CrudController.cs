@@ -7,6 +7,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Common.Data;
 using Common.Features;
+using Common.Features.Auth;
 using Common.Features.BaseEntity;
 using Common.Features.Cruds;
 using Common.Features.Cruds.Filterable;

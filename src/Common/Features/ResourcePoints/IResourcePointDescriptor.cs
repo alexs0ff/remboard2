@@ -11,5 +11,6 @@ namespace Common.Features.ResourcePoints
 		Type EntityTypeInfo { get; }
 		Type EntityDtoTypeInfo { get; }
 		Type FilterableEntityTypeInfo { get; }
+		Type KeyType { get; set; }
 	}
 }

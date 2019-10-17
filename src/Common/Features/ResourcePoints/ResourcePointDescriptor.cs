@@ -7,11 +7,12 @@ namespace Common.Features.ResourcePoints
 {
 	public class ResourcePointDescriptor: IResourcePointDescriptor
 	{
-		public string EntityName { get; }
-		public string EntityPluralName { get; }
-		public Type EntityTypeInfo { get; }
-		public Type EntityDtoTypeInfo { get; }
-		public Type FilterableEntityTypeInfo { get; }
-		public Type KeyType { get; }
+		public string EntityName { get; set; }
+		public string EntityPluralName { get; set; }
+		public Type EntityTypeInfo { get; set; }
+		public Type EntityDtoTypeInfo { get; set; }
+		public Type FilterableEntityTypeInfo { get; set; }
+
+		public Type KeyType { get; set; }
 	}
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Threading.Tasks;
+using Common.Features.Auth;
 using Common.Features.Cruds;
 using Common.Features.PermissibleValues;
 using Common.Features.Users;
