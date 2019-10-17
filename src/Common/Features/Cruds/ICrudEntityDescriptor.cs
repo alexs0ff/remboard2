@@ -12,5 +12,6 @@ namespace Common.Features.Cruds
         TypeInfo EntityTypeInfo { get; }
         TypeInfo EntityDtoTypeInfo { get; }
         TypeInfo FilterableEntityTypeInfo { get; }
-    }
+        Type KeyType { get; }
+	}
 }
