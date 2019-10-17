@@ -6,10 +6,12 @@ using Autofac;
 using Common.Extensions;
 using Common.FeatureEntities;
 using Common.Features.BaseEntity;
-using Common.Features.Cruds;
 using Common.Features.ResourcePoints.Filterable;
 using Common.Features.Specifications;
 using Common.Features.Tenant;
+using EntityContextFilterOperationParameters = Common.Features.ResourcePoints.Filterable.EntityContextFilterOperationParameters;
+using EntityFilterOperationParameters = Common.Features.ResourcePoints.Filterable.EntityFilterOperationParameters;
+using EntitySqlFilterOperationParameters = Common.Features.ResourcePoints.Filterable.EntitySqlFilterOperationParameters;
 
 namespace Common.Features.ResourcePoints
 {
@@ -42,13 +44,23 @@ namespace Common.Features.ResourcePoints
 		}
 
 		public ResourcePointConfigurator<TEntity, TEntityDto, TFilterableEntity, TKey> UseFilterableEntityOperation<TFilterableOperation>(Action<EntityContextFilterOperationParameters> config)
-			where TFilterableOperation : IEntityFilterOperation<TEntity, TFilterableEntity,TKey>
+			where TFilterableOperation : EntityContextFilterOperation<TEntity, TFilterableEntity,TKey>
 		{
 			var parameters = new EntityContextFilterOperationParameters();
 			config(parameters);
 			_filterableEntityOperationParameters = parameters;
 
 			_filterableEntityOperation = typeof(TFilterableOperation);
+			return this;
+		}
+
+		public ResourcePointConfigurator<TEntity, TEntityDto, TFilterableEntity, TKey> UseFilterableEntityOperation<TFilterableOperation>(Action<EntitySqlFilterOperationParameters> config)
+			where TFilterableOperation : EntitySqlFilterOperation<TEntity, TFilterableEntity, TKey>
+		{
+			_filterableEntityOperation = typeof(TFilterableOperation);
+			var parameters = new EntitySqlFilterOperationParameters();
+			config(parameters);
+			_filterableEntityOperationParameters = parameters;
 			return this;
 		}
 
@@ -102,7 +114,7 @@ namespace Common.Features.ResourcePoints
 				.AsSelf()
 				.WithParameter("resourcePoint", resourcePointDescriptor)
 				.WithParameter("controllerType", controllerType)
-				.WithParameter("accessRuleMap", new AccessRuleMap(_readRoles.ToArray()))
+				.WithParameter("accessRuleMap", new Common.Features.Cruds.AccessRuleMap(_readRoles.ToArray()))
 				.WithParameter("filterableEntityOperationType", _filterableEntityOperation)
 				.WithParameter("filterableEntityOperationParameters", _filterableEntityOperationParameters)
 				.WithParameter("mandatorySpecificationTypes", _mandatorySpecifications)

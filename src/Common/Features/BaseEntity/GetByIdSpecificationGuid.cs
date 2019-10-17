@@ -6,21 +6,21 @@ using Common.Features.Specifications;
 
 namespace Common.Features.BaseEntity
 {
-	public class GetByIdSpecification<TEntity,TKey> : ISpecification<TEntity>
-		where TEntity : BaseEntity<TKey>
-		where TKey:struct
+	[Obsolete]
+	public class GetByIdSpecificationGuid<TEntity> : ISpecification<TEntity>
+		where TEntity : BaseEntityGuidKey
 	{
-		private readonly TKey _id;
+		private readonly Guid _id;
 
 		/// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
-		public GetByIdSpecification(TKey id)
+		public GetByIdSpecificationGuid(Guid id)
 		{
 			_id = id;
 		}
 
 		public Expression<Func<TEntity, bool>> IsSatisfiedBy()
 		{
-			return e => e.Id.Equals(_id);
+			return e => e.Id == _id;
 		}
 	}
 }

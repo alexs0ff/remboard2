@@ -98,7 +98,7 @@ namespace Remboard.Controllers
                 return NotFound();
             }
 
-            var getByIdSpec = new GetByIdSpecification<TEntity>(guidId);
+            var getByIdSpec = new GetByIdSpecificationGuid<TEntity>(guidId);
             var predicate =  _descriptor.GetMandatoryPredicate();
 
             predicate.And(getByIdSpec.IsSatisfiedBy());
@@ -169,7 +169,7 @@ namespace Remboard.Controllers
                 return Forbid();
             }
 
-            var getByIdSpec = new GetByIdSpecification<TEntity>(id);
+            var getByIdSpec = new GetByIdSpecificationGuid<TEntity>(id);
             var predicate = _descriptor.GetMandatoryPredicate();
 
             predicate.And(getByIdSpec.IsSatisfiedBy());
@@ -221,7 +221,7 @@ namespace Remboard.Controllers
             }
 
             var predicate = _descriptor.GetMandatoryPredicate();
-            var getByIdSpec = new GetByIdSpecification<TEntity>(id);
+            var getByIdSpec = new GetByIdSpecificationGuid<TEntity>(id);
 
             predicate.And(getByIdSpec.IsSatisfiedBy());
 
