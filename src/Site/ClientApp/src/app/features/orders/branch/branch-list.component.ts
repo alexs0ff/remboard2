@@ -35,9 +35,9 @@ export class BranchListComponent implements OnInit {
 						}
 					]
 				}*/
-				{ id: "title", name: "Название", options: { canOrder: true } },
-				{ id: "legalName", name: "Юр наименование", options: { canOrder: true } },
-				{ id: "address", name: "Адрес", options: { canOrder: true } }
+				{ id: "title", name: "Название", options: { canOrder: true, valueKind:'string' } },
+				{ id: "legalName", name: "Юр наименование", options: { canOrder: true, valueKind: 'string' } },
+				{ id: "address", name: "Адрес", options: { canOrder: true, valueKind: 'string' } }
 			],
 			panel: {showAddButton: true,},
 			filter: {

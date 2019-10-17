@@ -14,14 +14,14 @@ export class AutocompleteItemListComponent implements OnInit {
 	dataGrid: RaServerDataGridModel;
 
 	constructor() {
-		/*this.dataGrid = {
+		this.dataGrid = {
 			entitiesName: "autocompleteItems",
 			columns: [
-				{ kind: 'content', canOrder: true, id: "title", name: "Название" },
-				{ kind: 'content', canOrder: false, id: "autocompleteKindTitle", name: "Тип" },
+				{ id: "title", name: "Название", options:{canOrder:true,valueKind:'string'}},
+				{ id: "autocompleteKindTitle", name: "Тип", options: { canOrder: true, valueKind: 'string' } },
 			],
 			pageSize: 10,
-			showAddButton: true,
+			panel: { showAddButton: true,},
 			filter: {
 				columns: [
 					{
@@ -49,7 +49,7 @@ export class AutocompleteItemListComponent implements OnInit {
 					}
 				]
 			}
-		};*/
+		};
 	}
 
 	ngOnInit() {

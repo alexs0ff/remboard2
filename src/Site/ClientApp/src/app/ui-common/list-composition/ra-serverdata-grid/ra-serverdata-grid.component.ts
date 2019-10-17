@@ -22,9 +22,8 @@ export class RaServerdataGridComponent implements OnInit {
 	totalLength$: Observable<number>;
 	isLoading$: Observable<boolean>;
 
-	//displayedColumns: string[] = [];
-
 	pageSize = 50;
+
 	private currentPage: number = 1;
 	private sortedColumn: string = "";
 	private sortDirection: string = "";

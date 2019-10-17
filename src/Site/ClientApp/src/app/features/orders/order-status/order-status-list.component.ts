@@ -14,16 +14,16 @@ export class OrderStatusListComponent implements OnInit {
 	dataGrid: RaServerDataGridModel;
 
 	constructor() {
-		/*this.dataGrid = {
+		this.dataGrid = {
 			entitiesName: "orderStatuses",
 			columns: [
-				{ kind: 'content',canOrder: true, id: "title", name: "Название" },
-				{ kind: 'content',canOrder: true, id: "orderStatusKindTitle", name: "Тип" },
+				{ id: "title", name: "Название", options: { canOrder: true, valueKind: 'string' } },
+				{ id: "orderStatusKindTitle", name: "Тип", options: { canOrder: true, valueKind: 'string' } },
 			],
 			pageSize: 10,
-			showAddButton: true,
+			panel: {showAddButton:true},
 			filter: null
-		};*/
+		};
 	}
 
 	ngOnInit() {

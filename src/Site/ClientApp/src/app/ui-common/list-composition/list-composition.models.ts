@@ -1,11 +1,12 @@
 import { RaTextBox, RaSelectBox } from "../forms-composition/forms-composition.models";
 
 export interface GridContentOptions {
- canOrder: boolean; 
+	canOrder: boolean;
+	valueKind:'string'|'decimal'|'percentage';
 }
 
 export interface GridControlPanel {
-	showAddButton:boolean;
+	showAddButton: boolean;
 }
 
 export interface RaGridColumn {

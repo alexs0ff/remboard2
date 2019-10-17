@@ -14,15 +14,15 @@ export class OrderTypeListComponent implements OnInit {
 	dataGrid: RaServerDataGridModel;
 
 	constructor() {
-		/*this.dataGrid = {
+		this.dataGrid = {
 			entitiesName: "orderTypes",
 			columns: [
-				{ kind: 'content', canOrder: true, id: "title", name: "Название" },
+				{ id: "title", name: "Название", options: { canOrder: true, valueKind: 'string' } },
 			],
 			pageSize: 10,
-			showAddButton: true,
+			panel: { showAddButton: true,},
 			filter: null
-		};*/
+		};
 	}
 
 	ngOnInit() {
