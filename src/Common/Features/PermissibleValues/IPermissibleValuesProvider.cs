@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Common.Features.PermissibleValues
 {
     public interface IPermissibleValuesProvider<TEntity,TEnum>
-        where TEnum:Enum
+        where TEnum:struct,Enum
         where TEntity: BasePermissibleValue<TEnum>
     {
         Task<IEnumerable<TEntity>> ReadEntitiesAsync();

@@ -5,7 +5,7 @@ using System.Text;
 namespace Common.Features.PermissibleValues
 {
     public interface IPermissibleValuesTypedControllerDescriptor<TEntity,TEnum>: IPermissibleValuesControllerDescriptor
-        where TEnum : Enum
+        where TEnum : struct,Enum
         where TEntity : BasePermissibleValue<TEnum>
     {
         IPermissibleValuesProvider<TEntity, TEnum> PermissibleValuesProvider { get; }

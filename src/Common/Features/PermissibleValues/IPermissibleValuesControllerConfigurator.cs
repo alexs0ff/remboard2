@@ -5,6 +5,7 @@ using Autofac;
 
 namespace Common.Features.PermissibleValues
 {
+	[Obsolete]
     public interface IPermissibleValuesControllerConfigurator
     {
         void Finish(ContainerBuilder builder);
