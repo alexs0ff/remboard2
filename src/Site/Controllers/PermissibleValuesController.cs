@@ -20,7 +20,7 @@ namespace Remboard.Controllers
     [Route("api/[controller]")]
     public class PermissibleValuesController<TEntity,TEnum>: ControllerBase
         where TEntity : BasePermissibleValue<TEnum>
-        where TEnum : struct,Enum
+        where TEnum : Enum
     {
         private readonly ILogger<PermissibleValuesController<TEntity, TEnum>> _logger;
 

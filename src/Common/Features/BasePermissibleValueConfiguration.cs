@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace Common.Features
 {
     public abstract class BasePermissibleValueConfiguration<TEntity,TEnum> : IEntityTypeConfiguration<TEntity> where TEntity : BasePermissibleValue<TEnum>,new()
-    where TEnum:struct,Enum
+    where TEnum:Enum
     {
         public virtual void Configure(EntityTypeBuilder<TEntity> builder)
         {

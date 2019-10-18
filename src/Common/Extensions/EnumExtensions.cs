@@ -25,8 +25,8 @@ namespace Common.Extensions
 
         public static List<TEntity> EnumToEntities<TEntity,TEnum>()
             where TEntity : Common.Features.BasePermissibleValue<TEnum>, new()
-            where TEnum : struct,Enum
-		{
+            where TEnum : Enum
+        {
             var list = new List<TEntity>();
 
             var values = Enum.GetValues(typeof(TEnum));

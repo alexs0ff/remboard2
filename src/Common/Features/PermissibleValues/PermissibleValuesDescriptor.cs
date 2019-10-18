@@ -6,7 +6,7 @@ using System.Text;
 namespace Common.Features.PermissibleValues
 {
     public class PermissibleValuesDescriptor<TEntity, TEnum> : IPermissibleValuesDescriptor
-        where TEnum:struct,Enum
+        where TEnum:Enum
         where TEntity : BasePermissibleValue<TEnum>
     {
         /// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>

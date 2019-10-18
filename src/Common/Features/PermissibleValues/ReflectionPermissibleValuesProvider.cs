@@ -9,7 +9,7 @@ using Common.Extensions;
 namespace Common.Features.PermissibleValues
 {
     public class ReflectionPermissibleValuesProvider<TEntity, TEnum> : IPermissibleValuesProvider<TEntity,TEnum>
-        where TEnum : struct,Enum
+        where TEnum : Enum
         where TEntity : BasePermissibleValue<TEnum>, new()
     {
         private static Lazy<IEnumerable<TEntity>> _entities;
