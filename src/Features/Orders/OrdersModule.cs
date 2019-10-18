@@ -65,69 +65,59 @@ namespace Orders
 			        parameters => { })
 				.AddReadRoles(ProjectRoles.Admin,ProjectRoles.Engineer,ProjectRoles.Manager);
 
-        }
-
-        protected override IEnumerable<ICrudControllerConfigurator> RegisterCrudControllers()
-        {
-            yield return new CrudControllerConfigurator<AutocompleteItem, AutocompleteItemDto, AutocompleteItemDto>()
-                .UseValidator<AutocompleteItemDtoValidator>()
-                .UseFilterableEntityOperation<EntityContextFilterOperation<AutocompleteItem, AutocompleteItemDto>>(
-                    parameters =>
-                    {
-                        parameters.AddSortFieldsMapping(nameof(AutocompleteItemDto.AutocompleteKindTitle),nameof(AutocompleteItem.AutocompleteKind) + "." +nameof(AutocompleteItem.AutocompleteKind.Name));
-                    })
-                /*.UseFilterableEntityOperation<EntitySqlFilterOperation<AutocompleteItem, AutocompleteItemDto>>(
-                    parameters =>
-                    {
-                        parameters.Sql = @"SELECT [Id]
-                                          ,[IsDeleted]
-                                          ,[DateCreated]
-                                          ,[DateModified]
-                                          ,[RowVersion]
-                                          ,[TenantId]
-                                          ,[AutocompleteKindId]
-                                          ,[Title] FROM [dbo].[AutocompleteItem] a
-                                          {WhereClause}
-                                          {OrderByClause}
-                                          {PaggingClause}
+	        yield return new CrudResourcePointConfigurator<AutocompleteItem, AutocompleteItemDto, AutocompleteItemDto,
+			        Guid>()
+		        .AddModifyRoles()
+		        .UseValidator<AutocompleteItemDtoValidator>()
+		        .UseCrudOperation<EntityContextCrudOperation<AutocompleteItem, AutocompleteItemDto, Guid>>()
+		        /*.UseFilterableEntityOperation<EntitySqlFilterOperation<AutocompleteItem, AutocompleteItemDto>>(
+		           parameters =>
+		           {
+			           parameters.Sql = @"SELECT [Id]
+								         ,[IsDeleted]
+								         ,[DateCreated]
+								         ,[DateModified]
+								         ,[RowVersion]
+								         ,[TenantId]
+								         ,[AutocompleteKindId]
+								         ,[Title] FROM [dbo].[AutocompleteItem] a
+								         {WhereClause}
+								         {OrderByClause}
+								         {PaggingClause}
 "
-                            ;
-                        parameters.DefaultOrderColumn = "Title";
-                        parameters.AliasName = "a";
+				           ;
+			           parameters.DefaultOrderColumn = "Title";
+			           parameters.AliasName = "a";
 
-                    })*/
-                .AddModifyRoles();
+		           })*/
+				.UseFilterableEntityOperation<Common.Features.ResourcePoints.Filterable.EntityContextFilterOperation<AutocompleteItem, AutocompleteItemDto, Guid>>(
+			        parameters =>
+			        {
+				        parameters.AddSortFieldsMapping(nameof(AutocompleteItemDto.AutocompleteKindTitle),
+					        nameof(AutocompleteItem.AutocompleteKind) + "." + nameof(AutocompleteItem.AutocompleteKind.Name));
+			        });
 
-            yield return new CrudControllerConfigurator<OrderStatus, OrderStatusDto, OrderStatusDto>()
-	            .SetEntityPluralName("OrderStatuses")
-	            .UseValidator<OrderStatusDtoValidator>()
-	            .UseFilterableEntityOperation<EntityContextFilterOperation<OrderStatus, OrderStatusDto>>(
-		            parameters =>
-		            {
-			            parameters.AddSortFieldsMapping(nameof(OrderStatusDto.OrderStatusKindTitle), nameof(OrderStatus.OrderStatusKind) + "." + nameof(OrderStatus.OrderStatusKind.Name));
-		            })
-	            .AddModifyRoles();
+	        yield return new CrudResourcePointConfigurator<OrderStatus, OrderStatusDto, OrderStatusDto, Guid>()
+		        .AddModifyRoles()
+		        .UseValidator<OrderStatusDtoValidator>()
+		        .UseCrudOperation<EntityContextCrudOperation<OrderStatus, OrderStatusDto, Guid>>()
+		        .SetEntityPluralName("OrderStatuses")
+		        .UseFilterableEntityOperation<Common.Features.ResourcePoints.Filterable.EntityContextFilterOperation<
+			        OrderStatus, OrderStatusDto, Guid>>(
+			        parameters =>
+			        {
+				        parameters.AddSortFieldsMapping(nameof(OrderStatusDto.OrderStatusKindTitle), nameof(OrderStatus.OrderStatusKind) + "." + nameof(OrderStatus.OrderStatusKind.Name));
+					});
 
-            yield return new CrudControllerConfigurator<Branch, BranchDto, BranchDto>()
-	            .SetEntityPluralName("Branches")
-	            .UseValidator<BranchDtoValidator>()
-	            .UseFilterableEntityOperation<EntityContextFilterOperation<Branch, BranchDto>>(
-		            parameters =>
-		            {
-			            
-		            })
-	            .AddModifyRoles();
+	        yield return new CrudResourcePointConfigurator<Branch, BranchDto, BranchDto, Guid>()
+		        .AddModifyRoles()
+		        .UseValidator<BranchDtoValidator>()
+		        .UseCrudOperation<EntityContextCrudOperation<Branch, BranchDto, Guid>>()
+		        .SetEntityPluralName("Branches")
+		        .UseFilterableEntityOperation<Common.Features.ResourcePoints.Filterable.EntityContextFilterOperation<
+			        Branch, BranchDto, Guid>>(
+			        parameters => { });
 
-            //yield return new CrudControllerConfigurator<OrderType, OrderTypeDto, OrderTypeDto>()
-	           // .SetEntityPluralName("OrderTypes")
-	           // .UseValidator<OrderTypeDtoValidator>()
-	           // .UseFilterableEntityOperation<EntityContextFilterOperation<OrderType, OrderTypeDto>>(
-		          //  parameters =>
-		          //  {
-
-		          //  })
-	           // .AddModifyRoles();
-
-		}
+        }
     }
 }
