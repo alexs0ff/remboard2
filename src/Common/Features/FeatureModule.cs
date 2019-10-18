@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Autofac;
-using Common.Features.Cruds;
 using Common.Features.PermissibleValues;
 using Common.Features.ResourcePoints;
 
@@ -23,11 +22,6 @@ namespace Common.Features
                 builder.RegisterInstance(cmf).As<IConfigureModelFeature>();
             }
 
-            foreach (var controllerConfgurator in RegisterCrudControllers())
-            {
-                controllerConfgurator.Finish(builder);
-            }
-
             foreach (var permissibleValuesControllerConfigurator in RegisterPermissibleValuesControllers())
             {
                 permissibleValuesControllerConfigurator.Finish(builder);
@@ -38,11 +32,6 @@ namespace Common.Features
 	            pointConfigurator.Finish(builder);
             }
 		}
-
-        protected virtual IEnumerable<ICrudControllerConfigurator> RegisterCrudControllers()
-        {
-            return Enumerable.Empty<ICrudControllerConfigurator>();
-        }
 
         protected virtual IEnumerable<IResourcePointConfigurator> RegisterResourcePoints()
         {

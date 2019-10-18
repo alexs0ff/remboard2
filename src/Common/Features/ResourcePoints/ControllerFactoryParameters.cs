@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using Autofac;
-using Common.Features.Cruds;
 using Common.Features.ResourcePoints.Filterable;
 
 namespace Common.Features.ResourcePoints

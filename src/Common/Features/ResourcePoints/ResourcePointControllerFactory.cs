@@ -4,7 +4,6 @@ using System.Text;
 using Autofac;
 using Common.FeatureEntities;
 using Common.Features.BaseEntity;
-using Common.Features.Cruds;
 using Common.Features.ResourcePoints.Filterable;
 using Common.Features.Specifications;
 using Microsoft.EntityFrameworkCore;

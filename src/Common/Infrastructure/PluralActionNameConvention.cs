@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Common.Extensions;
-using Common.Features.Cruds;
 using Common.Features.PermissibleValues;
 using Common.Features.ResourcePoints;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
@@ -18,18 +17,15 @@ namespace Common.Infrastructure
 
 	public class PluralActionNameConvention : IActionModelConvention
 	{
-		private readonly EntityControllerRegistry _controllerRegistry;
 
 		private readonly PermissibleValuesControllerRegistry _permissibleValuesControllerRegistry;
 
 		private readonly ResourcePointControllerRegistry _resourcePointControllerRegistry;
 
 		/// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
-		public PluralActionNameConvention(EntityControllerRegistry controllerRegistry,
-			PermissibleValuesControllerRegistry permissibleValuesControllerRegistry,
+		public PluralActionNameConvention(PermissibleValuesControllerRegistry permissibleValuesControllerRegistry,
 			ResourcePointControllerRegistry resourcePointControllerRegistry)
 		{
-			_controllerRegistry = controllerRegistry;
 			_permissibleValuesControllerRegistry = permissibleValuesControllerRegistry;
 			_resourcePointControllerRegistry = resourcePointControllerRegistry;
 		}
@@ -47,13 +43,7 @@ namespace Common.Infrastructure
 			{
 				var genericType = action.Controller.ControllerType.GetGenericTypeDefinition();
 				var name = genericType.Name;
-
-				if (hasAttribute && name == "CrudController`3")
-				{
-					var entityType = action.Controller.ControllerType.GenericTypeArguments[0];
-					action.ActionName = _controllerRegistry[entityType.Name].EntityDescriptor.EntityPluralName;
-				}
-				else if (name == "PermissibleValuesController`2")
+				if (name == "PermissibleValuesController`2")
 				{
 					var entityType = action.Controller.ControllerType.GenericTypeArguments[0];
 					action.ActionName = _permissibleValuesControllerRegistry[entityType.Name]

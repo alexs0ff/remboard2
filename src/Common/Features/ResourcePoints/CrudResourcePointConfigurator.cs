@@ -6,7 +6,6 @@ using Autofac;
 using Common.Extensions;
 using Common.FeatureEntities;
 using Common.Features.BaseEntity;
-using Common.Features.Cruds;
 using Common.Features.ResourcePoints.Crud;
 using Common.Features.Tenant;
 

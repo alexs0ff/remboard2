@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using Common.FeatureEntities;
 
-namespace Common.Features.Cruds
+namespace Common.Features
 {
     public class AccessRuleMap
     {

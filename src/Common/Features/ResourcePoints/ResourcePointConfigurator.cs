@@ -143,7 +143,7 @@ namespace Common.Features.ResourcePoints
 				typeof(TFilterableEntity), typeof(TKey));
 			parameters.ControllerType = controllerType;
 			parameters.ResourcePoint = resourcePointDescriptor;
-			parameters.AccessRuleMap = new Common.Features.Cruds.AccessRuleMap(_readRoles.ToArray());
+			parameters.AccessRuleMap = new AccessRuleMap(_readRoles.ToArray());
 			parameters.FilterableEntityOperationType = _filterableEntityOperation;
 			parameters.FilterableEntityOperationParameters = _filterableEntityOperationParameters;
 			parameters.MandatorySpecificationTypes = _mandatorySpecifications;

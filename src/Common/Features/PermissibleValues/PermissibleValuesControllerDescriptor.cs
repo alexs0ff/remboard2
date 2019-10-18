@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using Autofac;
-using Common.Features.Cruds;
 
 namespace Common.Features.PermissibleValues
 {

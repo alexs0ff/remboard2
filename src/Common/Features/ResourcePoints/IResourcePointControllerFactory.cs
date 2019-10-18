@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Common.Features.Cruds;
 
 namespace Common.Features.ResourcePoints
 {

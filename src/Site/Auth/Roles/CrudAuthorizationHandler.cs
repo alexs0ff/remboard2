@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Threading.Tasks;
+using Common.Features;
 using Common.Features.Auth;
-using Common.Features.Cruds;
 using Common.Features.PermissibleValues;
 using Common.Features.ResourcePoints;
 using Common.Features.Users;
@@ -17,7 +17,6 @@ namespace Remboard.Auth.Roles
     public class CrudAuthorizationHandler :
         AuthorizationHandler<OperationAuthorizationRequirement, Type>
     {
-        private readonly EntityControllerRegistry _entityControllerRegistry;
 
         private readonly PermissibleValuesControllerRegistry _permissibleValuesControllerRegistry;
 
@@ -25,9 +24,8 @@ namespace Remboard.Auth.Roles
 
         private readonly ICurrentIdentityInfoProvider _currentIdentityInfoProvider;
 
-        public CrudAuthorizationHandler(EntityControllerRegistry entityControllerRegistry, ICurrentIdentityInfoProvider currentIdentityInfoProvider, PermissibleValuesControllerRegistry permissibleValuesControllerRegistry, ResourcePointControllerRegistry resourcePointControllerRegistry)
+        public CrudAuthorizationHandler(ICurrentIdentityInfoProvider currentIdentityInfoProvider, PermissibleValuesControllerRegistry permissibleValuesControllerRegistry, ResourcePointControllerRegistry resourcePointControllerRegistry)
         {
-            _entityControllerRegistry = entityControllerRegistry;
             _currentIdentityInfoProvider = currentIdentityInfoProvider;
             _permissibleValuesControllerRegistry = permissibleValuesControllerRegistry;
             _resourcePointControllerRegistry = resourcePointControllerRegistry;
@@ -41,11 +39,6 @@ namespace Remboard.Auth.Roles
             {
 	            accessRules = _resourcePointControllerRegistry[resource.Name].AccessRules;
             }else
-
-			if (_entityControllerRegistry.HasEntity(resource.Name))
-            {
-				accessRules = _entityControllerRegistry[resource.Name].AccessRules;
-			}else
 
             if (_permissibleValuesControllerRegistry.HasEntity(resource.Name))
             {
