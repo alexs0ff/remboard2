@@ -15,5 +15,9 @@ namespace Common.Features.ResourcePoints.Crud
 		Task<TEntityDto> Get(string id, DbContext context, IResourceMandatoryPredicateFactory<TEntity, TKey> mandatoryPredicateFactory);
 
 		Task<TEntityDto> Post(TEntityDto entityDto, DbContext context,List<IEntityCorrector<TEntity, TEntityDto, TKey>> correctors);
+
+		Task<TEntityDto> Put(string id, TEntityDto entityDto, DbContext context,IResourceMandatoryPredicateFactory<TEntity, TKey> mandatoryPredicateFactory,List<IEntityCorrector<TEntity, TEntityDto, TKey>> correctors);
+
+		Task Delete(string id, DbContext context,IResourceMandatoryPredicateFactory<TEntity, TKey> mandatoryPredicateFactory);
 	}
 }

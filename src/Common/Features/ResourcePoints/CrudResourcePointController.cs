@@ -48,6 +48,8 @@ namespace Common.Features.ResourcePoints
 
 				if (entityDto == null)
 				{
+					var entityName = typeof(TEntity).Name;
+					logger.LogError("The entity '{entityName}' with {id} doesn`t exists ", id, entityName);
 					return NotFound();
 				}
 
@@ -96,6 +98,92 @@ namespace Common.Features.ResourcePoints
 			return BadRequest(errorResponse);
 		}
 
+		[HttpPut("{id}")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[ProducesResponseType(StatusCodes.Status403Forbidden)]
+		[ProducesResponseType(typeof(EntityResponse), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<TEntityDto>> Put([FromRoute] string id, [FromBody] TEntityDto entityDto, [FromServices] RemboardContext context, [FromServices] IAuthorizationService authorizationService, [FromServices] CrudResourcePointControllerFactory<TEntity, TEntityDto, TFilterableEntity, TKey> controllerFactory, [FromServices] ILogger<ResourcePointBaseController<TEntity, TEntityDto, TFilterableEntity, TKey>> logger)
+		{
+			var result = await authorizationService.AuthorizeAsync(User, typeof(TEntity), CrudOperations.Create);
+
+			if (!result.Succeeded)
+			{
+				return Forbid();
+			}
+
+			var validator = controllerFactory.GetValidator();
+
+			var validationResult = await ValidateAsync(validator, entityDto);
+
+			if (validationResult == null)
+			{
+				var predicates = controllerFactory.GetMandatoryPredicateFactory();
+				var operation = controllerFactory.GetCrudOperation();
+				var correctors = controllerFactory.GetCorrectors();
+				try
+				{
+					var entity = await operation.Put(id, entityDto, context, predicates, correctors);
+					return Ok(entity);
+				}
+				catch (WrongIdValueException)
+				{
+					var entityName = typeof(TEntity).Name;
+					logger.LogError("Can`t parse {id} for {entityName}", id, entityName);
+					return NotFound();
+				}
+				catch (EntityNotFoundException)
+				{
+					var entityName = typeof(TEntity).Name;
+					logger.LogError("The entity '{entityName}' with {id} doesn`t exists ", id, entityName);
+					return NotFound();
+				}
+				
+			}
+
+			var errorResponse = new EntityResponse
+			{
+				Message = "Failed to save entity",
+			};
+
+			errorResponse.ValidationErrors.AddRange(validationResult);
+			return BadRequest(errorResponse);
+		}
+
+		[HttpDelete("{id}")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[ProducesResponseType(StatusCodes.Status403Forbidden)]
+		public async Task<IActionResult> Delete([FromRoute] string id, [FromServices] RemboardContext context, [FromServices] IAuthorizationService authorizationService, [FromServices] CrudResourcePointControllerFactory<TEntity, TEntityDto, TFilterableEntity, TKey> controllerFactory, [FromServices] ILogger<ResourcePointBaseController<TEntity, TEntityDto, TFilterableEntity, TKey>> logger)
+		{
+			var result = await authorizationService.AuthorizeAsync(User, typeof(TEntity), CrudOperations.Delete);
+
+			if (!result.Succeeded)
+			{
+				return Forbid();
+			}
+
+			try
+			{
+				var operation = controllerFactory.GetCrudOperation();
+				var predicates = controllerFactory.GetMandatoryPredicateFactory();
+				await operation.Delete(id, context, predicates);
+			}
+			catch (WrongIdValueException)
+			{
+				var entityName = typeof(TEntity).Name;
+				logger.LogError("Can`t parse {id} for {entityName}", id, entityName);
+				return NotFound();
+			}
+			catch (EntityNotFoundException)
+			{
+				var entityName = typeof(TEntity).Name;
+				logger.LogError("The entity '{entityName}' with {id} doesn`t exists ", id, entityName);
+				return NotFound();
+			}
+
+			return Ok();
+		}
 
 		private async Task<ValidationErrorItem[]> ValidateAsync(IValidator<TEntityDto> validator, TEntityDto entityDto)
 		{

@@ -65,8 +65,9 @@ namespace Common.Features.ResourcePoints
 			return this;
 		}
 
-		protected override Type GetResourcePointFactoryType()
+		protected override Type GetResourcePointFactoryType(List<Type> listBaseTypes)
 		{
+			listBaseTypes.Add(typeof(ResourcePointControllerFactory<TEntity, TEntityDto, TFilterableEntity, TKey>));
 			return typeof(CrudResourcePointControllerFactory<TEntity, TEntityDto, TFilterableEntity, TKey>);
 		}
 

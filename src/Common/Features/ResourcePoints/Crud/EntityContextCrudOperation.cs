@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Common.Features.BaseEntity;
 using Common.Features.ResourcePoints.Filterable;
+using Common.Features.Tenant;
 using LinqKit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,17 +20,19 @@ namespace Common.Features.ResourcePoints.Crud
 	{
 		private readonly IMapper _mapper;
 		private readonly ILogger<EntityContextCrudOperation<TEntity, TEntityDto, TKey>> _logger;
+		private readonly OnlyTenantEntitiesSpecification<TEntity, TKey> _onlyTenantEntitiesSpecification;
 
 		/// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
-		public EntityContextCrudOperation(IMapper mapper,ILogger<EntityContextCrudOperation<TEntity, TEntityDto, TKey>> logger)
+		public EntityContextCrudOperation(IMapper mapper,ILogger<EntityContextCrudOperation<TEntity, TEntityDto, TKey>> logger, OnlyTenantEntitiesSpecification<TEntity,TKey> onlyTenantEntitiesSpecification)
 		{
 			_mapper = mapper;
 			_logger = logger;
+			_onlyTenantEntitiesSpecification = onlyTenantEntitiesSpecification;
 		}
 
 		public async Task<TEntityDto> Get(string id, DbContext context, IResourceMandatoryPredicateFactory<TEntity, TKey> mandatoryPredicateFactory)
 		{
-			var entity = await GetById(id, context, mandatoryPredicateFactory);
+			var entity = await GetById(id, context, mandatoryPredicateFactory.GetMandatoryPredicates());
 
 			if (entity == null)
 			{
@@ -41,7 +44,19 @@ namespace Common.Features.ResourcePoints.Crud
 			return entityDto;
 		}
 
-		protected static async Task<TEntity> GetById(string id, DbContext context,IResourceMandatoryPredicateFactory<TEntity, TKey> mandatoryPredicateFactory)
+		protected static async Task<TEntity> GetById(string id, DbContext context,ExpressionStarter<TEntity> predicate)
+		{
+			var idRaw = GetIdRaw(id);
+
+			var getByIdSpec = new GetByIdSpecification<TEntity, TKey>((TKey) idRaw);
+			
+			predicate.And(getByIdSpec.IsSatisfiedBy());
+
+			var entity = await context.Set<TEntity>().AsExpandable().FirstOrDefaultAsync(predicate);
+			return entity;
+		}
+
+		private static object GetIdRaw(string id)
 		{
 			var idRaw = FilterTypeCorrector.ChangeType<TEntity>(nameof(BaseEntity<TKey>.Id), id);
 
@@ -50,13 +65,7 @@ namespace Common.Features.ResourcePoints.Crud
 				throw new WrongIdValueException();
 			}
 
-			var getByIdSpec = new GetByIdSpecification<TEntity, TKey>((TKey) idRaw);
-
-			var predicate = mandatoryPredicateFactory.GetMandatoryPredicates();
-			predicate.And(getByIdSpec.IsSatisfiedBy());
-
-			var entity = await context.Set<TEntity>().AsExpandable().FirstOrDefaultAsync(predicate);
-			return entity;
+			return idRaw;
 		}
 
 		public async Task<TEntityDto> Post(TEntityDto entityDto, DbContext context, List<IEntityCorrector<TEntity, TEntityDto, TKey>> correctors)
@@ -81,6 +90,65 @@ namespace Common.Features.ResourcePoints.Crud
 			}
 
 			return entityDto;
+		}
+
+		public async Task<TEntityDto> Put(string id, TEntityDto entityDto, DbContext context, IResourceMandatoryPredicateFactory<TEntity, TKey> mandatoryPredicateFactory,List<IEntityCorrector<TEntity, TEntityDto, TKey>> correctors)
+		{
+			var foundEntity = await GetById(id, context, mandatoryPredicateFactory.GetMandatoryPredicates());
+
+			if (foundEntity == null)
+			{
+				throw new EntityNotFoundException();
+			}
+
+			_mapper.Map(entityDto, foundEntity);
+
+			foreach (var entityCorrector in correctors)
+			{
+				await entityCorrector.CorrectEntityAsync(foundEntity, entityDto);
+			}
+
+
+			context.Set<TEntity>().Update(foundEntity);
+			await context.SaveChangesAsync();
+
+			entityDto = _mapper.Map<TEntityDto>(foundEntity);
+
+			foreach (var entityCorrector in correctors)
+			{
+				await entityCorrector.CorrectEntityDtoAsync(entityDto, foundEntity);
+			}
+
+			return entityDto;
+		}
+
+		public async Task Delete(string id, DbContext context, IResourceMandatoryPredicateFactory<TEntity, TKey> mandatoryPredicateFactory)
+		{
+			var foundEntity = await GetById(id, context, mandatoryPredicateFactory.GetMandatoryPredicates());
+			var idRaw = GetIdRaw(id);
+
+			if (foundEntity == null)
+			{
+				var predicate = LinqKit.PredicateBuilder.New<TEntity>(true);
+
+				var getByIdSpec = new GetByIdSpecification<TEntity,TKey>((TKey)idRaw);
+
+
+				predicate.And(getByIdSpec.IsSatisfiedBy());
+				predicate.And(_onlyTenantEntitiesSpecification.IsSatisfiedBy());
+
+				foundEntity = await context.Set<TEntity>().AsExpandable().FirstOrDefaultAsync(predicate);
+
+				if (foundEntity == null)
+				{
+					throw new EntityNotFoundException();
+				}
+			}
+
+			foundEntity.IsDeleted = true;
+
+			context.Set<TEntity>().Update(foundEntity);
+			await context.SaveChangesAsync();
 		}
 	}
 }

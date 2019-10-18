@@ -94,9 +94,12 @@ namespace Common.Features.ResourcePoints
 			var parameters = CreateFactoryParameters();
 			FillControllerFactoryParameters(parameters);
 
-			builder.RegisterType(GetResourcePointFactoryType())
+			var listBaseTypes = new List<Type>();
+			var factoryType = GetResourcePointFactoryType(listBaseTypes);
+			builder.RegisterType(factoryType)
 				.As<IResourcePointControllerFactory>()
 				.AsSelf()
+				.As(listBaseTypes.ToArray())
 				.WithParameter("parameters", parameters)
 				.SingleInstance();
 
@@ -108,7 +111,7 @@ namespace Common.Features.ResourcePoints
 			
 		}
 
-		protected virtual Type GetResourcePointFactoryType()
+		protected virtual Type GetResourcePointFactoryType(List<Type> listBaseTypes)
 		{
 			return typeof(ResourcePointControllerFactory<TEntity, TEntityDto, TFilterableEntity, TKey>);
 		}
