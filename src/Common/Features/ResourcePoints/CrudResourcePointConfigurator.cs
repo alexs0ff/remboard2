@@ -1,8 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using Autofac;
+using Common.Extensions;
 using Common.FeatureEntities;
 using Common.Features.BaseEntity;
+using Common.Features.Cruds;
+using Common.Features.ResourcePoints.Crud;
+using Common.Features.Tenant;
 
 namespace Common.Features.ResourcePoints
 {
@@ -16,6 +22,22 @@ namespace Common.Features.ResourcePoints
 
 		private Type _entityValidator = null;
 
+		private Type _crudOperation;
+
+		private readonly IList<Type> _entityCorrectorTypes = new List<Type>();
+
+		private readonly Type _tenantedEntityCorrectorType = null;
+
+		/// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
+		public CrudResourcePointConfigurator()
+		{
+			if (typeof(TEntity).HasImplementation<ITenantedEntity>())
+			{
+				_tenantedEntityCorrectorType = typeof(TenantedEntityCorrector<TEntityDto, TKey>);
+				_entityCorrectorTypes.Add(_tenantedEntityCorrectorType);
+			}
+		}
+
 		public CrudResourcePointConfigurator<TEntity, TEntityDto, TFilterableEntity, TKey> AddModifyRoles(params ProjectRoles[] roles)
 		{
 			AppendRoles(_modifyRoles, roles);
@@ -27,6 +49,56 @@ namespace Common.Features.ResourcePoints
 		{
 			_entityValidator = typeof(TValidator);
 			return this;
+		}
+
+		public ResourcePointConfigurator<TEntity, TEntityDto, TFilterableEntity, TKey> UseCrudOperation<TCrudOperation>()
+			where TCrudOperation : ICrudOperation<TEntity, TEntityDto, TKey>
+		{
+			_crudOperation = typeof(TCrudOperation);
+			return this;
+		}
+
+		public ResourcePointConfigurator<TEntity, TEntityDto, TFilterableEntity, TKey> AddEntityCorrector<TCorrector>()
+			where TCorrector : IEntityCorrector<TEntity, TEntityDto,TKey>
+		{
+			_entityCorrectorTypes.Add(typeof(TCorrector));
+			return this;
+		}
+
+		protected override Type GetResourcePointFactoryType()
+		{
+			return typeof(CrudResourcePointControllerFactory<TEntity, TEntityDto, TFilterableEntity, TKey>);
+		}
+
+		protected override ControllerFactoryParameters CreateFactoryParameters()
+		{
+			return new CrudControllerFactoryParameters();
+		}
+
+		protected override void FillControllerFactoryParameters(ControllerFactoryParameters parameters)
+		{
+			var typedParameters = (CrudControllerFactoryParameters)parameters;
+			base.FillControllerFactoryParameters(typedParameters);
+
+
+			var controllerType = typeof(CrudResourcePointController<,,,>).MakeGenericType(typeof(TEntity), typeof(TEntityDto),
+				typeof(TFilterableEntity), typeof(TKey));
+			typedParameters.ControllerType = controllerType;
+			typedParameters.EntityValidatorType = _entityValidator;
+			typedParameters.CrudOperationType = _crudOperation;
+			typedParameters.AccessRuleMap = new AccessRuleMap(_readRoles.ToArray(),_modifyRoles.ToArray());
+			typedParameters.EntityCorrectorTypes = _entityCorrectorTypes;
+		}
+
+		protected override void RegisterTypes(ContainerBuilder builder)
+		{
+			builder.RegisterType(_entityValidator).AsSelf();
+			builder.RegisterType(_crudOperation).AsSelf();
+
+			if (_tenantedEntityCorrectorType!=null)
+			{
+				builder.RegisterType(_tenantedEntityCorrectorType).AsSelf().SingleInstance();
+			}
 		}
 	}
 }

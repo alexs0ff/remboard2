@@ -6,11 +6,13 @@ using AutoMapper;
 using Common.Data;
 using Common.Features.Auth;
 using Common.Features.BaseEntity;
+using Common.Features.ResourcePoints.Crud;
 using Common.Features.ResourcePoints.Filterable;
 using Common.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace Common.Features.ResourcePoints
 {

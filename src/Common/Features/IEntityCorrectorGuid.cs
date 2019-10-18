@@ -6,9 +6,9 @@ using Common.Features.BaseEntity;
 
 namespace Common.Features
 {
-	public interface IEntityCorrector<in TEntity,in TEntityDto,TKey>
-        where TEntity : BaseEntity<TKey>
-		where TKey:struct
+	[Obsolete]
+    public interface IEntityCorrectorGuid<in TEntity,in TEntityDto>
+        where TEntity : BaseEntityGuidKey
     {
         Task CorrectEntityAsync(TEntity entity, TEntityDto receivedEntityDto);
 

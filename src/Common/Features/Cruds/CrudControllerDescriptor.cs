@@ -38,7 +38,7 @@ namespace Common.Features.Cruds
 
         private readonly IComponentContext _context;
 
-        private readonly Lazy<IList<IEntityCorrector<TEntity, TEntityDto>>> _entityCorrectors;
+        private readonly Lazy<IList<IEntityCorrectorGuid<TEntity, TEntityDto>>> _entityCorrectors;
 
         public CrudControllerDescriptor(
             ICrudEntityDescriptor entityDescriptor, 
@@ -64,7 +64,7 @@ namespace Common.Features.Cruds
 
             _entityValidator = new Lazy<IValidator<TEntityDto>>(ValidatorFactory);
 
-            _entityCorrectors = new Lazy<IList<IEntityCorrector<TEntity,TEntityDto>>>(CorectorsFactory);
+            _entityCorrectors = new Lazy<IList<IEntityCorrectorGuid<TEntity,TEntityDto>>>(CorectorsFactory);
 
             _filterableEntityOperation = new Lazy<IEntityFilterOperation<TEntity, TFilterableEntity>>(EntityFilterOperationFactory);
         }
@@ -79,13 +79,13 @@ namespace Common.Features.Cruds
             return (IEntityFilterOperation<TEntity, TFilterableEntity>)_context.Resolve(_filterableEntityOperationType, new NamedParameter("parameters", _filterableEntityOperationParameters));
         }
 
-        private IList<IEntityCorrector<TEntity, TEntityDto>> CorectorsFactory()
+        private IList<IEntityCorrectorGuid<TEntity, TEntityDto>> CorectorsFactory()
         {
-            var list = new List<IEntityCorrector<TEntity, TEntityDto>>();
+            var list = new List<IEntityCorrectorGuid<TEntity, TEntityDto>>();
 
             foreach (var entityCorrectorType in _entityCorrectorTypes)
             {
-                list.Add((IEntityCorrector<TEntity, TEntityDto>)_context.Resolve(entityCorrectorType));
+                list.Add((IEntityCorrectorGuid<TEntity, TEntityDto>)_context.Resolve(entityCorrectorType));
             }
 
             return list;

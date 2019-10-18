@@ -42,7 +42,7 @@ namespace Common.Features.Cruds
             if (typeof(TEntity).HasImplementation<ITenantedEntity>())
             {
                 AddMandatorySpecification<OnlyTenantEntitiesSpecificationGuid<TEntity>>();
-                _entityCorrectorTypes.Add(typeof(TenantedEntityCorrector));
+                _entityCorrectorTypes.Add(typeof(TenantedEntityCorrectorGuid));
             }
 
             _entityValidator = typeof(EmptyValidator);
@@ -79,7 +79,7 @@ namespace Common.Features.Cruds
         }
 
         public CrudControllerConfigurator<TEntity, TEntityDto, TFilterableEntity> AddEntityCorrector<TCorrector>()
-            where TCorrector : IEntityCorrector<TEntity,TEntityDto>
+            where TCorrector : IEntityCorrectorGuid<TEntity,TEntityDto>
         {
             _entityCorrectorTypes.Add(typeof(TCorrector));
             return this;

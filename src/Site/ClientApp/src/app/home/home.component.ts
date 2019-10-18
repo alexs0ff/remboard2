@@ -31,6 +31,7 @@ export class HomeComponent {
   }
 
   test2() {
-    this.router.navigateByUrl("orders/autocomplete-item/new");
+    //this.router.navigateByUrl("orders/autocomplete-item/new");
+	  this.response$ = this.httpClient.get<string>("api/OrderType/27903452-025A-467B-937E-C7DF7EF0DB61");
   }
 }

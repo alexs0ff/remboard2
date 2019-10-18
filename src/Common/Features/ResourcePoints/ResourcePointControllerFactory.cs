@@ -21,19 +21,19 @@ namespace Common.Features.ResourcePoints
 
 		private readonly IList<Type> _mandatorySpecificationTypes;
 
-		private readonly IComponentContext _context;
+		protected readonly IComponentContext context;
 
 		private readonly EntityFilterOperationParameters _filterableEntityOperationParameters;
 
-		public ResourcePointControllerFactory(IComponentContext context, IResourcePointDescriptor resourcePoint, Type controllerType, EntityFilterOperationParameters filterableEntityOperationParameters, Type filterableEntityOperationType, AccessRuleMap accessRuleMap, IList<Type> mandatorySpecificationTypes)
+		public ResourcePointControllerFactory(ControllerFactoryParameters parameters, IComponentContext context)
 		{
-			ResourcePoint = resourcePoint;
-			ControllerType = controllerType;
-			_context = context;
-			_filterableEntityOperationParameters = filterableEntityOperationParameters;
-			_filterableEntityOperationType = filterableEntityOperationType;
-			_mandatorySpecificationTypes = mandatorySpecificationTypes;
-			AccessRules = accessRuleMap;
+			this.context = context;
+			ResourcePoint = parameters.ResourcePoint;
+			ControllerType = parameters.ControllerType;
+			_filterableEntityOperationParameters = parameters.FilterableEntityOperationParameters;
+			_filterableEntityOperationType = parameters.FilterableEntityOperationType;
+			_mandatorySpecificationTypes = parameters.MandatorySpecificationTypes;
+			AccessRules = parameters.AccessRuleMap;
 		}
 
 		public IResourcePointDescriptor ResourcePoint { get; }
@@ -46,7 +46,7 @@ namespace Common.Features.ResourcePoints
 
 		public IEntityFilterOperation<TEntity, TFilterableEntity, TKey> GetFilterableOperation()
 		{
-			return (IEntityFilterOperation<TEntity, TFilterableEntity,TKey>)_context.Resolve(_filterableEntityOperationType, new NamedParameter("parameters", _filterableEntityOperationParameters));
+			return (IEntityFilterOperation<TEntity, TFilterableEntity,TKey>)context.Resolve(_filterableEntityOperationType, new NamedParameter("parameters", _filterableEntityOperationParameters));
 		}
 
 		public IResourceMandatoryPredicateFactory<TEntity, TKey> GetMandatoryPredicateFactory()
@@ -55,7 +55,7 @@ namespace Common.Features.ResourcePoints
 			foreach (var mandatorySpecification in _mandatorySpecificationTypes)
 			{
 
-				list.Add((ISpecification<TEntity>)_context.Resolve(mandatorySpecification));
+				list.Add((ISpecification<TEntity>)context.Resolve(mandatorySpecification));
 			}
 
 			return new ResourceMandatoryPredicateFactory<TEntity, TKey>(list);

@@ -44,7 +44,7 @@ namespace Common
             builder.RegisterType<EmptyValidator>().AsSelf().SingleInstance();
 
             //correctors
-            builder.RegisterType<TenantedEntityCorrector>().AsSelf().SingleInstance();
+            builder.RegisterType<TenantedEntityCorrectorGuid>().AsSelf().SingleInstance();
         }
 
         public void OnContextFeatureCreating(ModelBuilder modelBuilder, RemboardContextParameters contextParameters)

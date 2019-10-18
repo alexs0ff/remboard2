@@ -11,6 +11,7 @@ using Common.Features.Cruds;
 using Common.Features.Cruds.Filterable;
 using Common.Features.PermissibleValues;
 using Common.Features.ResourcePoints;
+using Common.Features.ResourcePoints.Crud;
 using Microsoft.EntityFrameworkCore;
 using Orders.Autocomplete;
 using Orders.Branches;
@@ -54,12 +55,15 @@ namespace Orders
 
         protected override IEnumerable<IResourcePointConfigurator> RegisterResourcePoints()
         {
-	        yield return new ResourcePointConfigurator<OrderType, OrderTypeDto, OrderTypeDto, Guid>()
-		        .SetEntityPluralName("OrderTypes")
+	        yield return new CrudResourcePointConfigurator<OrderType, OrderTypeDto, OrderTypeDto, Guid>()
+		        .AddModifyRoles()
+		        .UseValidator<OrderTypeDtoValidator>()
+		        .UseCrudOperation<EntityContextCrudOperation<OrderType,OrderTypeDto,Guid>>()
+				.SetEntityPluralName("OrderTypes")
 		        .UseFilterableEntityOperation<Common.Features.ResourcePoints.Filterable.EntityContextFilterOperation<
 			        OrderType, OrderTypeDto, Guid>>(
 			        parameters => { })
-		        .AddReadRoles(ProjectRoles.Admin,ProjectRoles.Engineer,ProjectRoles.Manager);
+				.AddReadRoles(ProjectRoles.Admin,ProjectRoles.Engineer,ProjectRoles.Manager);
 
         }
 

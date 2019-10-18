@@ -42,6 +42,14 @@ namespace Common.Features.ResourcePoints.Filterable
                 }
                 value = res;
             }
+            else if (targetType == typeof(Guid))
+            {
+				if (!Guid.TryParse(parameterValue,  out var res))
+				{
+					return null;
+				}
+				value = res;
+			}
 
             if (value!=null && property.PropertyType.IsEnum)
             {

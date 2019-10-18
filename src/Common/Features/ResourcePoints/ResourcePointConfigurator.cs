@@ -6,6 +6,7 @@ using Autofac;
 using Common.Extensions;
 using Common.FeatureEntities;
 using Common.Features.BaseEntity;
+using Common.Features.ResourcePoints.Crud;
 using Common.Features.ResourcePoints.Filterable;
 using Common.Features.Specifications;
 using Common.Features.Tenant;
@@ -27,7 +28,7 @@ namespace Common.Features.ResourcePoints
 
 		private string _entityPluralName;
 
-		private readonly HashSet<ProjectRoles> _readRoles = new HashSet<ProjectRoles>();
+		protected readonly HashSet<ProjectRoles> _readRoles = new HashSet<ProjectRoles>();
 
 		private readonly IList<Type> _mandatorySpecifications = new List<Type>();
 
@@ -89,6 +90,35 @@ namespace Common.Features.ResourcePoints
 			{
 				throw new InvalidOperationException("Need to call UseFilterableEntityOperation");
 			}
+
+			var parameters = CreateFactoryParameters();
+			FillControllerFactoryParameters(parameters);
+
+			builder.RegisterType(GetResourcePointFactoryType())
+				.As<IResourcePointControllerFactory>()
+				.AsSelf()
+				.WithParameter("parameters", parameters)
+				.SingleInstance();
+
+			RegisterTypes(builder);
+		}
+
+		protected virtual void RegisterTypes(ContainerBuilder builder)
+		{
+			
+		}
+
+		protected virtual Type GetResourcePointFactoryType()
+		{
+			return typeof(ResourcePointControllerFactory<TEntity, TEntityDto, TFilterableEntity, TKey>);
+		}
+		protected virtual ControllerFactoryParameters CreateFactoryParameters()
+		{
+			return new ControllerFactoryParameters();
+		}
+
+		protected virtual void FillControllerFactoryParameters(ControllerFactoryParameters parameters)
+		{
 			var resourcePointDescriptor = new ResourcePointDescriptor();
 			resourcePointDescriptor.EntityDtoTypeInfo = typeof(TEntityDto);
 			resourcePointDescriptor.EntityName = typeof(TEntity).Name;
@@ -108,20 +138,13 @@ namespace Common.Features.ResourcePoints
 
 			var controllerType = typeof(ResourcePointBaseController<,,,>).MakeGenericType(typeof(TEntity), typeof(TEntityDto),
 				typeof(TFilterableEntity), typeof(TKey));
-
-			builder.RegisterType<ResourcePointControllerFactory<TEntity,TEntityDto,TFilterableEntity,TKey>>()
-				.As<IResourcePointControllerFactory>()
-				.AsSelf()
-				.WithParameter("resourcePoint", resourcePointDescriptor)
-				.WithParameter("controllerType", controllerType)
-				.WithParameter("accessRuleMap", new Common.Features.Cruds.AccessRuleMap(_readRoles.ToArray()))
-				.WithParameter("filterableEntityOperationType", _filterableEntityOperation)
-				.WithParameter("filterableEntityOperationParameters", _filterableEntityOperationParameters)
-				.WithParameter("mandatorySpecificationTypes", _mandatorySpecifications)
-				.SingleInstance();
+			parameters.ControllerType = controllerType;
+			parameters.ResourcePoint = resourcePointDescriptor;
+			parameters.AccessRuleMap = new Common.Features.Cruds.AccessRuleMap(_readRoles.ToArray());
+			parameters.FilterableEntityOperationType = _filterableEntityOperation;
+			parameters.FilterableEntityOperationParameters = _filterableEntityOperationParameters;
+			parameters.MandatorySpecificationTypes = _mandatorySpecifications;
 		}
-
-
 
 		protected void AppendRoles(HashSet<ProjectRoles> roles, ProjectRoles[] rolesToAppend)
 		{
