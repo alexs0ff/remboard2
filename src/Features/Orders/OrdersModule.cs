@@ -49,6 +49,7 @@ namespace Orders
             yield return new PermissibleValuesControllerConfigurator<OrderStatusKind, OrderStatusKinds>()
 	            .AddValuesProvider<ReflectionPermissibleValuesProvider<OrderStatusKind, OrderStatusKinds>>()
 	            .AddReadRoles();
+
 		}
 
         protected override IEnumerable<IResourcePointConfigurator> RegisterResourcePoints()
