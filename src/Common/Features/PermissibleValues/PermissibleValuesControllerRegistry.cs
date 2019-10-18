@@ -26,7 +26,7 @@ namespace Common.Features.PermissibleValues
         public IPermissibleValuesControllerDescriptor this[string name] => _permissibleValuesControllerDescriptors[name];
 
         public IPermissibleValuesTypedControllerDescriptor<TEntity, TEnum> GetTypedDescriptor<TEntity, TEnum>()
-            where TEnum : Enum
+            where TEnum : struct,Enum
             where TEntity : BasePermissibleValue<TEnum>
         {
             return (IPermissibleValuesTypedControllerDescriptor<TEntity, TEnum>)this[typeof(TEntity).Name];

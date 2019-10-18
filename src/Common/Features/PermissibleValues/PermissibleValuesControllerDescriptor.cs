@@ -6,7 +6,7 @@ using Autofac;
 namespace Common.Features.PermissibleValues
 {
     public class PermissibleValuesControllerDescriptor<TEntity, TEnum> : IPermissibleValuesTypedControllerDescriptor<TEntity,TEnum>
-        where TEnum:Enum
+        where TEnum:struct,Enum
         where TEntity : BasePermissibleValue<TEnum>
     {
         private readonly Type _permissibleValuesProviderType;

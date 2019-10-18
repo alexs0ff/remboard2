@@ -10,6 +10,7 @@ using Common.Features;
 using Common.Features.PermissibleValues;
 using Common.Features.ResourcePoints;
 using Common.Features.ResourcePoints.Crud;
+using Common.Features.ResourcePoints.Filterable;
 using Microsoft.EntityFrameworkCore;
 using Orders.Autocomplete;
 using Orders.Branches;
@@ -42,9 +43,9 @@ namespace Orders
 
         protected override IEnumerable<IPermissibleValuesControllerConfigurator> RegisterPermissibleValuesControllers()
         {
-            yield return new PermissibleValuesControllerConfigurator<AutocompleteKind, AutocompleteKinds>()
+            /*yield return new PermissibleValuesControllerConfigurator<AutocompleteKind, AutocompleteKinds>()
                 .AddValuesProvider<ReflectionPermissibleValuesProvider<AutocompleteKind, AutocompleteKinds>>()
-                .AddReadRoles();
+                .AddReadRoles();*/
 
             yield return new PermissibleValuesControllerConfigurator<OrderStatusKind, OrderStatusKinds>()
 	            .AddValuesProvider<ReflectionPermissibleValuesProvider<OrderStatusKind, OrderStatusKinds>>()
@@ -53,12 +54,16 @@ namespace Orders
 
         protected override IEnumerable<IResourcePointConfigurator> RegisterResourcePoints()
         {
+			yield return new ResourcePointConfigurator<AutocompleteKind, AutocompleteKind, AutocompleteKind, AutocompleteKinds>()
+				.UseFilterableEntityOperation<EntityContextFilterOperation<AutocompleteKind, AutocompleteKind, AutocompleteKinds>>(parameters => { })
+				.AddReadRoles(ProjectRoles.Admin, ProjectRoles.Engineer, ProjectRoles.Manager);
+
 	        yield return new CrudResourcePointConfigurator<OrderType, OrderTypeDto, OrderTypeDto, Guid>()
 		        .AddModifyRoles()
 		        .UseValidator<OrderTypeDtoValidator>()
 		        .UseCrudOperation<EntityContextCrudOperation<OrderType,OrderTypeDto,Guid>>()
 				.SetEntityPluralName("OrderTypes")
-		        .UseFilterableEntityOperation<Common.Features.ResourcePoints.Filterable.EntityContextFilterOperation<
+		        .UseFilterableEntityOperation<EntityContextFilterOperation<
 			        OrderType, OrderTypeDto, Guid>>(
 			        parameters => { })
 				.AddReadRoles(ProjectRoles.Admin,ProjectRoles.Engineer,ProjectRoles.Manager);

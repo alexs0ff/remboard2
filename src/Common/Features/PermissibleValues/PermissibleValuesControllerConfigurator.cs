@@ -7,8 +7,9 @@ using Common.FeatureEntities;
 
 namespace Common.Features.PermissibleValues
 {
+	[Obsolete]
     public class PermissibleValuesControllerConfigurator<TEntity, TEnum>: IPermissibleValuesControllerConfigurator
-        where TEnum:Enum
+        where TEnum:struct,Enum
         where TEntity : BasePermissibleValue<TEnum>
     {
         private readonly HashSet<ProjectRoles> _readRoles = new HashSet<ProjectRoles>();
