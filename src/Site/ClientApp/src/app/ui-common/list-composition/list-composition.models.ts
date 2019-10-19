@@ -16,8 +16,6 @@ export interface RaGridColumn {
 	columns?: RaGridColumn[];
 }
 
-
-
 export interface RaServerDataGridModel {
 	entitiesName: string;
 	columns: RaGridColumn[];

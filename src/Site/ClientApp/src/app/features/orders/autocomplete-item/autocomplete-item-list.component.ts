@@ -20,7 +20,7 @@ export class AutocompleteItemListComponent implements OnInit {
 				{ id: "title", name: "Название", options:{canOrder:true,valueKind:'string'}},
 				{ id: "autocompleteKindTitle", name: "Тип", options: { canOrder: true, valueKind: 'string' } },
 			],
-			pageSize: 10,
+			pageSize: 50,
 			panel: { showAddButton: true,},
 			filter: {
 				columns: [

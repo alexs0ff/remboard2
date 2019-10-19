@@ -10,12 +10,12 @@ export interface RaValidators {
 
 export interface RaTextBox {
 	kind: 'textbox' | 'textarea';
-  valueKind: ControlValueType;
-  id: string;
-  label: string;
-  validators: RaValidators;
-  value?: any | null;
-  hint?: string | null;
+	valueKind: ControlValueType;
+	id: string;
+	label: string;
+	validators: RaValidators;
+	value?: any | null;
+	hint?: string | null;
 }
 
 
