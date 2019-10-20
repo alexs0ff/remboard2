@@ -8,6 +8,6 @@ namespace Common.Features.ResourcePoints.Schema
 	{
 		public SelectBoxItemsSourceKind Kind { get; set; }
 
-		public KeyValuePair<TKey,string> Items { get; set; }
+		public KeyValuePair<TKey,string>[] Items { get; set; }
 	}
 }

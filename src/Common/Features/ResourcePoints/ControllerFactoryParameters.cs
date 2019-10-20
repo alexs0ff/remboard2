@@ -19,5 +19,7 @@ namespace Common.Features.ResourcePoints
 		public AccessRuleMap AccessRuleMap { get; set; }
 
 		public IList<Type> MandatorySpecificationTypes { get; set; }
+
+		public Type EntitySchemaProviderType { get; set; }
 	}
 }

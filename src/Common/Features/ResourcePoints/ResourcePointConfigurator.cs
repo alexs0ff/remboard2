@@ -8,6 +8,7 @@ using Common.FeatureEntities;
 using Common.Features.BaseEntity;
 using Common.Features.ResourcePoints.Crud;
 using Common.Features.ResourcePoints.Filterable;
+using Common.Features.ResourcePoints.Filterable.Schema;
 using Common.Features.Specifications;
 using Common.Features.Tenant;
 using EntityContextFilterOperationParameters = Common.Features.ResourcePoints.Filterable.EntityContextFilterOperationParameters;
@@ -31,6 +32,8 @@ namespace Common.Features.ResourcePoints
 		protected readonly HashSet<ProjectRoles> _readRoles = new HashSet<ProjectRoles>();
 
 		private readonly IList<Type> _mandatorySpecifications = new List<Type>();
+
+		private Type _entitySchemaProviderType;
 
 		/// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
 		public ResourcePointConfigurator()
@@ -84,6 +87,14 @@ namespace Common.Features.ResourcePoints
 			return this;
 		}
 
+		//SchemaProvider IEntitySchemaProvider
+		public ResourcePointConfigurator<TEntity, TEntityDto, TFilterableEntity, TKey> UseEntitySchemaProvider<TProvider>()
+		where TProvider: IEntitySchemaProvider<TFilterableEntity>
+		{
+			_entitySchemaProviderType = typeof(TProvider);
+			return this;
+		}
+
 		public void Finish(ContainerBuilder builder)
 		{
 			if (_filterableEntityOperation == null)
@@ -103,6 +114,10 @@ namespace Common.Features.ResourcePoints
 				.WithParameter("parameters", parameters)
 				.SingleInstance();
 
+			if (_entitySchemaProviderType!=null)
+			{
+				builder.RegisterType(_entitySchemaProviderType);
+			}
 			RegisterTypes(builder);
 		}
 
@@ -147,6 +162,7 @@ namespace Common.Features.ResourcePoints
 			parameters.FilterableEntityOperationType = _filterableEntityOperation;
 			parameters.FilterableEntityOperationParameters = _filterableEntityOperationParameters;
 			parameters.MandatorySpecificationTypes = _mandatorySpecifications;
+			parameters.EntitySchemaProviderType = _entitySchemaProviderType;
 		}
 
 		protected void AppendRoles(HashSet<ProjectRoles> roles, ProjectRoles[] rolesToAppend)

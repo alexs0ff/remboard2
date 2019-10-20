@@ -14,5 +14,8 @@ namespace Common.Features.ResourcePoints.Filterable.Schema
 		public int? PageSize { get; set; }
 
 		public GridControlPanel Panel { get; set; }
+
+		public GridFilter Filter { get; set; }
+
 	}
 }

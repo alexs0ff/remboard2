@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Common.Features.ResourcePoints.Schema
 {
-	public class TextBoxControl
+	public class TextBoxControl:ControlBase
 	{
 		public TextBoxControlKind Kind { get; set; }
 

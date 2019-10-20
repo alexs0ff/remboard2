@@ -5,6 +5,7 @@ using Autofac;
 using Common.FeatureEntities;
 using Common.Features.BaseEntity;
 using Common.Features.ResourcePoints.Filterable;
+using Common.Features.ResourcePoints.Filterable.Schema;
 using Common.Features.Specifications;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,6 +25,8 @@ namespace Common.Features.ResourcePoints
 
 		private readonly EntityFilterOperationParameters _filterableEntityOperationParameters;
 
+		private readonly Type _entitySchemaProviderType;
+
 		public ResourcePointControllerFactory(ControllerFactoryParameters parameters, IComponentContext context)
 		{
 			this.context = context;
@@ -33,6 +36,7 @@ namespace Common.Features.ResourcePoints
 			_filterableEntityOperationType = parameters.FilterableEntityOperationType;
 			_mandatorySpecificationTypes = parameters.MandatorySpecificationTypes;
 			AccessRules = parameters.AccessRuleMap;
+			_entitySchemaProviderType = parameters.EntitySchemaProviderType;
 		}
 
 		public IResourcePointDescriptor ResourcePoint { get; }
@@ -58,6 +62,11 @@ namespace Common.Features.ResourcePoints
 			}
 
 			return new ResourceMandatoryPredicateFactory<TEntity, TKey>(list);
+		}
+
+		public IEntitySchemaProvider<TFilterableEntity> GetEntitySchemaProvider()
+		{
+			return (IEntitySchemaProvider<TFilterableEntity>) context.Resolve(_entitySchemaProviderType);
 		}
 	}
 }

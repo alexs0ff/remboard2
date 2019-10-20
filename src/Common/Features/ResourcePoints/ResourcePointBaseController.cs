@@ -8,6 +8,7 @@ using Common.Features.Auth;
 using Common.Features.BaseEntity;
 using Common.Features.ResourcePoints.Crud;
 using Common.Features.ResourcePoints.Filterable;
+using Common.Features.ResourcePoints.Filterable.Schema;
 using Common.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -33,6 +34,7 @@ namespace Common.Features.ResourcePoints
 		[PluralActionNameConvention]
 		[HttpGet("/api/[action]")]
 		[ProducesResponseType(StatusCodes.Status403Forbidden)]
+		[ProducesResponseType(StatusCodes.Status200OK)]
 		public async Task<ActionResult<PagedResult<TFilterableEntity>>> Get(FilterParameters filterParameters,[FromServices] RemboardContext context, [FromServices] IAuthorizationService authorizationService, [FromServices] ResourcePointControllerFactory<TEntity, TEntityDto, TFilterableEntity, TKey> controllerFactory)
 		{
 			var result = await authorizationService.AuthorizeAsync(User, typeof(TEntity), CrudOperations.Read);
@@ -46,6 +48,24 @@ namespace Common.Features.ResourcePoints
 			var predicateFactory = controllerFactory.GetMandatoryPredicateFactory();
 			var pagedResult = await filterableOperation.FilterAsync(context, predicateFactory, filterParameters);
 			return Ok(pagedResult);
+		}
+
+		[HttpGet("/api/[controller]/gridSchema")]
+		[ProducesResponseType(StatusCodes.Status403Forbidden)]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		public async Task<ActionResult<ServerDataGridModel>> GridSchema([FromServices] IAuthorizationService authorizationService, [FromServices] ResourcePointControllerFactory<TEntity, TEntityDto, TFilterableEntity, TKey> controllerFactory)
+		{
+			var result = await authorizationService.AuthorizeAsync(User, typeof(TEntity), CrudOperations.Read);
+
+			if (!result.Succeeded)
+			{
+				return Forbid();
+			}
+
+			var schemaProvider = controllerFactory.GetEntitySchemaProvider();
+
+			var model = schemaProvider.GetModel(new EntitySchemaProviderContext());
+			return Ok(model);
 		}
 	}
 }
