@@ -1,4 +1,4 @@
-import { Injectable,Type } from '@angular/core'
+import { Injectable, Inject, InjectionToken } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import * as uuid from 'uuid';
 import { Action, createAction, props, ActionReducer, on, createReducer, createSelector, MemoizedSelector } from '@ngrx/store';
@@ -138,29 +138,35 @@ export class CrudEntityConfigurator<T extends IEntityBase> implements ICrudEntit
   }
 }
 
+const configurators: { [key: string]: ICrudEntityConfigurator<any> } = {};
 
+export const CONFIGURATORS_STORAGE = new InjectionToken<{ [key: string]: ICrudEntityConfigurator<any>}>('Configurators registry Storage', {
+	providedIn: 'root',
+	factory: () => configurators
+});
 
-@Injectable()
+@Injectable({ providedIn: 'root',})
 export class ConfiguratorRegistry {
-  private configurators: { [key: string]: ICrudEntityConfigurator<any> } = {};
 
-  public add(entitiesName: string, configurator: ICrudEntityConfigurator<any>) {
-    this.configurators[entitiesName] = configurator;
-  }
+	constructor(@Inject(CONFIGURATORS_STORAGE) public configurators: { [key: string]: ICrudEntityConfigurator<any> }) {}
 
-  public getCrudEntityConfigurator<T extends IEntityBase>(entitiesName: string): ICrudEntityConfigurator<T> {
-    if (!this.configurators.hasOwnProperty(entitiesName)) {
-      throw "entity configurator of '" + entitiesName +"' doesn't exist";
-    }
+	public static add(entitiesName: string, configurator: ICrudEntityConfigurator<any>) {
+		configurators[entitiesName] = configurator;
+	}
 
-    return this.configurators[entitiesName];
-  }
+	public getCrudEntityConfigurator<T extends IEntityBase>(entitiesName: string): ICrudEntityConfigurator<T> {
+		if (!this.configurators.hasOwnProperty(entitiesName)) {
+			throw "entity configurator of '" + entitiesName + "' doesn't exist";
+		}
 
-  getEntityActions(entitiesName: string): EntityActions<any> {
-    const configurator = <CrudEntityConfigurator<any>>this.getCrudEntityConfigurator(entitiesName);
+		return this.configurators[entitiesName];
+	}
 
-    return configurator.entityActions;
-  }
+	public getEntityActions(entitiesName: string): EntityActions<any> {
+		const configurator = <CrudEntityConfigurator<any>>this.getCrudEntityConfigurator(entitiesName);
+
+		return configurator.entityActions;
+	}
 }
 
 

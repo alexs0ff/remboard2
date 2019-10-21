@@ -21,39 +21,48 @@ import { MenuEffects } from "./menu/menu.effects";
 import { AuthModule, AuthEffects } from './auth/auth.module';
 import { httpInterceptorProviders } from "./http/interceptors";
 import { MessageFlowModule } from "./message-flow/message-flow.module";
+import { RaCrudsModule, CrudsEntityMetadata } from "./features/ra-cruds/ra-cruds.module";
+
+
+const configCrudsEntityMetadata: CrudsEntityMetadata = {};
+
+RaCrudsModule.prepareReducersMap(configCrudsEntityMetadata, reducers);
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    NavMenuComponent,
-    HomeComponent,
-    CounterComponent,
-    FetchDataComponent
-  ],
-  imports: [
-    BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
-    HttpClientModule,
-    RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'counter', component: CounterComponent },
-      { path: 'fetch-data', component: FetchDataComponent },
-      { path: 'orders', loadChildren: () => import('./features/orders/orders.module').then(m => m.OrdersModule) },
-    ]),
-    UiCommonModule,
-    MenuModule,
-    StoreModule.forRoot(reducers, {
-      metaReducers,
-      runtimeChecks: {
-        strictStateImmutability: true,
-        strictActionImmutability: true
-      }
-    }),
-    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
-    EffectsModule.forRoot([MenuEffects, AuthEffects]),
-    AuthModule,
-    MessageFlowModule
-  ],
-  providers: [httpInterceptorProviders],
-  bootstrap: [AppComponent]
+	declarations: [
+		AppComponent,
+		NavMenuComponent,
+		HomeComponent,
+		CounterComponent,
+		FetchDataComponent
+	],
+	imports: [
+		BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
+		HttpClientModule,
+		RouterModule.forRoot([
+			{ path: '', component: HomeComponent, pathMatch: 'full' },
+			{ path: 'counter', component: CounterComponent },
+			{ path: 'fetch-data', component: FetchDataComponent },
+			{ path: 'orders', loadChildren: () => import('./features/orders/orders.module').then(m => m.OrdersModule) },
+		]),
+		UiCommonModule,
+		MenuModule,
+		StoreModule.forRoot(reducers,
+			{
+				metaReducers,
+				runtimeChecks: {
+					strictStateImmutability: true,
+					strictActionImmutability: true
+				}
+			}),
+		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+		EffectsModule.forRoot([MenuEffects, AuthEffects]),
+		AuthModule,
+		MessageFlowModule,
+		RaCrudsModule.forRoot()
+	],
+	providers: [httpInterceptorProviders],
+	bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
