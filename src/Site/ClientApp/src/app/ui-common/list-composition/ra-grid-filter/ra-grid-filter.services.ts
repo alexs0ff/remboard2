@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { KeyValue } from "../../../app.models";
-import { FilterControlKinds, RaGridFilterModel } from "../list-composition.models";
-import { RaTextBox, RaSelectBox } from "../../forms-composition/forms-composition.models";
 import { ComparisonOperators } from "../../ra-filter.models";
+import { RaGridFilterModel, FilterControlKinds, RaTextBox, RaSelectBox } from "../../../ra-schema/ra-schema.module";
 
 
 const ControlsComparisonOperatorsMap = {

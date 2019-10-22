@@ -1,7 +1,7 @@
 import { Component, OnInit,Input } from '@angular/core';
-import { RaControls } from "../forms-composition.models";
 import { FormGroup } from "@angular/forms";
-import { FormErrorService } from "../form-error-service";
+import { RaControls } from "../../../ra-schema/ra-schema.module";
+import { FormErrorService } from "../../ui-common.module";
 
 @Component({
   selector: 'ra-textbox',

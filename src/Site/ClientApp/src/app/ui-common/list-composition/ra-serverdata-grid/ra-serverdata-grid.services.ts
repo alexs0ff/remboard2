@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { RaGridFilterModel, RaServerDataGridModel, RaGridColumn } from "../list-composition.models";
-import { RaGridFlatModel, RaGridInternalColumn, RaGridInternalColumn as IRaGridInternalColumn } from "./ra-serverdata-grid.models";
+import { RaGridFlatModel, RaGridColumn,  RaServerDataGridModel } from "../../../ra-schema/ra-schema.module";
 
 @Injectable()
 export class GridModelComposer {

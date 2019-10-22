@@ -1,11 +1,11 @@
 import { Component, OnInit,Input,Output,EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, FormArray, Validators } from "@angular/forms";
 import { KeyValue } from "../../../app.models";
-import { RaGridFilterModel, FilterControlKinds } from "../list-composition.models";
 import { FormErrorService } from "../../forms-composition/form-error-service";
 import { GridFilterCompositionService } from "./ra-grid-filter.services";
 import { MatSelectChange } from '@angular/material/select';
 import { FilterData, FilterStatement } from "../../ra-filter.models";
+import { RaGridFilterModel, FilterControlKinds } from "../../../ra-schema/ra-schema.module";
 
 @Component({
 	selector: 'ra-grid-filter',

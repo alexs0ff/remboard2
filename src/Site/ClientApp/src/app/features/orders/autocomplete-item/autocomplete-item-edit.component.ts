@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { flexExpressions, RaEntityEdit } from "../../../ui-common/ui-common.module";
+import { RaEntityEdit, flexExpressions} from "../../../ra-schema/ra-schema.module";
 
 @Component({
   selector: 'autocomplete-item-edit',

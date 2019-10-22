@@ -5,11 +5,10 @@ import { AutocompleteItem } from "../../../features/orders/autocomplete-item/aut
 import { QueryParamsConfigurator } from "../../../features/ra-cruds/ra-cruds.utils";
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
-import { RaServerDataGridModel } from "../list-composition.models";
 import { Router, ActivatedRoute } from '@angular/router'
 import { FilterData,FilterStatement } from "../../ra-filter.models";
 import { GridModelComposer } from "./ra-serverdata-grid.services";
-import { RaGridFlatModel } from "./ra-serverdata-grid.models";
+import { RaServerDataGridModel, RaGridFlatModel } from "../../../ra-schema/ra-schema.module";
 
 @Component({
 	selector: 'ra-serverdata-grid',

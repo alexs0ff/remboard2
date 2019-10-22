@@ -1,7 +1,7 @@
 import { Component, OnInit,Input } from '@angular/core';
-import { RaControls } from "../forms-composition.models";
 import { FormGroup } from "@angular/forms";
 import { FormErrorService } from "../form-error-service";
+import { RaControls } from "../../../ra-schema/ra-schema.module";
 
 @Component({
   selector: 'ra-textarea',

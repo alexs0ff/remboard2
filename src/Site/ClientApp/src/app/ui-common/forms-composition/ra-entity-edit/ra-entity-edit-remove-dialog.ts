@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { RemoveDialogData } from "../forms-composition.models";
+import { RemoveDialogData } from "../../../ra-schema/ra-schema.module";
 
 @Component({
     selector: 'ra-entity-edit-remove-dialog',

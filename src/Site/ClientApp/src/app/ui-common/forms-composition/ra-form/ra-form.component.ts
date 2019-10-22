@@ -1,7 +1,7 @@
 import { Component, OnInit,Input } from '@angular/core';
-import { RaControls, RaFormLayout } from "../forms-composition.models";
 import { FormsCompositionService } from "../forms-composition-service";
 import { FormGroup } from '@angular/forms';
+import { RaFormLayout } from "../../../ra-schema/ra-schema.module";
 
 @Component({
   selector: 'ra-form',

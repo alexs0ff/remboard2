@@ -1,5 +1,4 @@
 import { Component, OnInit,Input,OnDestroy } from '@angular/core';
-import { RaAutocompleteBox } from "../forms-composition.models";
 import { FormGroup } from "@angular/forms";
 import { Observable, Subject } from 'rxjs';
 import { map, startWith,takeUntil } from 'rxjs/operators';
@@ -8,6 +7,7 @@ import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { DictionaryUtils } from "../../../app.utils";
 import { RedirectedErrorStateMatcher } from "../forms-composition-service";
+import { RaAutocompleteBox } from "../../../ra-schema/ra-schema.module";
 
 @Component({
   selector: 'ra-autocompletebox',

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RaServerDataGridModel } from "../../../ui-common/ui-common.module";
+import { RaServerDataGridModel } from "../../../ra-schema/ra-schema.module";
 
 @Component({
 	selector: 'branch-list',

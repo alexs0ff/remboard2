@@ -19,8 +19,6 @@ import { RaControlComponent } from './forms-composition/ra-control/ra-control.co
 import { RaFormComponent } from './forms-composition/ra-form/ra-form.component'
 import { MatTableModule } from '@angular/material/table';
 import { RaServerdataGridComponent } from './list-composition/ra-serverdata-grid/ra-serverdata-grid.component';
-import { RaServerDataGridModel } from './list-composition/list-composition.models';
-import { RaFormLayout, flexExpressions, RaEntityEdit} from './forms-composition/forms-composition.models';
 import { MatDividerModule } from '@angular/material/divider';
 import { RaEntityEditComponent } from './forms-composition/ra-entity-edit/ra-entity-edit.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -82,4 +80,4 @@ const commonUiExport = [...commonUi, RaServerdataGridComponent, RaFormComponent,
 })
 class UiCommonModule { }
 
-export { UiCommonModule, storeMessageValidator, RaServerDataGridModel, RaFormLayout, flexExpressions, RaEntityEdit, FormErrorService, FilterData, FilterStatement}
+export { UiCommonModule, storeMessageValidator, FormErrorService, FilterData, FilterStatement}

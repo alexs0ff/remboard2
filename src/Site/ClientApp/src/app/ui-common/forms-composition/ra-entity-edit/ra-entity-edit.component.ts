@@ -3,7 +3,6 @@ import { Location } from '@angular/common';
 import { Subject, Observable } from "rxjs";
 import { takeUntil, map } from "rxjs/operators";
 import { ActivatedRoute, Router } from '@angular/router';
-import { RaEntityEdit, RaFormLayout, RemoveDialogData } from "../forms-composition.models";
 import { EntityServiceFabric, IEntityService, EntityResponse, ValidationError } from "../../../features/ra-cruds/ra-cruds.module";
 import { FormsCompositionService } from "../forms-composition-service";
 import { FormGroup } from "@angular/forms";
@@ -11,6 +10,7 @@ import { MatDialog, MatDialogRef} from '@angular/material/dialog';
 import { RaEntityEditRemoveDialog } from "./ra-entity-edit-remove-dialog";
 import { FormErrorService } from "../../ui-common.module";
 import { EntityCorrelationIds } from "../../../features/ra-cruds/ra-cruds.models";
+import { RaEntityEdit, RaFormLayout, RemoveDialogData } from "../../../ra-schema/ra-schema.module";
 
 @Component({
   selector: 'ra-entity-edit',

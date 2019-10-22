@@ -1,5 +1,4 @@
 import { Component, OnInit,Input,OnDestroy } from '@angular/core';
-import { RaSelectBox, RaSelectBoxSources, RaSelectBoxItemsSource, RaSelectBoxRemoteSource } from "../forms-composition.models";
 import { FormGroup } from "@angular/forms";
 import { Observable, Subject } from 'rxjs';
 import { map, startWith, takeUntil, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
@@ -10,6 +9,7 @@ import { RedirectedErrorStateMatcher, TypedItemsUtils } from "../forms-compositi
 import { EntityServiceApiFactory, QueryParams, QueryParamsConfigurator } from "../../../features/ra-cruds/ra-cruds.module";
 import { PagedResult } from "../../../features/ra-cruds/ra-cruds.models";
 import { FormErrorService } from "../form-error-service";
+import { RaSelectBox, RaSelectBoxRemoteSource, RaSelectBoxSources, RaSelectBoxItemsSource } from "../../../ra-schema/ra-schema.module";
 
 @Component({
   selector: 'ra-selectbox',
