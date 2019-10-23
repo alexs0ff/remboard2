@@ -9,23 +9,27 @@ import { RaControls, RaFormLayout, RaFormLayoutRowContent, RaFormLayoutItems, Ra
 export class FormsCompositionService  {
   constructor() { }
 
-  public toFormGroup(layout: RaFormLayout) {
+  public toFormGroup(layouts: RaFormLayout[]) {
     let group: any = {};
 
-    layout.rows.forEach(row => {
-      if (this.isLayoutItems(row.content)) {
-        row.content.items.forEach(item => {
-          group[item.control.id] = this.createFormControl(item.control);  
-        });
-      }
+	for (let i = 0; i < layouts.length; i++) {
+		let layout = layouts[i];
+		layout.rows.forEach(row => {
+			if (this.isLayoutItems(row.content)) {
+				row.content.items.forEach(item => {
+					group[item.control.id] = this.createFormControl(item.control);
+				});
+			}
 
-      if (this.isHiddenItems(row.content)) {
-        row.content.items.forEach(hitem => {
-          group[hitem] = new FormControl('');
-        });
-      }
-      
-    });
+			if (this.isHiddenItems(row.content)) {
+				row.content.items.forEach(hitem => {
+					group[hitem] = new FormControl('');
+				});
+			}
+
+		});
+	}
+    
 
     return new FormGroup(group);
   }

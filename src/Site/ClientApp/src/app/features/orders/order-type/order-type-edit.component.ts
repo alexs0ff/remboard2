@@ -14,30 +14,32 @@ export class OrderTypeEditComponent implements OnInit {
 			entitiesName: "orderTypes",
 			title: "Статус заказа",
 			removeDialog: { valueId: "title" },
-			layout: {
-				rows: [
-					{ content: { kind: 'hidden', items: ['id'] } },
-					{
-						content: {
-							kind: 'controls',
-							items: [
-								{
-									flexExpression: flexExpressions.oneItemExpressions,
-									control: {
-										id: "title",
-										kind: 'textbox',
-										label: 'Название',
-										hint: "Название типа",
-										valueKind: 'string',
-										validators: {
-											required: true
+			layouts: {
+				"MainGroup": {
+					rows: [
+						{ content: { kind: 'hidden', items: ['id'] } },
+						{
+							content: {
+								kind: 'controls',
+								items: [
+									{
+										flexExpression: flexExpressions.oneItemExpressions,
+										control: {
+											id: "title",
+											kind: 'textbox',
+											label: 'Название',
+											hint: "Название типа",
+											valueKind: 'string',
+											validators: {
+												required: true
+											}
 										}
 									}
-								}
-							]
+								]
+							}
 						}
-					}
-				]
+					]
+				}
 			}
 		};
 

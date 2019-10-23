@@ -14,56 +14,58 @@ export class BranchEditComponent implements OnInit {
 			entitiesName: "branches",
 			title: "Филиалы",
 			removeDialog: { valueId: "title" },
-			layout: {
-				rows: [
-					{ content: { kind: 'hidden', items: ['id'] } },
-					{
-						content: {
-							kind: 'controls',
-							items: [
-								{
-									flexExpression: flexExpressions.twoItemsExpressions,
-									control: {
-										id: "title",
-										kind: 'textbox',
-										label: 'Название',
-										hint: "Название филиала",
-										valueKind: 'string',
-										validators: {
-											required: true
+			layouts: {
+				"MainGroup": {
+					rows: [
+						{ content: { kind: 'hidden', items: ['id'] } },
+						{
+							content: {
+								kind: 'controls',
+								items: [
+									{
+										flexExpression: flexExpressions.twoItemsExpressions,
+										control: {
+											id: "title",
+											kind: 'textbox',
+											label: 'Название',
+											hint: "Название филиала",
+											valueKind: 'string',
+											validators: {
+												required: true
+											}
+										}
+									},
+									{
+										flexExpression: flexExpressions.twoItemsExpressions,
+										control: {
+											id: "legalName",
+											kind: 'textbox',
+											label: 'Юр название',
+											hint: "Юридическое название филиала",
+											valueKind: 'string',
+											validators: {
+												required: true
+											}
+										}
+									},
+									{
+										flexExpression: flexExpressions.oneItemExpressions,
+										control: {
+											id: "address",
+											kind: 'textarea',
+											label: 'Адрес',
+											hint: "Адрес филиала",
+											valueKind: 'string',
+											validators: {
+												required: false
+											}
 										}
 									}
-								},
-                {
-                  flexExpression: flexExpressions.twoItemsExpressions,
-                  control: {
-                    id: "legalName",
-                    kind: 'textbox',
-                    label: 'Юр название',
-                    hint: "Юридическое название филиала",
-                    valueKind: 'string',
-                    validators: {
-                      required: true
-                    }
-                  }
-								},
-                {
-                  flexExpression: flexExpressions.oneItemExpressions,
-                  control: {
-					id: "address",
-                    kind: 'textarea',
-                    label: 'Адрес',
-                    hint: "Адрес филиала",
-                    valueKind: 'string',
-                    validators: {
-                      required: false
-                    }
-                  }
-                }
-							]
+								]
+							}
 						}
-					}
-				]
+					]
+				}
 			}
 		};
 

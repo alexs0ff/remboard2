@@ -1,6 +1,6 @@
 import { Component, OnInit,OnDestroy,Input } from '@angular/core';
 import { Location } from '@angular/common';
-import { Subject, Observable } from "rxjs";
+import { Subject, Observable,of } from "rxjs";
 import { takeUntil, map } from "rxjs/operators";
 import { ActivatedRoute, Router } from '@angular/router';
 import { EntityServiceFactory, IEntityService, EntityResponse, ValidationError } from "../../../features/ra-cruds/ra-cruds.module";
@@ -13,141 +13,157 @@ import { EntityCorrelationIds } from "../../../features/ra-cruds/ra-cruds.models
 import { RaEntityEdit, RaFormLayout, RemoveDialogData } from "../../../ra-schema/ra-schema.module";
 
 @Component({
-  selector: 'ra-entity-edit',
-  templateUrl: './ra-entity-edit.component.html',
-  styleUrls: ['./ra-entity-edit.component.scss']
+	selector: 'ra-entity-edit',
+	templateUrl: './ra-entity-edit.component.html',
+	styleUrls: ['./ra-entity-edit.component.scss']
 })
 export class RaEntityEditComponent implements OnInit, OnDestroy {
 
-  @Input() model: RaEntityEdit;
+	@Input()
+	model: RaEntityEdit;
 
-  layout: RaFormLayout;
+	layouts$:Observable<string[]>;
 
-  form: FormGroup;
+	@Input()
+	layouts: string[];
+
+	form: FormGroup;
 
 	hasServerError$: Observable<boolean>;
 
-  isLoading$: Observable<boolean>;
+	isLoading$: Observable<boolean>;
 
-  serverErrors$: Observable<ValidationError[]>;
-  serverMessage$: Observable<string>;
+	serverErrors$: Observable<ValidationError[]>;
+	serverMessage$: Observable<string>;
 
-  private lifeTimeObject: Subject<boolean> = new Subject<boolean>();
+	private lifeTimeObject: Subject<boolean> = new Subject<boolean>();
 
-  private entityService: IEntityService<any>;
+	private entityService: IEntityService<any>;
 
-  private isNewEntity: boolean;
+	private isNewEntity: boolean;
 
-  private currentId:string;
+	private currentId: string;
 
-  private lastAddedEntityCorrelationId:string;
+	private lastAddedEntityCorrelationId: string;
 
-	constructor(private location: Location, private route: ActivatedRoute, private router: Router, private entityServiceFabric: EntityServiceFactory, private compositionService: FormsCompositionService, private dialog: MatDialog) {
-  }
+	constructor(private location: Location,
+		private route: ActivatedRoute,
+		private router: Router,
+		private entityServiceFabric: EntityServiceFactory,
+		private compositionService: FormsCompositionService,
+		private dialog: MatDialog) {
+	}
 
-  ngOnInit() {
-    this.entityService = this.entityServiceFabric.getService(this.model.entitiesName);
+	ngOnInit() {
+		this.entityService = this.entityServiceFabric.getService(this.model.entitiesName);
 
-    this.layout = this.model.layout;
-    this.form = this.compositionService.toFormGroup(this.layout);
-    this.hasServerError$ = this.entityService.hasError;
-    this.isLoading$ = this.entityService.isLoading;
-    this.serverErrors$ = this.entityService.errorResponse.pipe(map(r=>r.validationErrors));
-    this.serverMessage$ = this.entityService.errorResponse.pipe(map(r=>r.message));
+		this.layouts$ = of(this.layouts);//layout to Store
 
-    this.entityService.currentEntity.pipe(takeUntil(this.lifeTimeObject)).subscribe(entity => {
-      if (entity) {
-        this.form.setValue(entity);
-	  } 
-	});
+		let layouts: Array<RaFormLayout> = new Array<RaFormLayout>();
+		for (let key in this.model.layouts) {
+			layouts.push(this.model.layouts[key]);
+		}
 
-    this.entityService.lastRemovedIds.pipe(takeUntil(this.lifeTimeObject)).subscribe(removedIds => {
-      if (removedIds != null) {
-        let res: boolean = false;
+		this.form = this.compositionService.toFormGroup(layouts);
 
-        for (var i = 0; i < removedIds.length; i++) {
-          if (removedIds[i] === this.currentId) {
-            res = true;
-            break;
-          }
-        }
+		this.hasServerError$ = this.entityService.hasError;
+		this.isLoading$ = this.entityService.isLoading;
+		this.serverErrors$ = this.entityService.errorResponse.pipe(map(r => r.validationErrors));
+		this.serverMessage$ = this.entityService.errorResponse.pipe(map(r => r.message));
 
-        if (res) {
-          this.router.navigate(["../"], { relativeTo: this.route });
-        }
-      }
-	});
+		this.entityService.currentEntity.pipe(takeUntil(this.lifeTimeObject)).subscribe(entity => {
+			if (entity) {
+				this.form.setValue(entity);
+			}
+		});
 
-	  this.entityService.lastAddedIds.pipe(takeUntil(this.lifeTimeObject)).subscribe(addedIds => {
+		this.entityService.lastRemovedIds.pipe(takeUntil(this.lifeTimeObject)).subscribe(removedIds => {
+			if (removedIds != null) {
+				let res: boolean = false;
 
-      if (addedIds != null) {
-		    let res: EntityCorrelationIds = null;
+				for (var i = 0; i < removedIds.length; i++) {
+					if (removedIds[i] === this.currentId) {
+						res = true;
+						break;
+					}
+				}
 
-        for (var i = 0; i < addedIds.length; i++) {
-          if (addedIds[i].correlationId === this.lastAddedEntityCorrelationId) {
-			    res = addedIds[i];
-            break;
-          }
-        }
+				if (res) {
+					this.router.navigate(["../"], { relativeTo: this.route });
+				}
+			}
+		});
 
-        if (res!=null) {
-			    this.router.navigate(["../", res.entityId], { relativeTo: this.route });
-        }
-      }
-    });
+		this.entityService.lastAddedIds.pipe(takeUntil(this.lifeTimeObject)).subscribe(addedIds => {
 
-    this.route.paramMap.pipe(takeUntil(this.lifeTimeObject), map(p => p.get("id"))).subscribe(currentId => {
-      if (!currentId) {
-        return;
-	  }
-      if (currentId.toLowerCase() === 'new') {
-		    this.isNewEntity = true;
-        this.form.reset();
-      } else {
-        this.entityService.getById(currentId);
-        this.currentId = currentId;
-        this.isNewEntity = false;
-      }
-    });
+			if (addedIds != null) {
+				let res: EntityCorrelationIds = null;
 
-  }
+				for (var i = 0; i < addedIds.length; i++) {
+					if (addedIds[i].correlationId === this.lastAddedEntityCorrelationId) {
+						res = addedIds[i];
+						break;
+					}
+				}
 
-  ngOnDestroy(): void {
-    this.lifeTimeObject.next(true);
-    this.lifeTimeObject.complete();
-  }
+				if (res != null) {
+					this.router.navigate(["../", res.entityId], { relativeTo: this.route });
+				}
+			}
+		});
 
-  goBack() {
-    this.router.navigate(["../"], { relativeTo: this.route });
-  }
+		this.route.paramMap.pipe(takeUntil(this.lifeTimeObject), map(p => p.get("id"))).subscribe(currentId => {
+			if (!currentId) {
+				return;
+			}
+			if (currentId.toLowerCase() === 'new') {
+				this.isNewEntity = true;
+				this.form.reset();
+			} else {
+				this.entityService.getById(currentId);
+				this.currentId = currentId;
+				this.isNewEntity = false;
+			}
+		});
 
-  saveItem() {
-	  if (!this.form.valid) {
-      this.form.markAllAsTouched();
-      return;
-    }
+	}
 
-    if (this.isNewEntity) {
-      this.lastAddedEntityCorrelationId = this.entityService.add({ ...this.form.value, id: "newguid" });
-    } else {
-      this.entityService.update(this.form.value);
-    }
-  }
+	ngOnDestroy(): void {
+		this.lifeTimeObject.next(true);
+		this.lifeTimeObject.complete();
+	}
+
+	goBack() {
+		this.router.navigate(["../"], { relativeTo: this.route });
+	}
+
+	saveItem() {
+		if (!this.form.valid) {
+			this.form.markAllAsTouched();
+			return;
+		}
+
+		if (this.isNewEntity) {
+			this.lastAddedEntityCorrelationId = this.entityService.add({ ...this.form.value, id: "newguid" });
+		} else {
+			this.entityService.update(this.form.value);
+		}
+	}
 
 	deleteItem() {
 
 		let entity: any = this.form.value || {};
 		let dialogData: RemoveDialogData = { name: entity[this.model.removeDialog.valueId], title: this.model.title };
 
-    const dialogRef = this.dialog.open(RaEntityEditRemoveDialog,
-      {
-        data: dialogData
-      });
+		const dialogRef = this.dialog.open(RaEntityEditRemoveDialog,
+			{
+				data: dialogData
+			});
 
-    dialogRef.afterClosed().pipe(takeUntil(this.lifeTimeObject)).subscribe((result: boolean) => {
-      if (result) {
-        this.entityService.delete(entity.id);
-      }
-    });
-  }
+		dialogRef.afterClosed().pipe(takeUntil(this.lifeTimeObject)).subscribe((result: boolean) => {
+			if (result) {
+				this.entityService.delete(entity.id);
+			}
+		});
+	}
 }

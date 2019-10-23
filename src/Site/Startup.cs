@@ -107,8 +107,6 @@ namespace Remboard
             }).AddNewtonsoftJson(options =>
                     {
                         options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-						options.SerializerSettings.Converters.Add(new StringEnumConverter(typeof(CamelCaseNamingStrategy)));
-                        
                     }
                 )
                 .ConfigureApplicationPartManager(ap =>

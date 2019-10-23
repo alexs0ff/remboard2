@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 
 namespace Common.Features.ResourcePoints.Schema
 {
 	public class SelectBoxControl: ControlBase
 	{
+		[JsonConverter(typeof(StringEnumConverter), typeof(CamelCaseNamingStrategy))]
 		public SelectBoxControlKind Kind { get; set; }
 
+		[JsonConverter(typeof(StringEnumConverter), typeof(CamelCaseNamingStrategy))]
 		public ControlValueKind ValueKind { get; set; }
 
 		public string Id { get; set; }

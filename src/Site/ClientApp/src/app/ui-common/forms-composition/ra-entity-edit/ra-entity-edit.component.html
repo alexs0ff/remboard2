@@ -5,18 +5,18 @@
   </div>
 </div>
 <div *ngIf="hasServerError$ | async" class="server-errors">
-  <div  fxLayout="row" fxLayoutAlign="start center">
-    <mat-icon color="warn">report</mat-icon>
-    <span>{{serverMessage | async}}</span>
-  </div>
-  <mat-list dense>
-    <mat-list-item *ngFor="let item of serverErrors$ | async">
+	<div  fxLayout="row" fxLayoutAlign="start center">
+		<mat-icon color="warn">report</mat-icon>
+		<span>{{serverMessage | async}}</span>
+	</div>
+	<mat-list dense>
+		<mat-list-item *ngFor="let item of serverErrors$ | async">
 
-      <span><strong *ngIf="item.property">{{item.property}}: </strong> {{item.message}}</span>
-    </mat-list-item>
-  </mat-list>
+			<span><strong *ngIf="item.property">{{item.property}}: </strong> {{item.message}}</span>
+		</mat-list-item>
+	</mat-list>
 </div>
-<ra-form [layout]="layout" [form]="form"></ra-form>
+<ra-form  *ngFor="let layoutName of layouts$ | async" [layout]="model.layouts[layoutName]" [form]="form"></ra-form>
 <div fxLayout="row" fxLayoutAlign="end center" class="manage-controls">
     <button mat-raised-button matTooltip="Удалить" (click)="deleteItem()" color="warn" *ngIf="!isNewEntity" [class.spinner]="isLoading$ | async" [disabled]="isLoading$ | async"><mat-icon>remove_circle</mat-icon> Удалить</button>
     <button mat-raised-button matTooltip="Сохранить" (click)="saveItem()" color="primary" [class.spinner]="isLoading$ | async" [disabled]="isLoading$ | async">

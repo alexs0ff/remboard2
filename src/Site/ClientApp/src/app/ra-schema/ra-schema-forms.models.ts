@@ -90,7 +90,9 @@ export interface RaFormCaption {
 }
 export type RaFormLayoutRowContent = RaFormLayoutItems | RaFormDivider | RaFormCaption | RaFormLayoutHiddenItems;
 
-
+export interface LayoutGroups {
+	[p: string]: RaFormLayout;
+}
 
 export interface RaFormLayoutRow {
 	content: RaFormLayoutRowContent;
@@ -103,7 +105,7 @@ export interface RaFormLayout {
 export interface RaEntityEdit {
 	entitiesName: string;
 	title: string;
-	layout: RaFormLayout;
+	layouts: LayoutGroups;
 	removeDialog: {
 		valueId: string;
 	};
