@@ -3,7 +3,7 @@ import { Location } from '@angular/common';
 import { Subject, Observable } from "rxjs";
 import { takeUntil, map } from "rxjs/operators";
 import { ActivatedRoute, Router } from '@angular/router';
-import { EntityServiceFabric, IEntityService, EntityResponse, ValidationError } from "../../../features/ra-cruds/ra-cruds.module";
+import { EntityServiceFactory, IEntityService, EntityResponse, ValidationError } from "../../../features/ra-cruds/ra-cruds.module";
 import { FormsCompositionService } from "../forms-composition-service";
 import { FormGroup } from "@angular/forms";
 import { MatDialog, MatDialogRef} from '@angular/material/dialog';
@@ -42,7 +42,7 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 
   private lastAddedEntityCorrelationId:string;
 
-	constructor(private location: Location, private route: ActivatedRoute, private router: Router, private entityServiceFabric: EntityServiceFabric, private compositionService: FormsCompositionService, private dialog: MatDialog) {
+	constructor(private location: Location, private route: ActivatedRoute, private router: Router, private entityServiceFabric: EntityServiceFactory, private compositionService: FormsCompositionService, private dialog: MatDialog) {
   }
 
   ngOnInit() {

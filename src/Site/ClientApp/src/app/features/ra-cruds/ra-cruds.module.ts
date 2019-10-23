@@ -3,13 +3,13 @@ import { StoreModule, Action  } from "@ngrx/store";
 import { ActionReducerMap, } from '@ngrx/store';
 import { CrudsEntityMetadata, QueryParams} from "./ra-cruds.models";
 import { QueryParamsConfigurator} from "./ra-cruds.utils";
-import { ConfiguratorRegistry, EntityServiceFabric, CrudEntityConfigurator, EntityServiceApiFactory } from "./ra-cruds.services";
+import { ConfiguratorRegistry, EntityServiceFactory, CrudEntityConfigurator, EntityServiceApiFactory } from "./ra-cruds.services";
 import { IEntityBase, IEntityService, ICrudEntityConfigurator, PagedResult, EntityResponse, ValidationError } from "./ra-cruds.models"
 import { EffectsModule } from '@ngrx/effects';
 import { RaCrudsEntityEffects  } from "./ra-cruds.effects";
-import { EntitySchemaServiceApiFactory, EntitySchemaServiceFabric, EntitySchemaConfiguratorRegistry, EntitySchemaConfigurator } from "./ra-schema-cruds.services";
+import { EntitySchemaServiceApiFactory, EntitySchemaServiceFactory as EntitySchemaServiceFabric, EntitySchemaConfiguratorRegistry, EntitySchemaConfigurator } from "./ra-schema-cruds.services";
 import { EntitySchemaEffects } from "./ra-schema-cruds.effects";
-import { EntitySchemaMetadata } from "./ra-schema-cruds.models";
+import { EntitySchemaMetadata, IEntitySchemaService } from "./ra-schema-cruds.models";
 
 
 interface IFeatureState {
@@ -86,7 +86,7 @@ class RaCrudsModule {
 		const raCrudsModule: ModuleWithProviders = {
 			ngModule: RaCrudsModule,
 			providers: [
-				EntityServiceApiFactory, EntityServiceFabric, EntitySchemaServiceApiFactory, EntitySchemaServiceFabric
+				EntityServiceApiFactory, EntityServiceFactory, EntitySchemaServiceApiFactory, EntitySchemaServiceFabric
 			]
 		}
 
@@ -101,7 +101,7 @@ export {
 	IEntityBase,
 	IEntityService,
 	CrudEntityConfigurator,
-	EntityServiceFabric,
+	EntityServiceFactory,
 	EntityServiceApiFactory,
 	QueryParams,
 	QueryParamsConfigurator,
@@ -111,5 +111,6 @@ export {
 
 
 	EntitySchemaMetadata,
-	EntitySchemaConfigurator
+	EntitySchemaConfigurator,
+	IEntitySchemaService
 }

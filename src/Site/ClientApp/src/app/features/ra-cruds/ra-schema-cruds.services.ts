@@ -81,7 +81,7 @@ export class EntitySchemaConfigurator<T extends FilterableEntityBase> implements
 }
 
 @Injectable()
-export class EntitySchemaServiceFabric {
+export class EntitySchemaServiceFactory {
 	constructor(private registry: EntitySchemaConfiguratorRegistry, private store: Store<{}>) { }
 
 	public getService<T extends FilterableEntityBase>(entitiesName: string): IEntitySchemaService<T> {

@@ -248,7 +248,7 @@ export class EntityService<T extends IEntityBase> implements IEntityService<T> {
 
 
 @Injectable()
-export class EntityServiceFabric {
+export class EntityServiceFactory {
   constructor(private registry: ConfiguratorRegistry, private store: Store<{}>) { }
 
   public getService<T extends IEntityBase>(entitiesName: string): IEntityService<T> {

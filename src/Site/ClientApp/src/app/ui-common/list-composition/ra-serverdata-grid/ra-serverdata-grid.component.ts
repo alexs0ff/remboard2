@@ -1,5 +1,5 @@
 import { Component, OnInit,Input } from '@angular/core';
-import { EntityServiceFabric, IEntityService } from "../../../features/ra-cruds/ra-cruds.module";
+import { EntityServiceFactory, IEntityService, IEntitySchemaService } from "../../../features/ra-cruds/ra-cruds.module";
 import { Observable } from 'rxjs';
 import { AutocompleteItem } from "../../../features/orders/autocomplete-item/autocomplete-item.models";
 import { QueryParamsConfigurator } from "../../../features/ra-cruds/ra-cruds.utils";
@@ -9,6 +9,7 @@ import { Router, ActivatedRoute } from '@angular/router'
 import { FilterData,FilterStatement } from "../../ra-filter.models";
 import { GridModelComposer } from "./ra-serverdata-grid.services";
 import { RaServerDataGridModel, RaGridFlatModel } from "../../../ra-schema/ra-schema.module";
+import { EntitySchemaServiceFactory } from "../../../features/ra-cruds/ra-schema-cruds.services";
 
 @Component({
 	selector: 'ra-serverdata-grid',
@@ -27,6 +28,7 @@ export class RaServerdataGridComponent implements OnInit {
 	private sortedColumn: string = "";
 	private sortDirection: string = "";
 	private entityService: IEntityService<any>;
+	private entitySchemaService: IEntitySchemaService<any>;
 	private currentFilter: FilterData = null;
 
 	@Input()
@@ -34,7 +36,7 @@ export class RaServerdataGridComponent implements OnInit {
 
 	flatModel: RaGridFlatModel;
 
-	constructor(private entityServiceFabric: EntityServiceFabric,
+	constructor(private entityServiceFabric: EntityServiceFactory,private entitySchemaServiceFactory: EntitySchemaServiceFactory,
 		private router: Router,
 		private route: ActivatedRoute,
 		private gridModelComposer: GridModelComposer) {
@@ -43,6 +45,7 @@ export class RaServerdataGridComponent implements OnInit {
 
 	ngOnInit() {
 		this.entityService = this.entityServiceFabric.getService(this.model.entitiesName);
+		this.entitySchemaService = this.entitySchemaServiceFactory.getService(this.model.entitiesName);
 		this.dataSource$ = this.entityService.entities;
 		this.totalLength$ = this.entityService.totalLength;
 		this.isLoading$ = this.entityService.isLoading;
@@ -64,6 +67,8 @@ export class RaServerdataGridComponent implements OnInit {
 		}
 
 		this.refreshData();
+
+		this.entitySchemaService.getWithQuery(null);
 	}
 
 	onPaginateChange(event: PageEvent) {
