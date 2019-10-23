@@ -53,4 +53,21 @@ export class GridModelComposer {
 		return sumSpan;
 	}
 
+	public static convertToFlat(gridModelComposer: GridModelComposer, model: RaServerDataGridModel): RaGridFlatModel {
+		if (!model) {
+			return null;
+		}
+
+		let converted = gridModelComposer.toFlatModel(model);
+		if (model.panel) {
+			converted.displayedColumns.splice(0, 0, "gridControlPanel");
+			converted.headers[0].splice(0, 0, "gridControlPanel");
+
+			for (let i = 1; i < converted.headers.length; i++) {
+				converted.headers[i].splice(0, 0, "gridHiddenColumn");
+			}
+		}
+		return converted;
+	}
+
 }

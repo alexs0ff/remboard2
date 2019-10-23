@@ -1,6 +1,7 @@
 import { Component, OnInit,Input } from '@angular/core';
 import { EntityServiceFactory, IEntityService, IEntitySchemaService } from "../../../features/ra-cruds/ra-cruds.module";
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { map,tap } from 'rxjs/operators';
 import { AutocompleteItem } from "../../../features/orders/autocomplete-item/autocomplete-item.models";
 import { QueryParamsConfigurator } from "../../../features/ra-cruds/ra-cruds.utils";
 import { PageEvent } from '@angular/material/paginator';
@@ -22,7 +23,6 @@ export class RaServerdataGridComponent implements OnInit {
 	totalLength$: Observable<number>;
 	isLoading$: Observable<boolean>;
 
-	pageSize = 50;
 
 	private currentPage: number = 1;
 	private sortedColumn: string = "";
@@ -31,10 +31,15 @@ export class RaServerdataGridComponent implements OnInit {
 	private entitySchemaService: IEntitySchemaService<any>;
 	private currentFilter: FilterData = null;
 
+	flatModel$: Observable<RaGridFlatModel>;
+
+	pageSize:number = 50;
+
 	@Input()
 	model: RaServerDataGridModel;
 
-	flatModel: RaGridFlatModel;
+	@Input()
+	remoteSchemaEntitiesName:string;
 
 	constructor(private entityServiceFabric: EntityServiceFactory,private entitySchemaServiceFactory: EntitySchemaServiceFactory,
 		private router: Router,
@@ -44,32 +49,39 @@ export class RaServerdataGridComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.entityService = this.entityServiceFabric.getService(this.model.entitiesName);
-		this.entitySchemaService = this.entitySchemaServiceFactory.getService(this.model.entitiesName);
+
+		let entitiesName = this.remoteSchemaEntitiesName;
+		let useModel = false;
+
+		if (this.model && this.model.entitiesName) {
+			useModel = true;
+			entitiesName = this.model.entitiesName;
+		}
+
+		this.entityService = this.entityServiceFabric.getService(entitiesName);
+		this.entitySchemaService = this.entitySchemaServiceFactory.getService(entitiesName);
 		this.dataSource$ = this.entityService.entities;
 		this.totalLength$ = this.entityService.totalLength;
 		this.isLoading$ = this.entityService.isLoading;
-		this.flatModel = this.gridModelComposer.toFlatModel(this.model);
 
-		if (this.model.panel) {
-			this.flatModel.displayedColumns.splice(0, 0, "gridControlPanel");
-			this.flatModel.headers[0].splice(0, 0, "gridControlPanel");
+		let gridModelComposer = this.gridModelComposer;
 
-			for (let i = 1; i < this.flatModel.headers.length; i++) {
-				this.flatModel.headers[i].splice(0, 0, "gridHiddenColumn");
-			}
-
-		}
-
-
-		if (this.model.pageSize) {
-			this.pageSize = this.model.pageSize;
+		if (useModel) {
+			let converted = GridModelComposer.convertToFlat(gridModelComposer, this.model);
+			this.flatModel$ = of(converted);
+		} else {
+			this.flatModel$ = this.entitySchemaService.gridModel.pipe(map(m => GridModelComposer.convertToFlat(gridModelComposer, m)));
+			
 		}
 
 		this.refreshData();
 
-		this.entitySchemaService.getWithQuery(null);
+		if (!useModel) {
+			this.entitySchemaService.getWithQuery(null);
+		}
 	}
+
+	
 
 	onPaginateChange(event: PageEvent) {
 		this.currentPage = event.pageIndex + 1;

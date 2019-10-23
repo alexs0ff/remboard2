@@ -1,5 +1,5 @@
-<div class="table-content">
-  <ra-grid-filter *ngIf="model.filter" [model]="model.filter" (filterChanged)="onFilterChanged($event)"></ra-grid-filter>
+<div class="table-content" *ngIf="flatModel$ |async as flatModel">
+  <ra-grid-filter *ngIf="flatModel.filter" [model]="flatModel.filter" (filterChanged)="onFilterChanged($event)"></ra-grid-filter>
 
   <mat-progress-spinner *ngIf="isLoading$ | async"
                         color="primary"
