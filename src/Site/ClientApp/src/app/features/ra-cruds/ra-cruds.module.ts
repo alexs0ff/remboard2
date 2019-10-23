@@ -7,6 +7,9 @@ import { ConfiguratorRegistry, EntityServiceFabric, CrudEntityConfigurator, Enti
 import { IEntityBase, IEntityService, ICrudEntityConfigurator, PagedResult, EntityResponse, ValidationError } from "./ra-cruds.models"
 import { EffectsModule } from '@ngrx/effects';
 import { RaCrudsEntityEffects  } from "./ra-cruds.effects";
+import { EntitySchemaServiceApiFactory, EntitySchemaServiceFabric, EntitySchemaConfiguratorRegistry, EntitySchemaConfigurator } from "./ra-schema-cruds.services";
+import { EntitySchemaEffects } from "./ra-schema-cruds.effects";
+import { EntitySchemaMetadata } from "./ra-schema-cruds.models";
 
 
 interface IFeatureState {
@@ -21,7 +24,7 @@ interface IFeatureState {
 })
 class RaCrudsModule {
 
-	static forFeature(featureName: string, config: CrudsEntityMetadata): ModuleWithProviders[] {
+	static forCrudsFeature(featureName: string, config: CrudsEntityMetadata): ModuleWithProviders[] {
 		const ruducersMap: ActionReducerMap<IFeatureState> = {}
 
 		for (let key in config) {
@@ -42,21 +45,48 @@ class RaCrudsModule {
 		return [raCrudsModule, storeModule];
 	}
 
-	static prepareReducersMap(config: CrudsEntityMetadata, currentMap: any) {
+	static forSchemaFeature(featureName: string, configSchema: EntitySchemaMetadata): ModuleWithProviders[] {
+		const ruducersMap: ActionReducerMap<IFeatureState> = {}
+	
+		for (let key in configSchema) {
+			let configuratorSchema = configSchema[key];
+			configuratorSchema.configure(featureName, key);
+			ruducersMap[key] = configuratorSchema.entityReducer;
+			EntitySchemaConfiguratorRegistry.add(key, configuratorSchema);
+		}
+
+		let storeModule = StoreModule.forFeature(featureName, ruducersMap);
+
+		const raCrudsModule: ModuleWithProviders = {
+			ngModule: RaCrudsModule,
+			providers: []
+		}
+
+		return [raCrudsModule, storeModule];
+	}
+
+	static prepareReducersMap(config: CrudsEntityMetadata, configSchema: EntitySchemaMetadata, currentMap: any) {
 		for (let key in config) {
 			let configurator = config[key];
 			configurator.configure("RaEntities", key);
 			currentMap[key] = configurator.entityReducer;
 			ConfiguratorRegistry.add(key, configurator);
 		}
+
+		for (let key in configSchema) {
+			let configuratorSchema = configSchema[key];
+			configuratorSchema.configure("RaEntitySchemas", key);
+			currentMap[key] = configuratorSchema.entityReducer;
+			EntitySchemaConfiguratorRegistry.add(key, configuratorSchema);
+		}
 	}
 
 	static forRoot(): ModuleWithProviders[] {
-		const effectsModule = EffectsModule.forFeature([RaCrudsEntityEffects]);
+		const effectsModule = EffectsModule.forFeature([RaCrudsEntityEffects, EntitySchemaEffects]);
 		const raCrudsModule: ModuleWithProviders = {
 			ngModule: RaCrudsModule,
 			providers: [
-				EntityServiceApiFactory, EntityServiceFabric
+				EntityServiceApiFactory, EntityServiceFabric, EntitySchemaServiceApiFactory, EntitySchemaServiceFabric
 			]
 		}
 
@@ -65,4 +95,21 @@ class RaCrudsModule {
 
 }
 
-export { RaCrudsModule, CrudsEntityMetadata, IEntityBase, IEntityService, CrudEntityConfigurator, EntityServiceFabric, EntityServiceApiFactory, QueryParams, QueryParamsConfigurator, PagedResult, EntityResponse, ValidationError}
+export {
+	RaCrudsModule,
+	CrudsEntityMetadata,
+	IEntityBase,
+	IEntityService,
+	CrudEntityConfigurator,
+	EntityServiceFabric,
+	EntityServiceApiFactory,
+	QueryParams,
+	QueryParamsConfigurator,
+	PagedResult,
+	EntityResponse,
+	ValidationError,
+
+
+	EntitySchemaMetadata,
+	EntitySchemaConfigurator
+}

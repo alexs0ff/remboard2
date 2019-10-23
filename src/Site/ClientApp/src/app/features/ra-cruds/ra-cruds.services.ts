@@ -14,39 +14,41 @@ import { RaUtils } from "./ra-cruds.utils";
 
 
 class EntitySelectors<T extends IEntityBase> {
-  selectAll: MemoizedSelector<any, T[]>;
-  currentEntity: MemoizedSelector<any, T>;
-  hasError: MemoizedSelector<any, boolean>;
-  totalCount: MemoizedSelector<any, number>;
-  isLoading: MemoizedSelector<any, boolean>;
-  errorResponse: MemoizedSelector<any, EntityResponse>;
+	selectAll: MemoizedSelector<any, T[]>;
+	currentEntity: MemoizedSelector<any, T>;
+	hasError: MemoizedSelector<any, boolean>;
+	totalCount: MemoizedSelector<any, number>;
+	isLoading: MemoizedSelector<any, boolean>;
+	errorResponse: MemoizedSelector<any, EntityResponse>;
 	lastRemovedIds: MemoizedSelector<any, string[] | null>;
 	lastAddedIds: MemoizedSelector<any, EntityCorrelationIds[] | null>;
-  
 
-  constructor(featureName: string,private entitiesName: string, adapter: CrudAdapter<T>) {
-    const { selectIds, selectEntities, selectAll, selectTotal, } = adapter.getSelectors();
-   
-    const getAppState = (state: any) => state[featureName];
 
-    const getModuleStateAny = (state: any) => getAppState(state)[entitiesName];
-    const getModuleState = (state: any) => <IState<T>>getModuleStateAny(state);
+	constructor(featureName: string, private entitiesName: string, adapter: CrudAdapter<T>) {
+		const { selectIds, selectEntities, selectAll, selectTotal, } = adapter.getSelectors();
 
-    const getSelectedEntityId = (state: IState<T>) => state.selectedId;
+		const getAppState = (state: any) => state[featureName];
 
-    const getModuleEntities = (state:any)=>selectEntities(getModuleState(state));
-    const getModuleSelectedEntityId = (state: any) => getSelectedEntityId(getModuleState(state));
+		const getModuleStateAny = (state: any) => getAppState(state)[entitiesName];
+		const getModuleState = (state: any) => <IState<T>>getModuleStateAny(state);
 
-    this.selectAll = createSelector(getModuleState, selectAll);
-    this.totalCount = createSelector(getModuleState, (i)=>i.totalCount);
-    this.isLoading = createSelector(getModuleState, (i) => i.loading);
-    this.hasError = createSelector(getModuleState, (i) => i.hasError);
-	  this.errorResponse = createSelector(getModuleState, (i) => i.error);
-	  this.lastRemovedIds = createSelector(getModuleState, (i) => i.lastRemovedIds);
-	  this.lastAddedIds = createSelector(getModuleState, (i) => i.lastAddedIds);
+		const getSelectedEntityId = (state: IState<T>) => state.selectedId;
 
-    this.currentEntity = createSelector(getModuleEntities,getModuleSelectedEntityId,(entities, currentId) => entities[currentId]);
-  }
+		const getModuleEntities = (state: any) => selectEntities(getModuleState(state));
+		const getModuleSelectedEntityId = (state: any) => getSelectedEntityId(getModuleState(state));
+
+		this.selectAll = createSelector(getModuleState, selectAll);
+		this.totalCount = createSelector(getModuleState, (i) => i.totalCount);
+		this.isLoading = createSelector(getModuleState, (i) => i.loading);
+		this.hasError = createSelector(getModuleState, (i) => i.hasError);
+		this.errorResponse = createSelector(getModuleState, (i) => i.error);
+		this.lastRemovedIds = createSelector(getModuleState, (i) => i.lastRemovedIds);
+		this.lastAddedIds = createSelector(getModuleState, (i) => i.lastAddedIds);
+
+		this.currentEntity = createSelector(getModuleEntities,
+			getModuleSelectedEntityId,
+			(entities, currentId) => entities[currentId]);
+	}
 
 
 }
@@ -171,71 +173,77 @@ export class ConfiguratorRegistry {
 
 
 export class EntityService<T extends IEntityBase> implements IEntityService<T> {
-  private entityActions: EntityActions<T>;
+	private entityActions: EntityActions<T>;
 
-  entities: Observable<T[]>;
+	entities: Observable<T[]>;
 
-  totalLength: Observable<number>;
+	totalLength: Observable<number>;
 
-  isLoading: Observable<boolean>;
+	isLoading: Observable<boolean>;
 
-  currentEntity: Observable<T>;
+	currentEntity: Observable<T>;
 
-  hasError: Observable<boolean>;
+	hasError: Observable<boolean>;
 
 	errorResponse: Observable<EntityResponse>;
 
 	lastRemovedIds: Observable<string[] | null>;
 
-  lastAddedIds: Observable<EntityCorrelationIds[] | null>;
+	lastAddedIds: Observable<EntityCorrelationIds[] | null>;
 
-  constructor(private configurator: CrudEntityConfigurator<T>, private store: Store<{}>, private entitiesName:string) {
-    this.entityActions = configurator.entityActions;
-    this.entities = store.pipe(select(configurator.entitySelectors.selectAll));
-    this.totalLength = store.pipe(select(configurator.entitySelectors.totalCount));
-    this.isLoading = store.pipe(select(configurator.entitySelectors.isLoading));
-    this.currentEntity = store.pipe(select(configurator.entitySelectors.currentEntity));
-    this.hasError = store.pipe(select(configurator.entitySelectors.hasError));
-    this.errorResponse = store.pipe(select(configurator.entitySelectors.errorResponse));
-	  this.lastRemovedIds = store.pipe(select(configurator.entitySelectors.lastRemovedIds));
-	  this.lastAddedIds = store.pipe(select(configurator.entitySelectors.lastAddedIds));
-  }
+	constructor(private configurator: CrudEntityConfigurator<T>,
+		private store: Store<{}>,
+		private entitiesName: string) {
+		this.entityActions = configurator.entityActions;
+		this.entities = store.pipe(select(configurator.entitySelectors.selectAll));
+		this.totalLength = store.pipe(select(configurator.entitySelectors.totalCount));
+		this.isLoading = store.pipe(select(configurator.entitySelectors.isLoading));
+		this.currentEntity = store.pipe(select(configurator.entitySelectors.currentEntity));
+		this.hasError = store.pipe(select(configurator.entitySelectors.hasError));
+		this.errorResponse = store.pipe(select(configurator.entitySelectors.errorResponse));
+		this.lastRemovedIds = store.pipe(select(configurator.entitySelectors.lastRemovedIds));
+		this.lastAddedIds = store.pipe(select(configurator.entitySelectors.lastAddedIds));
+	}
 
-  addMany(entities: T[]) {
-    this.store.dispatch(this.entityActions.addEntities({ entities: entities }));
-  }
+	addMany(entities: T[]) {
+		this.store.dispatch(this.entityActions.addEntities({ entities: entities }));
+	}
 
-  getAll() {
-    this.store.dispatch(this.entityActions.startApiFetch());
-    this.store.dispatch(loadAllEntities({ entitiesName: this.entitiesName }));
-  }
+	getAll() {
+		this.store.dispatch(this.entityActions.startApiFetch());
+		this.store.dispatch(loadAllEntities({ entitiesName: this.entitiesName }));
+	}
 
-  getWithQuery(queryParams: QueryParams) {
-    this.store.dispatch(this.entityActions.startApiFetch());
-    this.store.dispatch(loadWithQueryEntities({ entitiesName: this.entitiesName, queryParams: queryParams }));
-  }
+	getWithQuery(queryParams: QueryParams) {
+		this.store.dispatch(this.entityActions.startApiFetch());
+		this.store.dispatch(loadWithQueryEntities({ entitiesName: this.entitiesName, queryParams: queryParams }));
+	}
 
-  getById(id: string) {
-    this.store.dispatch(this.entityActions.startApiFetch());
-    this.store.dispatch(loadByIdEntity({ entitiesName: this.entitiesName, id: id}));
-  }
+	getById(id: string) {
+		this.store.dispatch(this.entityActions.startApiFetch());
+		this.store.dispatch(loadByIdEntity({ entitiesName: this.entitiesName, id: id }));
+	}
 
 	add(entity: T): string {
 		const correlationId = uuid.v4();
-    this.store.dispatch(this.entityActions.startApiFetch());
-		this.store.dispatch(createEntity({ entitiesName: this.entitiesName, entity: entity, correlationId:correlationId}));
-    return correlationId;
-  }
+		this.store.dispatch(this.entityActions.startApiFetch());
+		this.store.dispatch(createEntity({
+			entitiesName: this.entitiesName,
+			entity: entity,
+			correlationId: correlationId
+		}));
+		return correlationId;
+	}
 
-  update(entity: T) {
-    this.store.dispatch(this.entityActions.startApiFetch());
-    this.store.dispatch(updateEntity({ entitiesName: this.entitiesName, entity: entity,id:entity.id }));
-  }
+	update(entity: T) {
+		this.store.dispatch(this.entityActions.startApiFetch());
+		this.store.dispatch(updateEntity({ entitiesName: this.entitiesName, entity: entity, id: entity.id }));
+	}
 
-  delete(id:string) {
-    this.store.dispatch(this.entityActions.startApiFetch());
-    this.store.dispatch(deleteEntity({ entitiesName: this.entitiesName, id:id}));
-  }
+	delete(id: string) {
+		this.store.dispatch(this.entityActions.startApiFetch());
+		this.store.dispatch(deleteEntity({ entitiesName: this.entitiesName, id: id }));
+	}
 }
 
 

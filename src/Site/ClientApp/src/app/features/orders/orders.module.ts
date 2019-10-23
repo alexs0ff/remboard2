@@ -7,12 +7,16 @@ import { AutocompleteItemListComponent } from './autocomplete-item/autocomplete-
 import { OrderStatusEditComponent } from './order-status/order-status-edit.component';
 import { OrderStatusListComponent } from './order-status/order-status-list.component';
 import { UiCommonModule } from "../../ui-common/ui-common.module";
-import { CrudsEntityMetadata, CrudEntityConfigurator, RaCrudsModule } from "../ra-cruds/ra-cruds.module";
+import { CrudsEntityMetadata, CrudEntityConfigurator, RaCrudsModule, EntitySchemaConfigurator } from "../ra-cruds/ra-cruds.module";
 import { AutocompleteItem } from "./autocomplete-item/autocomplete-item.models";
 import { BranchListComponent } from "./branch/branch-list.component";
 import { BranchEditComponent } from "./branch/branch-edit.component";
 import { OrderTypeListComponent } from "./order-type/order-type-list.component";
 import { OrderTypeEditComponent } from "./order-type/order-type-edit.component";
+import { EntitySchemaMetadata } from "../ra-cruds/ra-schema-cruds.models";
+import { OrderType } from "./order-type/order-type.models";
+import { OrderStatus } from "./order-status/order-status.models";
+import { Branch } from "./branch/branch.models";
 
 
 const routes: Routes = [
@@ -29,14 +33,19 @@ const routes: Routes = [
 
 
 const config: CrudsEntityMetadata = {
-  "autocompleteItems": new CrudEntityConfigurator<AutocompleteItem>("autocompleteItem"),
-	"orderStatuses": new CrudEntityConfigurator<AutocompleteItem>("orderStatus"),
-	"branches": new CrudEntityConfigurator<AutocompleteItem>("branch"),
-	"orderTypes": new CrudEntityConfigurator<AutocompleteItem>("orderType"),
+	"autocompleteItems": new CrudEntityConfigurator<AutocompleteItem>("autocompleteItem"),
+	"orderStatuses": new CrudEntityConfigurator<OrderStatus>("orderStatus"),
+	"branches": new CrudEntityConfigurator<Branch>("branch"),
+	"orderTypes": new CrudEntityConfigurator<OrderType>("orderType"),
+}
+
+const configSchema: EntitySchemaMetadata = {
+	"autocompleteItems": new EntitySchemaConfigurator<AutocompleteItem>("autocompleteItem")
 }
 
 @NgModule({
-	declarations: [OrdersComponent,
+	declarations: [
+		OrdersComponent,
 		AutocompleteItemEditComponent,
 		AutocompleteItemListComponent,
 		OrderStatusEditComponent,
@@ -44,19 +53,20 @@ const config: CrudsEntityMetadata = {
 		BranchListComponent,
 		BranchEditComponent,
 		OrderTypeListComponent,
-    OrderTypeEditComponent
-  ],
-  imports: [
-    CommonModule,
-    UiCommonModule,
-    RouterModule.forChild(routes),
-    RaCrudsModule.forFeature("orders", config)
-  ],
-  providers: []
+		OrderTypeEditComponent
+	],
+	imports: [
+		CommonModule,
+		UiCommonModule,
+		RouterModule.forChild(routes),
+		RaCrudsModule.forCrudsFeature("orders", config ),
+		RaCrudsModule.forSchemaFeature("ordersSchema", configSchema)
+	],
+	providers: []
 })
 export class OrdersModule {
-  constructor() {
-    
-  }
+	constructor() {
+
+	}
 
 }

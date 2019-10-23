@@ -21,12 +21,13 @@ import { MenuEffects } from "./menu/menu.effects";
 import { AuthModule, AuthEffects } from './auth/auth.module';
 import { httpInterceptorProviders } from "./http/interceptors";
 import { MessageFlowModule } from "./message-flow/message-flow.module";
-import { RaCrudsModule, CrudsEntityMetadata } from "./features/ra-cruds/ra-cruds.module";
+import { RaCrudsModule, CrudsEntityMetadata, EntitySchemaMetadata } from "./features/ra-cruds/ra-cruds.module";
 
 
 const configCrudsEntityMetadata: CrudsEntityMetadata = {};
+const configEntitySchemaMetadata: EntitySchemaMetadata = {};
 
-RaCrudsModule.prepareReducersMap(configCrudsEntityMetadata, reducers);
+RaCrudsModule.prepareReducersMap(configCrudsEntityMetadata, configEntitySchemaMetadata,reducers);
 
 @NgModule({
 	declarations: [
