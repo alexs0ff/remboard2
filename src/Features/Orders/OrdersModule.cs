@@ -15,6 +15,7 @@ using Orders.Autocomplete;
 using Orders.Branches;
 using Orders.OrderStatuses;
 using Orders.OrderTypes;
+using Common.Features.ResourcePoints.Filterable;
 
 namespace Orders
 {
@@ -70,32 +71,35 @@ namespace Orders
 		        .UseValidator<AutocompleteItemDtoValidator>()
 		        .UseCrudOperation<EntityContextCrudOperation<AutocompleteItem, AutocompleteItemDto, Guid>>()
 		        .UseEntitySchemaProvider<AutocompleteItemSchemaProvider>()
-		        /*.UseFilterableEntityOperation<EntitySqlFilterOperation<AutocompleteItem, AutocompleteItemDto>>(
-		           parameters =>
-		           {
-			           parameters.Sql = @"SELECT [Id]
-								         ,[IsDeleted]
-								         ,[DateCreated]
-								         ,[DateModified]
-								         ,[RowVersion]
-								         ,[TenantId]
-								         ,[AutocompleteKindId]
-								         ,[Title] FROM [dbo].[AutocompleteItem] a
+		        .UseFilterableEntityOperation<EntitySqlFilterOperation<AutocompleteItem, AutocompleteItemDto,Guid>>(
+			        parameters =>
+			        {
+				        parameters.Sql = @"SELECT a.[Id]
+								         ,a.[IsDeleted]
+								         ,a.[DateCreated]
+								         ,a.[DateModified]
+								         ,a.[RowVersion]
+								         ,a.[TenantId]
+								         ,a.[AutocompleteKindId]
+								         ,a.[Title] ,
+										k.Name as AutocompleteKindTitle
+										FROM [dbo].[AutocompleteItem] a
+										join [dbo].[AutocompleteKind] k on k.Id = a.AutocompleteKindId
 								         {WhereClause}
 								         {OrderByClause}
 								         {PaggingClause}
 "
-				           ;
-			           parameters.DefaultOrderColumn = "Title";
-			           parameters.AliasName = "a";
+							;
+				        parameters.DefaultOrderColumn = "Title";
+				        parameters.AliasName = "a";
 
-		           })*/
-				.UseFilterableEntityOperation<Common.Features.ResourcePoints.Filterable.EntityContextFilterOperation<AutocompleteItem, AutocompleteItemDto, Guid>>(
+			        });
+				/*.UseFilterableEntityOperation<Common.Features.ResourcePoints.Filterable.EntityContextFilterOperation<AutocompleteItem, AutocompleteItemDto, Guid>>(
 			        parameters =>
 			        {
 				        parameters.AddSortFieldsMapping(nameof(AutocompleteItemDto.AutocompleteKindTitle),
 					        nameof(AutocompleteItem.AutocompleteKind) + "." + nameof(AutocompleteItem.AutocompleteKind.Name));
-			        });
+			        })*/;
 
 	        yield return new CrudResourcePointConfigurator<OrderStatus, OrderStatusDto, OrderStatusDto, Guid>()
 		        .AddModifyRoles()

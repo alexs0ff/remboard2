@@ -28,7 +28,8 @@ export class HomeComponent {
     //this.router.navigateByUrl("orders/autocomplete-item/8948a322-20e4-42c8-86cf-0a48806bad8a");
     //this.router.navigateByUrl("orders/autocomplete-item/8948a322-20e4-42c8-86cf-0a48806bad8a");
 	//this.response$ = this.httpClient.get<string>("api/OrderTypes");
-	  this.response$ = this.httpClient.get<string>("api/AutocompleteItem/gridSchema");
+	//  this.response$ = this.httpClient.get<string>("api/AutocompleteItem/gridSchema");
+	this.response$ = this.httpClient.get<string>("api/AutocompleteItems?filterColumnName=Title&filterColumnTitleValue=t&filterColumnTitleOperator=Contains&orderby=title&orderkind=desc");
   }
 
   test2() {

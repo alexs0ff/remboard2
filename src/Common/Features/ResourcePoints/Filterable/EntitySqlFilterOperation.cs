@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Common.Extensions;
 using Common.Features.BaseEntity;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
@@ -30,7 +31,7 @@ namespace Common.Features.ResourcePoints.Filterable
 
         public async Task<PagedResult<TFilterableEntity>> FilterAsync(DbContext context, IResourceMandatoryPredicateFactory<TEntity, TKey> mandatoryPredicateFactory, FilterParameters filterParameters)
         {
-            var orderByClause = CreateOrderBy(filterParameters);
+            var orderByClause = CreateOrderBy<TFilterableEntity>(filterParameters);
             var paggingClause = CreatePagging(filterParameters);
             var whereParameters = CreateWhere(filterParameters);
 
@@ -68,14 +69,21 @@ namespace Common.Features.ResourcePoints.Filterable
             return string.Empty;
         }
 
-        private string CreateOrderBy(FilterParameters filterParameters)
+        private string CreateOrderBy<TFilterableEntity>(FilterParameters filterParameters)
         {
-            if (string.IsNullOrWhiteSpace(filterParameters.OrderBy))
-            {
-                return $" ORDER BY {_parameters.DefaultOrderColumn} ";
-            }
+	        var orderColumn = _parameters.DefaultOrderColumn;
 
-            return $" ORDER BY {filterParameters.OrderBy} {filterParameters.OrderKind} ";
+	        if (!string.IsNullOrWhiteSpace(filterParameters.OrderBy))
+	        {
+		        orderColumn = filterParameters.OrderBy;
+	        }
+
+	        if (!typeof(TFilterableEntity).PropertyExists(orderColumn)) //prevent sql injection
+	        {
+				throw new Exception($"The property {orderColumn} should exists in {typeof(TFilterableEntity).Name}");
+	        }
+
+            return $" ORDER BY {orderColumn} {filterParameters.OrderKind} ";
         }
 
         private void ShouldContains(string sql, string clause)

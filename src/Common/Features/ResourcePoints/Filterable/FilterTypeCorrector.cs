@@ -11,7 +11,7 @@ namespace Common.Features.ResourcePoints.Filterable
     {
         public static object ChangeType<TEntity>(string parameterName, string parameterValue)
         {
-			var property = typeof(TEntity).GetProperty(parameterName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+			var property = typeof(TEntity).GetPropertyInfoIgnoreCase(parameterName);
 
 			if (property == null)
 			{

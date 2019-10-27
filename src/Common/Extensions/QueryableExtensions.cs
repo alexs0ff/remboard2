@@ -49,7 +49,7 @@ namespace Common.Extensions
             }
             else
             {
-                var prop = src.GetProperty(propName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                var prop = src.GetPropertyInfoIgnoreCase(propName);
                 return prop;
             }
         }

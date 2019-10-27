@@ -18,21 +18,15 @@ namespace Common.Extensions
             return typeof(TType).GetTypeInfo().IsAssignableFrom(derivedType.GetTypeInfo());
         }
 
-        public static Type GetPropertyType(this Type type, string propertyName, bool throwException = false)
+        public static bool PropertyExists(this Type type, string name)
         {
-            var propertyInfo = type.GetProperty(propertyName);
+	        var info = GetPropertyInfoIgnoreCase(type, name);
+	        return info != null;
+        }
 
-            if (propertyInfo == null)
-            {
-                if (throwException)
-                {
-                    throw new ArgumentException($"property {propertyName} does not exists on type {type.Name}");
-                }
-
-                return null;
-            }
-
-            return propertyInfo.PropertyType;
+        public static PropertyInfo GetPropertyInfoIgnoreCase(this Type type, string name)
+        {
+	        return type.GetProperty(name, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
         }
 
         public static Type GetEntityTypeOrNull(this Type child)

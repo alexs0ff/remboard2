@@ -91,7 +91,7 @@ namespace Common.Features.ResourcePoints.Filterable
 
         private ISpecification<TEntity> Create(FilterStatement filter)
         {
-	        var property = typeof(TEntity).GetProperty(filter.ParameterName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+	        var property = typeof(TEntity).GetPropertyInfoIgnoreCase(filter.ParameterName);
 
 	        if (property == null)
 	        {
