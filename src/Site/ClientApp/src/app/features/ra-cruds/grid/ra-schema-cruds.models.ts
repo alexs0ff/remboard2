@@ -2,7 +2,6 @@ import { Action, ActionReducer } from '@ngrx/store';
 import { RaServerDataGridModel } from "../../../ra-schema/ra-schema.module";
 import { QueryParams } from "../ra-cruds.module";
 import { Observable } from "rxjs";
-import { RaServerDataGridModel as IRaServerDataGridModel } from "../../../ra-schema/ra-schema-grid.models";
 
 
 export interface FilterableEntityBase {
@@ -23,7 +22,7 @@ export interface IEntitySchemaConfigurator<T extends FilterableEntityBase> {
 
 
 export interface IEntitySchemaService<T extends FilterableEntityBase> {
-	gridModel: Observable<IRaServerDataGridModel>;
+	gridModel: Observable<RaServerDataGridModel>;
 	getWithQuery(queryParams: QueryParams);
 }
 

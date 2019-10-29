@@ -7,13 +7,13 @@ import { AutocompleteItemListComponent } from './autocomplete-item/autocomplete-
 import { OrderStatusEditComponent } from './order-status/order-status-edit.component';
 import { OrderStatusListComponent } from './order-status/order-status-list.component';
 import { UiCommonModule } from "../../ui-common/ui-common.module";
-import { CrudsEntityMetadata, CrudEntityConfigurator, RaCrudsModule, EntitySchemaConfigurator } from "../ra-cruds/ra-cruds.module";
+import { CrudsEntityMetadata, CrudEntityConfigurator, RaCrudsModule, EntitySchemaConfigurator, EntitySchemaMetadata, EntityEditSchemaMetadata, EntityEditSchemaConfigurator } from "../ra-cruds/ra-cruds.module";
 import { AutocompleteItem } from "./autocomplete-item/autocomplete-item.models";
 import { BranchListComponent } from "./branch/branch-list.component";
 import { BranchEditComponent } from "./branch/branch-edit.component";
 import { OrderTypeListComponent } from "./order-type/order-type-list.component";
 import { OrderTypeEditComponent } from "./order-type/order-type-edit.component";
-import { EntitySchemaMetadata } from "../ra-cruds/grid/ra-schema-cruds.models";
+
 import { OrderType } from "./order-type/order-type.models";
 import { OrderStatus } from "./order-status/order-status.models";
 import { Branch } from "./branch/branch.models";
@@ -43,6 +43,11 @@ const configSchema: EntitySchemaMetadata = {
 	"autocompleteItems": new EntitySchemaConfigurator<AutocompleteItem>("autocompleteItem")
 }
 
+const configEditSchema: EntityEditSchemaMetadata = {
+	"autocompleteItems": new EntityEditSchemaConfigurator<AutocompleteItem>("autocompleteItem")
+}
+
+
 @NgModule({
 	declarations: [
 		OrdersComponent,
@@ -60,7 +65,8 @@ const configSchema: EntitySchemaMetadata = {
 		UiCommonModule,
 		RouterModule.forChild(routes),
 		RaCrudsModule.forCrudsFeature("orders", config ),
-		RaCrudsModule.forSchemaFeature("ordersSchema", configSchema)
+		RaCrudsModule.forSchemaFeature("ordersSchema", configSchema),
+		RaCrudsModule.forEditSchemaFeature("ordersEditSchema", configEditSchema),
 	],
 	providers: []
 })
