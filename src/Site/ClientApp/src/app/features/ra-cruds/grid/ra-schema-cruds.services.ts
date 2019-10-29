@@ -103,7 +103,11 @@ export class EntitySchemaService<T extends FilterableEntityBase> implements IEnt
 	}
 
 	getWithQuery(queryParams: QueryParams) {
-		this.store.dispatch(loadGridModelWithQuery({ entitiesName: this.entitiesName, queryParams: queryParams }));
+		this.store.dispatch(loadGridModelWithQuery({ entitiesName: this.entitiesName, queryParams: queryParams,force:true }));
+	}
+
+	getIfEmpty() {
+		this.store.dispatch(loadGridModelWithQuery({ entitiesName: this.entitiesName, queryParams: null, force: false }));
 	}
 }
 

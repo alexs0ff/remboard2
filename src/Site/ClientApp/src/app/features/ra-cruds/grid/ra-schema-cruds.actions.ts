@@ -11,4 +11,4 @@ export class EntitySchemaActions<T extends FilterableEntityBase> {
 	//RaServerDataGridModel
 	updateGridModel = createAction('[' + this.entityName + ' Schema] update data', props<{model: RaServerDataGridModel}>());
 }
-export const loadGridModelWithQuery = createAction('Load grid schema with query from API', props<{ entitiesName: string, queryParams: QueryParams }>());
+export const loadGridModelWithQuery = createAction('Load grid schema with query from API', props<{ entitiesName: string, queryParams: QueryParams,force:boolean }>());

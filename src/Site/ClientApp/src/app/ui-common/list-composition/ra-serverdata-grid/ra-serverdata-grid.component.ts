@@ -77,7 +77,7 @@ export class RaServerdataGridComponent implements OnInit {
 		this.refreshData();
 
 		if (!useModel) {
-			this.entitySchemaService.getWithQuery(null);
+			this.entitySchemaService.getIfEmpty();
 		}
 	}
 
