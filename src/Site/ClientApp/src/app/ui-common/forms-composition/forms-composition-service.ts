@@ -2,18 +2,20 @@ import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators, ValidatorFn, FormGroupDirective, NgForm, AbstractControl  } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { KeyValue } from "../../app.models";
-import { RaControls, RaFormLayout, RaFormLayoutRowContent, RaFormLayoutItems, RaFormLayoutHiddenItems, RaTextBox, ControlValueType } from "../../ra-schema/ra-schema.module";
+import { RaControls, RaFormLayout, RaFormLayoutRowContent, RaFormLayoutItems, RaFormLayoutHiddenItems, RaTextBox, ControlValueType,
+	LayoutGroups
+} from "../../ra-schema/ra-schema.module";
 
 
 @Injectable()
 export class FormsCompositionService  {
   constructor() { }
 
-  public toFormGroup(layouts: RaFormLayout[]) {
+	public toFormGroup(layouts: LayoutGroups) {
     let group: any = {};
 
-	for (let i = 0; i < layouts.length; i++) {
-		let layout = layouts[i];
+	for (const key in layouts) {
+		let layout = layouts[key];
 		layout.rows.forEach(row => {
 			if (this.isLayoutItems(row.content)) {
 				row.content.items.forEach(item => {
@@ -28,8 +30,8 @@ export class FormsCompositionService  {
 			}
 
 		});
+
 	}
-    
 
     return new FormGroup(group);
   }

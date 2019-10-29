@@ -19,7 +19,9 @@ import {
 	RaFormLayout,
 	RaEntityEdit,
 	flexExpressions,
-	RemoveDialogData, ControlValueType
+	RemoveDialogData,
+	ControlValueType,
+	LayoutGroups
 
 
 
@@ -72,6 +74,7 @@ export {
 	flexExpressions,
 	RemoveDialogData,
 	ControlValueType,
+	LayoutGroups,
 
 
 	GridContentOptions,

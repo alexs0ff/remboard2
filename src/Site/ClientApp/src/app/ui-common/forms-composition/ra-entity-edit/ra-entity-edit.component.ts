@@ -59,12 +59,7 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 
 		this.layouts$ = of(this.layouts);//layout to Store
 
-		let layouts: Array<RaFormLayout> = new Array<RaFormLayout>();
-		for (let key in this.model.layouts) {
-			layouts.push(this.model.layouts[key]);
-		}
-
-		this.form = this.compositionService.toFormGroup(layouts);
+		this.form = this.compositionService.toFormGroup(this.model.layouts);
 
 		this.hasServerError$ = this.entityService.hasError;
 		this.isLoading$ = this.entityService.isLoading;
