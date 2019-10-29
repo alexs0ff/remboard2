@@ -7,6 +7,7 @@ using Common.Extensions;
 using Common.FeatureEntities;
 using Common.Features.BaseEntity;
 using Common.Features.ResourcePoints.Crud;
+using Common.Features.ResourcePoints.Schema;
 using Common.Features.Tenant;
 
 namespace Common.Features.ResourcePoints
@@ -26,6 +27,8 @@ namespace Common.Features.ResourcePoints
 		private readonly IList<Type> _entityCorrectorTypes = new List<Type>();
 
 		private readonly Type _tenantedEntityCorrectorType = null;
+
+		private Type _entityEditSchemaProviderType = null;
 
 		/// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
 		public CrudResourcePointConfigurator()
@@ -50,17 +53,24 @@ namespace Common.Features.ResourcePoints
 			return this;
 		}
 
-		public ResourcePointConfigurator<TEntity, TEntityDto, TFilterableEntity, TKey> UseCrudOperation<TCrudOperation>()
+		public CrudResourcePointConfigurator<TEntity, TEntityDto, TFilterableEntity, TKey> UseCrudOperation<TCrudOperation>()
 			where TCrudOperation : ICrudOperation<TEntity, TEntityDto, TKey>
 		{
 			_crudOperation = typeof(TCrudOperation);
 			return this;
 		}
 
-		public ResourcePointConfigurator<TEntity, TEntityDto, TFilterableEntity, TKey> AddEntityCorrector<TCorrector>()
+		public CrudResourcePointConfigurator<TEntity, TEntityDto, TFilterableEntity, TKey> AddEntityCorrector<TCorrector>()
 			where TCorrector : IEntityCorrector<TEntity, TEntityDto,TKey>
 		{
 			_entityCorrectorTypes.Add(typeof(TCorrector));
+			return this;
+		}
+
+		public CrudResourcePointConfigurator<TEntity, TEntityDto, TFilterableEntity, TKey> UseEntityEditSchemaProvider<TProvider>()
+			where TProvider : IEntityEditSchemaProvider<TEntityDto>
+		{
+			_entityEditSchemaProviderType = typeof(TProvider);
 			return this;
 		}
 
@@ -86,6 +96,7 @@ namespace Common.Features.ResourcePoints
 			typedParameters.ControllerType = controllerType;
 			typedParameters.EntityValidatorType = _entityValidator;
 			typedParameters.CrudOperationType = _crudOperation;
+			typedParameters.EntityEditSchemaProviderType = _entityEditSchemaProviderType;
 			typedParameters.AccessRuleMap = new AccessRuleMap(_readRoles.ToArray(),_modifyRoles.ToArray());
 			typedParameters.EntityCorrectorTypes = _entityCorrectorTypes;
 		}
@@ -98,6 +109,11 @@ namespace Common.Features.ResourcePoints
 			if (_tenantedEntityCorrectorType!=null)
 			{
 				builder.RegisterType(_tenantedEntityCorrectorType).AsSelf().SingleInstance();
+			}
+
+			if (_entityEditSchemaProviderType!=null)
+			{
+				builder.RegisterType(_entityEditSchemaProviderType).AsSelf().SingleInstance();
 			}
 		}
 	}

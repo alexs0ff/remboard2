@@ -8,6 +8,7 @@ using Common.Features.Auth;
 using Common.Features.BaseEntity;
 using Common.Features.ErrorFlow;
 using Common.Features.ResourcePoints.Crud;
+using Common.Features.ResourcePoints.Schema;
 using Common.Infrastructure;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
@@ -183,6 +184,25 @@ namespace Common.Features.ResourcePoints
 			}
 
 			return Ok();
+		}
+
+		[HttpGet("/api/[controller]/editSchema")]
+		[ProducesResponseType(StatusCodes.Status403Forbidden)]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		public async Task<ActionResult<EntityEditModel>> GridSchema([FromServices] IAuthorizationService authorizationService, [FromServices] CrudResourcePointControllerFactory<TEntity, TEntityDto, TFilterableEntity, TKey> controllerFactory)
+		{
+			var createResult = await authorizationService.AuthorizeAsync(User, typeof(TEntity), CrudOperations.Create);
+			var updateResult = await authorizationService.AuthorizeAsync(User, typeof(TEntity), CrudOperations.Update);
+
+			if (!(createResult.Succeeded || updateResult.Succeeded))
+			{
+				return Forbid();
+			}
+
+			var schemaProvider = controllerFactory.GetEntityEditSchemaProvider();
+
+			var model = schemaProvider.GetModel(new EntityEditSchemaProviderContext());
+			return Ok(model);
 		}
 
 		private async Task<ValidationErrorItem[]> ValidateAsync(IValidator<TEntityDto> validator, TEntityDto entityDto)

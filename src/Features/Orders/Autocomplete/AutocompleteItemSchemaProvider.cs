@@ -8,7 +8,7 @@ namespace Orders.Autocomplete
 {
 	public class AutocompleteItemSchemaProvider: IEntitySchemaProvider<AutocompleteItemDto>
 	{
-		private static ServerDataGridModel _model = new ServerDataGridModel
+		private static readonly ServerDataGridModel _model = new ServerDataGridModel
 		{
 			EntitiesName = "autocompleteItems",
 			Columns = new GridColumn[]

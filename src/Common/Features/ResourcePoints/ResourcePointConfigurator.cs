@@ -116,7 +116,7 @@ namespace Common.Features.ResourcePoints
 
 			if (_entitySchemaProviderType!=null)
 			{
-				builder.RegisterType(_entitySchemaProviderType);
+				builder.RegisterType(_entitySchemaProviderType).AsSelf().SingleInstance();
 			}
 			RegisterTypes(builder);
 		}

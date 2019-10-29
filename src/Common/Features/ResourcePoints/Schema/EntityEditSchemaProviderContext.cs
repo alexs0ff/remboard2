@@ -4,8 +4,7 @@ using System.Text;
 
 namespace Common.Features.ResourcePoints.Schema
 {
-	public class FormLayoutRow
+	public class EntityEditSchemaProviderContext
 	{
-		public FormLayoutRowContent Content { get; set; }
 	}
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Autofac;
 using Common.Features.BaseEntity;
+using Common.Features.ResourcePoints.Schema;
 using FluentValidation;
 
 namespace Common.Features.ResourcePoints.Crud
@@ -42,6 +43,11 @@ namespace Common.Features.ResourcePoints.Crud
 			}
 
 			return correctors;
+		}
+
+		public IEntityEditSchemaProvider<TEntityDto> GetEntityEditSchemaProvider()
+		{
+			return (IEntityEditSchemaProvider<TEntityDto>)context.Resolve(_parameters.EntityEditSchemaProviderType);
 		}
 	}
 }

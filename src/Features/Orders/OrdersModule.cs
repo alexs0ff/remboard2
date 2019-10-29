@@ -69,6 +69,7 @@ namespace Orders
 			        Guid>()
 		        .AddModifyRoles()
 		        .UseValidator<AutocompleteItemDtoValidator>()
+		        .UseEntityEditSchemaProvider<AutocompleteItemEditSchemaProvider>()
 		        .UseCrudOperation<EntityContextCrudOperation<AutocompleteItem, AutocompleteItemDto, Guid>>()
 		        .UseEntitySchemaProvider<AutocompleteItemSchemaProvider>()
 		        .UseFilterableEntityOperation<EntitySqlFilterOperation<AutocompleteItem, AutocompleteItemDto,Guid>>(

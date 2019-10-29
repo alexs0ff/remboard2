@@ -11,5 +11,8 @@ namespace Common.Features.ResourcePoints.Crud
 		public Type CrudOperationType { get; set; }
 
 		public  IList<Type> EntityCorrectorTypes { get; set; }
+
+
+		public Type EntityEditSchemaProviderType { get; set; }
 	}
 }
