@@ -13,7 +13,7 @@ import { BranchListComponent } from "./branch/branch-list.component";
 import { BranchEditComponent } from "./branch/branch-edit.component";
 import { OrderTypeListComponent } from "./order-type/order-type-list.component";
 import { OrderTypeEditComponent } from "./order-type/order-type-edit.component";
-import { EntitySchemaMetadata } from "../ra-cruds/ra-schema-cruds.models";
+import { EntitySchemaMetadata } from "../ra-cruds/grid/ra-schema-cruds.models";
 import { OrderType } from "./order-type/order-type.models";
 import { OrderStatus } from "./order-status/order-status.models";
 import { Branch } from "./branch/branch.models";

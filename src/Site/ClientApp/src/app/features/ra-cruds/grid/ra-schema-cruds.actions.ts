@@ -1,7 +1,7 @@
 import { FilterableEntityBase } from "./ra-schema-cruds.models";
 import { createAction, props } from '@ngrx/store';
-import { RaServerDataGridModel } from "../../ra-schema/ra-schema.module";
-import { QueryParams } from "./ra-cruds.module";
+import { RaServerDataGridModel } from "../../../ra-schema/ra-schema.module";
+import { QueryParams } from "../ra-cruds.module";
 
 
 export class EntitySchemaActions<T extends FilterableEntityBase> {

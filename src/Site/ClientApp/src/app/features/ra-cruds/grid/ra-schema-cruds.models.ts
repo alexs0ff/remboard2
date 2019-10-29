@@ -1,8 +1,8 @@
 import { Action, ActionReducer } from '@ngrx/store';
-import { RaServerDataGridModel } from "../../ra-schema/ra-schema.module";
-import { QueryParams } from "./ra-cruds.module";
+import { RaServerDataGridModel } from "../../../ra-schema/ra-schema.module";
+import { QueryParams } from "../ra-cruds.module";
 import { Observable } from "rxjs";
-import { RaServerDataGridModel as IRaServerDataGridModel } from "../../ra-schema/ra-schema-grid.models";
+import { RaServerDataGridModel as IRaServerDataGridModel } from "../../../ra-schema/ra-schema-grid.models";
 
 
 export interface FilterableEntityBase {

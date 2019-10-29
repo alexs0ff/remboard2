@@ -1,5 +1,5 @@
 import { Component, OnInit,Input } from '@angular/core';
-import { EntityServiceFactory, IEntityService, IEntitySchemaService } from "../../../features/ra-cruds/ra-cruds.module";
+import { EntityServiceFactory, IEntityService, IEntitySchemaService, EntitySchemaServiceFactory } from "../../../features/ra-cruds/ra-cruds.module";
 import { Observable, of } from 'rxjs';
 import { map,tap } from 'rxjs/operators';
 import { AutocompleteItem } from "../../../features/orders/autocomplete-item/autocomplete-item.models";
@@ -10,7 +10,7 @@ import { Router, ActivatedRoute } from '@angular/router'
 import { FilterData,FilterStatement } from "../../ra-filter.models";
 import { GridModelComposer } from "./ra-serverdata-grid.services";
 import { RaServerDataGridModel, RaGridFlatModel } from "../../../ra-schema/ra-schema.module";
-import { EntitySchemaServiceFactory } from "../../../features/ra-cruds/ra-schema-cruds.services";
+
 
 @Component({
 	selector: 'ra-serverdata-grid',

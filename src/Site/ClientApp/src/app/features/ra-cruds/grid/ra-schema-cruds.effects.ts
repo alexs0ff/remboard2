@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, ofType, createEffect } from '@ngrx/effects';
 import { map, mergeMap, catchError, tap } from 'rxjs/operators';
-import { RaUtils } from "./ra-cruds.utils";
+import { RaUtils } from "../ra-cruds.utils";
 import { Update } from '@ngrx/entity';
 import { EMPTY, of } from 'rxjs';
 import { loadGridModelWithQuery, EntitySchemaActions } from "./ra-schema-cruds.actions";

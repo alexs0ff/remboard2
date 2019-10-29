@@ -7,9 +7,9 @@ import { ConfiguratorRegistry, EntityServiceFactory, CrudEntityConfigurator, Ent
 import { IEntityBase, IEntityService, ICrudEntityConfigurator, PagedResult, EntityResponse, ValidationError } from "./ra-cruds.models"
 import { EffectsModule } from '@ngrx/effects';
 import { RaCrudsEntityEffects  } from "./ra-cruds.effects";
-import { EntitySchemaServiceApiFactory, EntitySchemaServiceFactory as EntitySchemaServiceFabric, EntitySchemaConfiguratorRegistry, EntitySchemaConfigurator } from "./ra-schema-cruds.services";
-import { EntitySchemaEffects } from "./ra-schema-cruds.effects";
-import { EntitySchemaMetadata, IEntitySchemaService } from "./ra-schema-cruds.models";
+import { EntitySchemaServiceApiFactory, EntitySchemaServiceFactory as EntitySchemaServiceFabric, EntitySchemaConfiguratorRegistry, EntitySchemaConfigurator, EntitySchemaServiceFactory } from "./grid/ra-schema-cruds.services";
+import { EntitySchemaEffects } from "./grid/ra-schema-cruds.effects";
+import { EntitySchemaMetadata, IEntitySchemaService } from "./grid/ra-schema-cruds.models";
 
 
 interface IFeatureState {
@@ -112,5 +112,6 @@ export {
 
 	EntitySchemaMetadata,
 	EntitySchemaConfigurator,
-	IEntitySchemaService
+	IEntitySchemaService,
+	EntitySchemaServiceFactory
 }

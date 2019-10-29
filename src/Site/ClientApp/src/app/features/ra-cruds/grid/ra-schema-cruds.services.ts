@@ -3,10 +3,10 @@ import { HttpClient } from '@angular/common/http'
 import { FilterableEntityBase, IEntitySchemaConfigurator, EntitySchemaState, IEntitySchemaService } from "./ra-schema-cruds.models";
 import { Action, ActionReducer, createReducer, on, createSelector, MemoizedSelector, Store, select } from '@ngrx/store';
 import { EntitySchemaActions, loadGridModelWithQuery } from "./ra-schema-cruds.actions";
-import { RaServerDataGridModel } from "../../ra-schema/ra-schema-grid.models";
-import { RaUtils } from "./ra-cruds.utils";
+import { RaServerDataGridModel } from "../../../ra-schema/ra-schema-grid.models";
+import { RaUtils } from "../ra-cruds.utils";
 import { Observable } from 'rxjs';
-import { QueryParams } from "./ra-cruds.module";
+import { QueryParams } from "../ra-cruds.module";
 
 
 export class EntitySchemaSelectors<T extends FilterableEntityBase> {
