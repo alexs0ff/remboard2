@@ -6,7 +6,7 @@ import { EntitySchemaServiceFactory } from "../../ra-cruds/ra-cruds.module";
 	selector: 'order-status-list',
 	template: `
  
-<ra-serverdata-grid remoteSchemaEntitiesName="orderStatuses"></ra-serverdata-grid>
+<ra-serverdata-grid entitiesName="orderStatuses"></ra-serverdata-grid>
   `,
 	styles: []
 })

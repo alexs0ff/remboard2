@@ -36,7 +36,7 @@ export class RaServerdataGridComponent implements OnInit {
 	pageSize:number = 50;
 
 	@Input()
-	remoteSchemaEntitiesName:string;
+	entitiesName:string;
 
 	constructor(private entityServiceFabric: EntityServiceFactory,private entitySchemaServiceFactory: EntitySchemaServiceFactory,
 		private router: Router,
@@ -47,7 +47,7 @@ export class RaServerdataGridComponent implements OnInit {
 
 	ngOnInit() {
 
-		let entitiesName = this.remoteSchemaEntitiesName;
+		let entitiesName = this.entitiesName;
 		
 		this.entityService = this.entityServiceFabric.getService(entitiesName);
 		this.entitySchemaService = this.entitySchemaServiceFactory.getService(entitiesName);

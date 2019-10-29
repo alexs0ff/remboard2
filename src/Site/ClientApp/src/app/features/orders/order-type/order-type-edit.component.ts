@@ -3,7 +3,7 @@ import { RaEntityEdit, flexExpressions } from "../../../ra-schema/ra-schema.modu
 
 @Component({
 	selector: 'order-type-edit',
-	template: `<ra-entity-edit [model]="model"></ra-entity-edit>`,
+	template: `<ra-entity-edit [model]="model" [layouts]="['MainGroup']"></ra-entity-edit>`,
 	styles: []
 })
 export class OrderTypeEditComponent implements OnInit {

@@ -6,7 +6,7 @@ import { EntitySchemaServiceFactory } from "../../ra-cruds/ra-cruds.module";
 	selector: 'branch-list',
 	template: `
  
-<ra-serverdata-grid remoteSchemaEntitiesName="branches"></ra-serverdata-grid>
+<ra-serverdata-grid entitiesName="branches"></ra-serverdata-grid>
   `,
 	styles: []
 })

@@ -5,7 +5,7 @@ import { RaServerDataGridModel } from "../../../ra-schema/ra-schema.module";
 	selector: 'autocomplete-item-list',
 	template: `
  
-<ra-serverdata-grid remoteSchemaEntitiesName="autocompleteItems"></ra-serverdata-grid>
+<ra-serverdata-grid entitiesName="autocompleteItems"></ra-serverdata-grid>
   `,
 	styles: []
 })
