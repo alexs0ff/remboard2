@@ -109,6 +109,10 @@ export class EntitySchemaService<T extends FilterableEntityBase> implements IEnt
 	getIfEmpty() {
 		this.store.dispatch(loadGridModelWithQuery({ entitiesName: this.entitiesName, queryParams: null, force: false }));
 	}
+
+	updateModel(model: RaServerDataGridModel) {
+		this.store.dispatch(this.entityActions.updateGridModel({model:model}));
+	}
 }
 
 export interface IEntitySchemaApiService {

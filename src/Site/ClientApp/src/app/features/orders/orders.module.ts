@@ -40,11 +40,17 @@ const config: CrudsEntityMetadata = {
 }
 
 const configSchema: EntitySchemaMetadata = {
-	"autocompleteItems": new EntitySchemaConfigurator<AutocompleteItem>("autocompleteItem")
+	"autocompleteItems": new EntitySchemaConfigurator<AutocompleteItem>("autocompleteItem"),
+	"branches": new EntitySchemaConfigurator<Branch>("branch"),
+	"orderTypes": new EntitySchemaConfigurator<OrderType>("orderType"),
+	"orderStatuses": new EntitySchemaConfigurator<OrderStatus>("orderStatus"),
 }
 
 const configEditSchema: EntityEditSchemaMetadata = {
-	"autocompleteItems": new EntityEditSchemaConfigurator<AutocompleteItem>("autocompleteItem")
+	"autocompleteItems": new EntityEditSchemaConfigurator<AutocompleteItem>("autocompleteItem"),
+	"branches": new EntityEditSchemaConfigurator<Branch>("branch"),
+	"orderTypes": new EntityEditSchemaConfigurator<OrderType>("orderType"),
+	"orderStatuses": new EntityEditSchemaConfigurator<OrderStatus>("orderStatus"),
 }
 
 

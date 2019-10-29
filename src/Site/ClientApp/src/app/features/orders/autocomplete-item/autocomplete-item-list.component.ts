@@ -5,14 +5,12 @@ import { RaServerDataGridModel } from "../../../ra-schema/ra-schema.module";
 	selector: 'autocomplete-item-list',
 	template: `
  
-<ra-serverdata-grid [model]="dataGrid" remoteSchemaEntitiesName="autocompleteItems"></ra-serverdata-grid>
+<ra-serverdata-grid remoteSchemaEntitiesName="autocompleteItems"></ra-serverdata-grid>
   `,
 	styles: []
 })
 export class AutocompleteItemListComponent implements OnInit {
-
-	dataGrid: RaServerDataGridModel;
-
+	
 	constructor() {
 	}
 

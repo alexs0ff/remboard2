@@ -1,20 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { RaServerDataGridModel } from "../../../ra-schema/ra-schema.module";
+import { EntitySchemaServiceFactory } from "../../ra-cruds/ra-cruds.module";
 
 @Component({
 	selector: 'branch-list',
 	template: `
  
-<ra-serverdata-grid [model]="dataGrid"></ra-serverdata-grid>
+<ra-serverdata-grid remoteSchemaEntitiesName="branches"></ra-serverdata-grid>
   `,
 	styles: []
 })
 export class BranchListComponent implements OnInit {
 
-	dataGrid: RaServerDataGridModel;
-
-	constructor() {
-		this.dataGrid = {
+	
+	constructor(entitySchemaServiceFactory: EntitySchemaServiceFactory) {
+		const dataGrid: RaServerDataGridModel = {
 			entitiesName: "branches",
 			columns: [
 				/*{
@@ -60,6 +60,8 @@ export class BranchListComponent implements OnInit {
 				]
 			}
 		};
+
+		entitySchemaServiceFactory.getService("branches").updateModel(dataGrid);
 	}
 
 	ngOnInit() {

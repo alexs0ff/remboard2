@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { RaServerDataGridModel } from "../../../ra-schema/ra-schema.module";
+import { EntitySchemaServiceFactory } from "../../ra-cruds/ra-cruds.module";
 
 @Component({
 	selector: 'order-type-list',
 	template: `
  
-<ra-serverdata-grid [model]="dataGrid"></ra-serverdata-grid>
+<ra-serverdata-grid remoteSchemaEntitiesName="orderTypes"></ra-serverdata-grid>
   `,
 	styles: []
 })
@@ -13,8 +14,8 @@ export class OrderTypeListComponent implements OnInit {
 
 	dataGrid: RaServerDataGridModel;
 
-	constructor() {
-		this.dataGrid = {
+	constructor(entitySchemaServiceFactory: EntitySchemaServiceFactory) {
+		const dataGrid: RaServerDataGridModel = {
 			entitiesName: "orderTypes",
 			columns: [
 				{ id: "title", name: "Название", options: { canOrder: true, valueKind: 'string' } },
@@ -23,6 +24,8 @@ export class OrderTypeListComponent implements OnInit {
 			panel: { showAddButton: true,},
 			filter: null
 		};
+
+		entitySchemaServiceFactory.getService("orderTypes").updateModel(dataGrid);
 	}
 
 	ngOnInit() {

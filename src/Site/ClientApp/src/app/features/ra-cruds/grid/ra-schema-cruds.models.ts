@@ -25,6 +25,7 @@ export interface IEntitySchemaService<T extends FilterableEntityBase> {
 	gridModel: Observable<RaServerDataGridModel>;
 	getWithQuery(queryParams: QueryParams);
 	getIfEmpty();
+	updateModel(model: RaServerDataGridModel);
 }
 
 export interface EntitySchemaMetadata {

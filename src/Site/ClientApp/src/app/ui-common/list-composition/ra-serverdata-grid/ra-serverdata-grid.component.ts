@@ -36,9 +36,6 @@ export class RaServerdataGridComponent implements OnInit {
 	pageSize:number = 50;
 
 	@Input()
-	model: RaServerDataGridModel;
-
-	@Input()
 	remoteSchemaEntitiesName:string;
 
 	constructor(private entityServiceFabric: EntityServiceFactory,private entitySchemaServiceFactory: EntitySchemaServiceFactory,
@@ -51,13 +48,7 @@ export class RaServerdataGridComponent implements OnInit {
 	ngOnInit() {
 
 		let entitiesName = this.remoteSchemaEntitiesName;
-		let useModel = false;
-
-		if (this.model && this.model.entitiesName) {
-			useModel = true;
-			entitiesName = this.model.entitiesName;
-		}
-
+		
 		this.entityService = this.entityServiceFabric.getService(entitiesName);
 		this.entitySchemaService = this.entitySchemaServiceFactory.getService(entitiesName);
 		this.dataSource$ = this.entityService.entities;
@@ -66,19 +57,12 @@ export class RaServerdataGridComponent implements OnInit {
 
 		let gridModelComposer = this.gridModelComposer;
 
-		if (useModel) {
-			let converted = GridModelComposer.convertToFlat(gridModelComposer, this.model);
-			this.flatModel$ = of(converted);
-		} else {
-			this.flatModel$ = this.entitySchemaService.gridModel.pipe(map(m => GridModelComposer.convertToFlat(gridModelComposer, m)));
-			
-		}
+		
+		this.flatModel$ = this.entitySchemaService.gridModel.pipe(map(m => GridModelComposer.convertToFlat(gridModelComposer, m)));
 
 		this.refreshData();
 
-		if (!useModel) {
-			this.entitySchemaService.getIfEmpty();
-		}
+		this.entitySchemaService.getIfEmpty();
 	}
 
 	

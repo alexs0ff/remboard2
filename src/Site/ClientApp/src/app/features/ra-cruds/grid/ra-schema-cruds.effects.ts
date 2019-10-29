@@ -13,19 +13,10 @@ export class EntitySchemaEffects {
 	loadwithQueryEntities$ = createEffect(() => this.actions$.pipe(
 		ofType(loadGridModelWithQuery),
 		mergeMap((e) => this.getService(e.entitiesName).gridModel.pipe(first(), map(model => [{action:e,model:model}]))),
-		/*mergeMap(([{ action, model}]) => this.getApiService(action.entitiesName).getWithQuery(action.queryParams).pipe(
-			map(result => this.getEntityActions(action.entitiesName).updateGridModel({ model: result })),
-			catchError((error) => {
-				const parsed = RaUtils.parseHttpError(error);
-				//return of(this.getEntityActions(e.entitiesName).setApiError({ error: parsed }));
-				return EMPTY;
-			})
-		))*/
 		mergeMap(([{ action, model }]) => {
 			if (!action.force && model) {
 				return EMPTY;
 			}
-
 			return this.getApiService(action.entitiesName).getWithQuery(action.queryParams).pipe(
 				map(result => this.getEntityActions(action.entitiesName).updateGridModel({ model: result })),
 				catchError((error) => {
@@ -35,19 +26,6 @@ export class EntitySchemaEffects {
 				})
 			);
 		}))
-
-		/*
-		mergeMap(([e, model]) => {
-				return this.getApiService(e.entitiesName).getWithQuery(e.queryParams).pipe(
-					map(result => this.getEntityActions(e.entitiesName).updateGridModel({ model: result })),
-					catchError((error) => {
-						const parsed = RaUtils.parseHttpError(error);
-						//return of(this.getEntityActions(e.entitiesName).setApiError({ error: parsed }));
-						return EMPTY;
-					})
-				);
-			}
-		)*/
 
 	);
 
