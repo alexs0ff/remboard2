@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Common.Extensions;
-using Common.Features.BaseEntity;
+using Entities;
 using Common.Features.Tenant;
 
 namespace Common.Features.ResourcePoints.Filterable

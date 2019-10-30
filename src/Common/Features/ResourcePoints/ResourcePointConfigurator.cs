@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using Entities;
 using Autofac;
 using Common.Extensions;
-using Common.FeatureEntities;
+using Entities;
 using Common.Features.BaseEntity;
 using Common.Features.ResourcePoints.Crud;
 using Common.Features.ResourcePoints.Filterable;

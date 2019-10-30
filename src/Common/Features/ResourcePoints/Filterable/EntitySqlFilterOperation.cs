@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Common.Extensions;
 using Common.Features.BaseEntity;
-using LinqKit;
+using Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Common.Features.ResourcePoints.Filterable

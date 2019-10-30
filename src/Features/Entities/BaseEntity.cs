@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Common.Features.BaseEntity
+namespace Entities
 {
     public abstract class BaseEntity<TKey> 
         where TKey:struct

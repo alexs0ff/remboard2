@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using Common.Features.BaseEntity;
+using Entities;
 using JetBrains.Annotations;
 
 namespace Common.Extensions

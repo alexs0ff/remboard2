@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Common.Features.ResourcePoints.Schema;
+using Entities;
 
 namespace Orders.Autocomplete
 {

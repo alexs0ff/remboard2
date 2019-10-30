@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Common.Extensions;
+using Entities;
 
 namespace Common.Features.ResourcePoints.Schema
 {
 	public static class SelectBoxItemsSourceExtensions
 	{
 		public static SelectBoxItemsSource<long> SourceFromEnum<TEntity, TEnum>()
-			where TEntity : Common.Features.BasePermissibleValue<TEnum>, new()
+			where TEntity : BasePermissibleValue<TEnum>, new()
 			where TEnum : Enum
 		{
 			var result = new SelectBoxItemsSource<long>();

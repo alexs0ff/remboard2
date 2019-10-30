@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
+using Entities;
 
 namespace Common.Extensions
 {
@@ -24,7 +24,7 @@ namespace Common.Extensions
 
 
         public static List<TEntity> EnumToEntities<TEntity,TEnum>()
-            where TEntity : Common.Features.BasePermissibleValue<TEnum>, new()
+            where TEntity : BasePermissibleValue<TEnum>, new()
             where TEnum : Enum
         {
             var list = new List<TEntity>();

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Common.Features.BaseEntity;
-using Common.Features.Tenant;
 
-namespace Orders.Branches
+namespace Entities
 {
 	public class Branch : BaseEntityGuidKey, ITenantedEntity
 	{

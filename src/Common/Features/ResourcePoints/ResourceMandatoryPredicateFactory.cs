@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using Entities;
 using Common.Features.Specifications;
 using LinqKit;
 
 namespace Common.Features.ResourcePoints
 {
 	public class ResourceMandatoryPredicateFactory<TEntity,TKey>: IResourceMandatoryPredicateFactory<TEntity,TKey>
-		where TEntity : BaseEntity.BaseEntity<TKey>
+		where TEntity : BaseEntity<TKey>
 		where TKey : struct
 	{
 		private readonly List<ISpecification<TEntity>> _specifications;

@@ -2,6 +2,7 @@
 using Common.Extensions;
 using Common.Features.BaseEntity;
 using Common.Features.Tenant;
+using Entities;
 using FluentValidation;
 
 namespace Common.Features

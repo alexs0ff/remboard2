@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Common.Features.Binders;
 using Common.Features.TypeConverters;
+using Entities;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 

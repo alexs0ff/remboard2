@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Common.Features.BaseEntity;
+using Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Common.Features.ResourcePoints.Crud

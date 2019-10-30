@@ -1,5 +1,6 @@
 ﻿using Common.Features;
 using Common.Features.BaseEntity;
+using Entities;
 
 namespace Common.FeatureEntities
 {

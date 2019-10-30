@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Orders.Autocomplete
+namespace Entities
 {
     public enum AutocompleteKinds:long
     {

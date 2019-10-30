@@ -7,7 +7,7 @@ using Common.Features.BaseEntity;
 using Common.Features.ResourcePoints.Filterable;
 using Common.Features.Tenant;
 using LinqKit;
-using Microsoft.AspNetCore.Mvc;
+using Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Common.FeatureEntities
+namespace Entities
 {
     public enum ProjectRoles:long
     {

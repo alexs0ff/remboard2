@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Common.FeatureEntities;
+using Entities;
 
 namespace Common.Features
 {

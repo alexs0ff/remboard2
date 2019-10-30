@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using AutoMapper;
 using Common.Features;
+using Entities;
 using Orders.Autocomplete;
 using Orders.Branches;
 using Orders.OrderStatuses;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Common.Features
+namespace Entities
 {
     public abstract class BasePermissibleValue<TEnum>
     where TEnum:Enum

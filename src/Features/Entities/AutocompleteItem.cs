@@ -1,9 +1,6 @@
 ﻿using System;
-using Common.Features;
-using Common.Features.BaseEntity;
-using Common.Features.Tenant;
 
-namespace Orders.Autocomplete
+namespace Entities
 {
     public class AutocompleteItem:BaseEntityGuidKey, ITenantedEntity
     {

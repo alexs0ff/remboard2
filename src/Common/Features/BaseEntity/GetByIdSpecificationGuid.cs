@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 using Common.Features.Specifications;
+using Entities;
 
 namespace Common.Features.BaseEntity
 {

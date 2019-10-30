@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Common.Features.Tenant
+namespace Entities
 {
     public interface ITenantedEntity
     {

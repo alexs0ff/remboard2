@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Common.FeatureEntities;
 using Common.Features.Users;
+using Entities;
 using Microsoft.AspNetCore.Http;
 using Remboard.Auth;
 using Users.Api;

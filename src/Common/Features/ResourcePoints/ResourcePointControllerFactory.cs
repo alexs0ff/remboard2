@@ -7,7 +7,7 @@ using Common.Features.BaseEntity;
 using Common.Features.ResourcePoints.Filterable;
 using Common.Features.ResourcePoints.Filterable.Schema;
 using Common.Features.Specifications;
-using Microsoft.EntityFrameworkCore;
+using Entities;
 
 namespace Common.Features.ResourcePoints
 {

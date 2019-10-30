@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Common.Extensions;
+using Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

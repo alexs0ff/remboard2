@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Common.Data;
 using Common.Features.Auth;
-using Common.Features.BaseEntity;
+using Entities;
 using Common.Features.ErrorFlow;
 using Common.Features.ResourcePoints.Crud;
 using Common.Features.ResourcePoints.Schema;

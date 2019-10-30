@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Autofac;
-using Common.Features.BaseEntity;
+using Entities;
 using Common.Features.ResourcePoints.Schema;
 using FluentValidation;
 

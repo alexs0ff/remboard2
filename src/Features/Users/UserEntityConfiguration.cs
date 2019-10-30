@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Common.Extensions;
 using Common.Features;
+using Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;

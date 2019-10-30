@@ -9,6 +9,7 @@ using Common.Features.BaseEntity;
 using Common.Features.ResourcePoints.Crud;
 using Common.Features.ResourcePoints.Schema;
 using Common.Features.Tenant;
+using Entities;
 
 namespace Common.Features.ResourcePoints
 {

@@ -1,6 +1,7 @@
 ﻿using System;
 using Common.Extensions;
 using Common.Features.BaseEntity;
+using Entities;
 
 namespace Common.Features
 {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Autofac;
 using Common.FeatureEntities;
+using Entities;
 
 namespace Common.Features.PermissibleValues
 {

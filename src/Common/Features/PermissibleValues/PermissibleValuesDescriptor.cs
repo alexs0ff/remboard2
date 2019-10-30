@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+using Entities;
 
 namespace Common.Features.PermissibleValues
 {

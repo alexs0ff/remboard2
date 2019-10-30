@@ -16,6 +16,7 @@ using Orders.Branches;
 using Orders.OrderStatuses;
 using Orders.OrderTypes;
 using Common.Features.ResourcePoints.Filterable;
+using Entities;
 
 namespace Orders
 {

@@ -12,7 +12,7 @@ using Common.Features.BaseEntity;
 using Common.Features.ResourcePoints.Filterable.Specifications;
 using Common.Features.Specifications;
 using LinqKit;
-using Microsoft.AspNetCore.Mvc;
+using Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Common.Features.ResourcePoints.Filterable

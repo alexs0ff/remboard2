@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using Entities;
 using System.Threading.Tasks;
 using Common.Features.BaseEntity;
 using Microsoft.EntityFrameworkCore;

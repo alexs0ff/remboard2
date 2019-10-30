@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Common.Features;
-using Common.FeatureEntities;
 
-namespace Users
+
+namespace Entities
 {
     public class ProjectRole: BasePermissibleValue<ProjectRoles>
     {

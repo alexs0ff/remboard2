@@ -39,6 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Features\Entities\Entities.csproj" />
     <ProjectReference Include="..\Features\Users\Users.csproj" />
   </ItemGroup>
 
