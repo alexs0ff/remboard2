@@ -1,22 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { RaEntityEdit, flexExpressions } from "../../../ra-schema/ra-schema.module";
+import { EntityEditSchemaServiceFactory } from "../../ra-cruds/ra-cruds.module";
 
 @Component({
 	selector: 'order-status-edit',
-	//template: `<ra-entity-edit [model]="model" [layouts]="['MainGroup']"></ra-entity-edit>`,
-	template: ``,
+	template: `<ra-entity-edit entitiesName="orderStatuses"></ra-entity-edit>`,
+	
 	styles: []
 })
 export class OrderStatusEditComponent implements OnInit {
-	model: RaEntityEdit;
-
-	constructor() {
-		this.model = {
+	
+	constructor(entityEditSchemaServiceFactory: EntityEditSchemaServiceFactory) {
+		const model: RaEntityEdit = {
 			entitiesName: "orderStatuses",
 			title: "Статус заказа",
 			removeDialog: { valueId: "title" },
 			layouts: {
-				"MainGroup": {
+				"mainGroup": {
 					rows: [
 						{ content: { kind: 'hidden', items: ['id', 'orderStatusKindTitle'] } },
 						{
@@ -64,6 +64,8 @@ export class OrderStatusEditComponent implements OnInit {
 				}
 			}
 		};
+
+		entityEditSchemaServiceFactory.getService("orderStatuses").updateModel(model, ['mainGroup']);
 
 	}
 

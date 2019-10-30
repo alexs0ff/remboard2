@@ -1,22 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { RaEntityEdit, flexExpressions } from "../../../ra-schema/ra-schema.module";
+import { EntityEditSchemaServiceFactory } from "../../ra-cruds/ra-cruds.module";
 
 @Component({
 	selector: 'order-type-edit',
-	//template: `<ra-entity-edit [model]="model" [layouts]="['MainGroup']"></ra-entity-edit>`,
-	template: ``,
+	template: `<ra-entity-edit entitiesName="orderTypes"></ra-entity-edit>`,
 	styles: []
 })
 export class OrderTypeEditComponent implements OnInit {
 	model: RaEntityEdit;
 
-	constructor() {
-		this.model = {
+	constructor(entityEditSchemaServiceFactory: EntityEditSchemaServiceFactory) {
+		const model: RaEntityEdit = {
 			entitiesName: "orderTypes",
 			title: "Статус заказа",
 			removeDialog: { valueId: "title" },
 			layouts: {
-				"MainGroup": {
+				"mainGroup": {
 					rows: [
 						{ content: { kind: 'hidden', items: ['id'] } },
 						{
@@ -43,7 +43,7 @@ export class OrderTypeEditComponent implements OnInit {
 				}
 			}
 		};
-
+		entityEditSchemaServiceFactory.getService("orderTypes").updateModel(model, ['mainGroup']);
 	}
 
 	ngOnInit() {

@@ -1,22 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { RaEntityEdit, flexExpressions } from "../../../ra-schema/ra-schema.module";
+import { EntityEditSchemaServiceFactory } from "../../ra-cruds/ra-cruds.module";
 
 @Component({
 	selector: 'branch-edit',
-	//template: `<ra-entity-edit [model]="model" [layouts]="['MainGroup']"></ra-entity-edit>`,
-	template:``,
+	template: `<ra-entity-edit entitiesName="branches"></ra-entity-edit>`,
+	
 	styles: []
 })
 export class BranchEditComponent implements OnInit {
-	model: RaEntityEdit;
 
-	constructor() {
-		this.model = {
+	constructor(entityEditSchemaServiceFactory: EntityEditSchemaServiceFactory) {
+		const model: RaEntityEdit = {
 			entitiesName: "branches",
 			title: "Филиалы",
 			removeDialog: { valueId: "title" },
 			layouts: {
-				"MainGroup": {
+				"mainGroup": {
 					rows: [
 						{ content: { kind: 'hidden', items: ['id'] } },
 						{
@@ -69,6 +69,8 @@ export class BranchEditComponent implements OnInit {
 				}
 			}
 		};
+
+		entityEditSchemaServiceFactory.getService("branches").updateModel(model, ['mainGroup']);
 
 	}
 
