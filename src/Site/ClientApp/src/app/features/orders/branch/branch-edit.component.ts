@@ -3,7 +3,8 @@ import { RaEntityEdit, flexExpressions } from "../../../ra-schema/ra-schema.modu
 
 @Component({
 	selector: 'branch-edit',
-	template: `<ra-entity-edit [model]="model" [layouts]="['MainGroup']"></ra-entity-edit>`,
+	//template: `<ra-entity-edit [model]="model" [layouts]="['MainGroup']"></ra-entity-edit>`,
+	template:``,
 	styles: []
 })
 export class BranchEditComponent implements OnInit {

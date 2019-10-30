@@ -31,7 +31,7 @@ namespace Common.Features.ResourcePoints.Filterable
 
         public async Task<PagedResult<TFilterableEntity>> FilterAsync(DbContext context, IResourceMandatoryPredicateFactory<TEntity, TKey> mandatoryPredicateFactory, FilterParameters filterParameters)
         {
-            var orderByClause = CreateOrderBy<TFilterableEntity>(filterParameters);
+            var orderByClause = CreateOrderBy(filterParameters);
             var paggingClause = CreatePagging(filterParameters);
             var whereParameters = CreateWhere(filterParameters);
 
@@ -69,7 +69,7 @@ namespace Common.Features.ResourcePoints.Filterable
             return string.Empty;
         }
 
-        private string CreateOrderBy<TFilterableEntity>(FilterParameters filterParameters)
+        private string CreateOrderBy(FilterParameters filterParameters)
         {
 	        var orderColumn = _parameters.DefaultOrderColumn;
 

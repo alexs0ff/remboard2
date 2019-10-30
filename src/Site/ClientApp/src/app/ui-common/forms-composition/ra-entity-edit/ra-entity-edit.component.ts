@@ -1,9 +1,11 @@
 import { Component, OnInit,OnDestroy,Input } from '@angular/core';
 import { Location } from '@angular/common';
 import { Subject, Observable,of } from "rxjs";
-import { takeUntil, map } from "rxjs/operators";
+import { takeUntil, map, filter, bufferWhen,shareReplay,withLatestFrom  } from "rxjs/operators";
 import { ActivatedRoute, Router } from '@angular/router';
-import { EntityServiceFactory, IEntityService, EntityResponse, ValidationError } from "../../../features/ra-cruds/ra-cruds.module";
+import { EntityServiceFactory, IEntityService, EntityResponse, ValidationError, EntityEditSchemaServiceFactory,
+	IEntityEditSchemaService
+} from "../../../features/ra-cruds/ra-cruds.module";
 import { FormsCompositionService } from "../forms-composition-service";
 import { FormGroup } from "@angular/forms";
 import { MatDialog, MatDialogRef} from '@angular/material/dialog';
@@ -20,11 +22,10 @@ import { RaEntityEdit, RaFormLayout, RemoveDialogData } from "../../../ra-schema
 export class RaEntityEditComponent implements OnInit, OnDestroy {
 
 	@Input()
-	model: RaEntityEdit;
+	entitiesName:string;
 
 	layouts$:Observable<string[]>;
 
-	@Input()
 	layouts: string[];
 
 	form: FormGroup;
@@ -36,9 +37,13 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 	serverErrors$: Observable<ValidationError[]>;
 	serverMessage$: Observable<string>;
 
+	editModel$: Observable<RaEntityEdit>;
+
 	private lifeTimeObject: Subject<boolean> = new Subject<boolean>();
 
 	private entityService: IEntityService<any>;
+
+	private entityEditSchemaService: IEntityEditSchemaService<any>;
 
 	private isNewEntity: boolean;
 
@@ -49,27 +54,45 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 	constructor(private location: Location,
 		private route: ActivatedRoute,
 		private router: Router,
-		private entityServiceFabric: EntityServiceFactory,
+		private entityServiceFactory: EntityServiceFactory,
+		private entityEditSchemaServiceFactory: EntityEditSchemaServiceFactory,
 		private compositionService: FormsCompositionService,
 		private dialog: MatDialog) {
+		
 	}
 
 	ngOnInit() {
-		this.entityService = this.entityServiceFabric.getService(this.model.entitiesName);
+		this.entityService = this.entityServiceFactory.getService(this.entitiesName);
+		this.entityEditSchemaService = this.entityEditSchemaServiceFactory.getService(this.entitiesName);
+		this.entityEditSchemaService.getIfEmpty();
 
-		this.layouts$ = of(this.layouts);//layout to Store
+		this.layouts$ = this.entityEditSchemaService.layoutIds.pipe(filter(l=>l!=null));
 
-		this.form = this.compositionService.toFormGroup(this.model.layouts);
+		const editModel$ = this.entityEditSchemaService.editModel.pipe(
+			takeUntil(this.lifeTimeObject)
+		);
+
+		const currentEntity$ = this.entityService.currentEntity.pipe(
+			takeUntil(this.lifeTimeObject)
+		);
+
+		this.editModel$ = editModel$;
+		
+		editModel$.pipe(
+			filter(i => i != null),
+			withLatestFrom(currentEntity$))
+			.subscribe(m => {
+				this.form = this.compositionService.toFormGroup(m[0].layouts);
+				this.updateFormValue(this.form,m[1]);
+		});
 
 		this.hasServerError$ = this.entityService.hasError;
 		this.isLoading$ = this.entityService.isLoading;
 		this.serverErrors$ = this.entityService.errorResponse.pipe(map(r => r.validationErrors));
 		this.serverMessage$ = this.entityService.errorResponse.pipe(map(r => r.message));
-
-		this.entityService.currentEntity.pipe(takeUntil(this.lifeTimeObject)).subscribe(entity => {
-			if (entity) {
-				this.form.setValue(entity);
-			}
+		
+		currentEntity$.pipe(filter(e => e != null)).subscribe(e => {
+			this.updateFormValue(this.form, e);
 		});
 
 		this.entityService.lastRemovedIds.pipe(takeUntil(this.lifeTimeObject)).subscribe(removedIds => {
@@ -145,10 +168,10 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	deleteItem() {
+	deleteItem(model:RaEntityEdit) {
 
 		let entity: any = this.form.value || {};
-		let dialogData: RemoveDialogData = { name: entity[this.model.removeDialog.valueId], title: this.model.title };
+		let dialogData: RemoveDialogData = { name: entity[model.removeDialog.valueId], title: model.title };
 
 		const dialogRef = this.dialog.open(RaEntityEditRemoveDialog,
 			{
@@ -160,5 +183,11 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 				this.entityService.delete(entity.id);
 			}
 		});
+	}
+
+	private updateFormValue(form: FormGroup, data: any) {
+		if (form && data) {
+			form.setValue(data);
+		}
 	}
 }

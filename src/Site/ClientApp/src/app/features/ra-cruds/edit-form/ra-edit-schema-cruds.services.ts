@@ -8,10 +8,12 @@ import { QueryParams, IEntityBase } from "../ra-cruds.module";
 import { EntityEditSchemaState, IEntityEditSchemaConfigurator, IEntityEditSchemaService } from "./ra-edit-schema-cruds.models";
 import { RaEntityEdit } from "../../../ra-schema/ra-schema-forms.models";
 import { EntityEditSchemaActions, loadEditModelWithQuery } from "./ra-edit-schema-cruds.actions";
+import { EntityFormModel } from "../../../ra-schema/ra-schema.module";
 
 
 export class EntityEditSchemaSelectors<T extends IEntityBase> {
-	gridModel: MemoizedSelector<any, RaEntityEdit>;
+	editModel: MemoizedSelector<any, RaEntityEdit>;
+	layouts: MemoizedSelector<any, string[]>;
 
 	constructor(featureName: string, entitiesName: string) {
 
@@ -19,7 +21,8 @@ export class EntityEditSchemaSelectors<T extends IEntityBase> {
 		const getModuleStateAny = (state: any) => getAppState(state)[entitiesName];
 		const getModuleState = (state: any) => <EntityEditSchemaState>getModuleStateAny(state);
 
-		this.gridModel = createSelector(getModuleState, (i) => i.model);
+		this.editModel = createSelector(getModuleState, (i) => i.model);
+		this.layouts = createSelector(getModuleState, (i) => i.layouts);
 	}
 }
 
@@ -68,10 +71,10 @@ export class EntityEditSchemaConfigurator<T extends IEntityBase> implements IEnt
 	configure(featureName: string, entitiesName: string) {
 		this.entityActions = new EntityEditSchemaActions<T>(entitiesName);
 
-		const initState: EntityEditSchemaState = { model: null };
+		const initState: EntityEditSchemaState = { model: null,layouts:null };
 		this.entityReducer = createReducer(
 			initState,
-			on(this.entityActions.updateGridModel, (state: EntityEditSchemaState, { model }) => ({ ...state, model: model}))
+			on(this.entityActions.updateEditModel, (state: EntityEditSchemaState, { model, layouts }) => ({ ...state, model: model, layouts: layouts}))
 		);
 
 		this.entityEditSchemaSelectors = new EntityEditSchemaSelectors<T>(featureName, entitiesName);
@@ -94,29 +97,40 @@ export class EntityEditSchemaService<T extends IEntityBase> implements IEntityEd
 
 	editModel: Observable<RaEntityEdit>;
 
+	layoutIds: Observable<string[]>;
+
 	constructor(configurator: EntityEditSchemaConfigurator<T>,
 		private store: Store<{}>,
 		private entitiesName: string) {
-		this.editModel = store.pipe(select(configurator.entityEditSchemaSelectors.gridModel));
+		this.editModel = store.pipe(select(configurator.entityEditSchemaSelectors.editModel));
+		this.layoutIds = store.pipe(select(configurator.entityEditSchemaSelectors.layouts));
 		this.entityActions = configurator.entityActions;
 	}
 
 	getWithQuery(queryParams: QueryParams) {
-		this.store.dispatch(loadEditModelWithQuery({ entitiesName: this.entitiesName, queryParams: queryParams }));
+		this.store.dispatch(loadEditModelWithQuery({ entitiesName: this.entitiesName, queryParams: queryParams,force:true }));
+	}
+
+	getIfEmpty() {
+		this.store.dispatch(loadEditModelWithQuery({ entitiesName: this.entitiesName, queryParams: null, force: false }));
+	}
+
+	updateModel(model: RaEntityEdit, layouts: string[]) {
+		this.store.dispatch(this.entityActions.updateEditModel({ model: model, layouts }));
 	}
 }
 
 export interface IEntityEditSchemaApiService {
-	getWithQuery(queryParams: QueryParams): Observable<RaEntityEdit>;
+	getWithQuery(queryParams: QueryParams): Observable<EntityFormModel>;
 }
 
 class EntityEditSchemaApiService implements IEntityEditSchemaApiService {
 
 	constructor(private entitiesName: string, private entitySingleName: string, private httpClient: HttpClient) { }
 
-	getWithQuery(queryParams): Observable<RaEntityEdit> {
+	getWithQuery(queryParams): Observable<EntityFormModel> {
 		const httpParams = RaUtils.toHttpParams(queryParams);
-		return this.httpClient.get<RaEntityEdit>("api/" + this.entitySingleName + "/editSchema",
+		return this.httpClient.get<EntityFormModel>("api/" + this.entitySingleName + "/editSchema",
 			{ params: httpParams });
 	}
 }

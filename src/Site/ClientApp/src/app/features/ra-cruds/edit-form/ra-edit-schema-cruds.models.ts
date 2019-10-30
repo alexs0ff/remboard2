@@ -5,7 +5,8 @@ import { RaEntityEdit } from "../../../ra-schema/ra-schema-forms.models";
 
 
 export interface EntityEditSchemaState {
-	model: RaEntityEdit
+	model: RaEntityEdit,
+	layouts:string[],
 }
 
 export interface IEntityEditSchemaConfigurator<T extends IEntityBase> {
@@ -18,7 +19,10 @@ export interface IEntityEditSchemaConfigurator<T extends IEntityBase> {
 
 export interface IEntityEditSchemaService<T extends IEntityBase> {
 	editModel: Observable<RaEntityEdit>;
+	layoutIds: Observable<string[]>;
 	getWithQuery(queryParams: QueryParams);
+	getIfEmpty();
+	updateModel(model: RaEntityEdit, layouts: string[]);
 }
 
 export interface EntityEditSchemaMetadata {

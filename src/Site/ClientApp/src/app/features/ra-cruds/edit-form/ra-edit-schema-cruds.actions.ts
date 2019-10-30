@@ -7,6 +7,6 @@ export class EntityEditSchemaActions<T extends IEntityBase> {
 	constructor(private entityName: string) {
 	}
 
-	updateGridModel = createAction('[' + this.entityName + ' Edit Schema] update data', props<{ model: RaEntityEdit }>());
+	updateEditModel = createAction('[' + this.entityName + ' Edit Schema] update data', props<{ model: RaEntityEdit,layouts:string[] }>());
 }
-export const loadEditModelWithQuery = createAction('Load edit form schema with query from API', props<{ entitiesName: string, queryParams: QueryParams }>());
+export const loadEditModelWithQuery = createAction('Load edit form schema with query from API', props<{ entitiesName: string, queryParams: QueryParams,force:boolean }>());

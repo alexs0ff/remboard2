@@ -1,33 +1,35 @@
-<div fxLayout="row" fxLayoutAlign="start start">
-  <button mat-icon-button matTooltip="К списку" (click)="goBack()"><mat-icon>arrow_back</mat-icon></button>
-  <div class="entity-title">
-    <h2>{{model.title}}</h2>
-  </div>
-</div>
-<div *ngIf="hasServerError$ | async" class="server-errors">
-	<div  fxLayout="row" fxLayoutAlign="start center">
-		<mat-icon color="warn">report</mat-icon>
-		<span>{{serverMessage | async}}</span>
+<div  *ngIf="editModel$ | async as editModel">
+	<div fxLayout="row" fxLayoutAlign="start start">
+		<button mat-icon-button matTooltip="К списку" (click)="goBack()"><mat-icon>arrow_back</mat-icon></button>
+		<div class="entity-title">
+			<h2>{{editModel.title}}</h2>
+		</div>
 	</div>
-	<mat-list dense>
-		<mat-list-item *ngFor="let item of serverErrors$ | async">
+	<div *ngIf="hasServerError$ | async" class="server-errors">
+		<div  fxLayout="row" fxLayoutAlign="start center">
+			<mat-icon color="warn">report</mat-icon>
+			<span>{{serverMessage | async}}</span>
+		</div>
+		<mat-list dense>
+			<mat-list-item *ngFor="let item of serverErrors$ | async">
 
-			<span><strong *ngIf="item.property">{{item.property}}: </strong> {{item.message}}</span>
-		</mat-list-item>
-	</mat-list>
-</div>
-<ra-form  *ngFor="let layoutName of layouts$ | async" [layout]="model.layouts[layoutName]" [form]="form"></ra-form>
-<div fxLayout="row" fxLayoutAlign="end center" class="manage-controls">
-    <button mat-raised-button matTooltip="Удалить" (click)="deleteItem()" color="warn" *ngIf="!isNewEntity" [class.spinner]="isLoading$ | async" [disabled]="isLoading$ | async"><mat-icon>remove_circle</mat-icon> Удалить</button>
-    <button mat-raised-button matTooltip="Сохранить" (click)="saveItem()" color="primary" [class.spinner]="isLoading$ | async" [disabled]="isLoading$ | async">
-      <mat-icon>save</mat-icon>
-      <ng-template [ngIf]="isNewEntity">
-        Добавить
-      </ng-template>
+				<span><strong *ngIf="item.property">{{item.property}}: </strong> {{item.message}}</span>
+			</mat-list-item>
+		</mat-list>
+	</div>
+	<ra-form  *ngFor="let layoutName of layouts$ | async" [layout]="editModel.layouts[layoutName]" [form]="form"></ra-form>
+	<div fxLayout="row" fxLayoutAlign="end center" class="manage-controls">
+		<button mat-raised-button matTooltip="Удалить" (click)="deleteItem(editModel)" color="warn" *ngIf="!isNewEntity" [class.spinner]="isLoading$ | async" [disabled]="isLoading$ | async"><mat-icon>remove_circle</mat-icon> Удалить</button>
+		<button mat-raised-button matTooltip="Сохранить" (click)="saveItem()" color="primary" [class.spinner]="isLoading$ | async" [disabled]="isLoading$ | async">
+			<mat-icon>save</mat-icon>
+			<ng-template [ngIf]="isNewEntity">
+				Добавить
+			</ng-template>
 
-      <ng-template [ngIf]="!isNewEntity">
-        Сохранить
-      </ng-template>
+			<ng-template [ngIf]="!isNewEntity">
+				Сохранить
+			</ng-template>
 
-    </button>
+		</button>
+	</div>
 </div>

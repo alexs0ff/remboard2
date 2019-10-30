@@ -1,80 +1,91 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using Common.Features.ResourcePoints.Schema;
 
 namespace Orders.Autocomplete
 {
 	public class AutocompleteItemEditSchemaProvider: IEntityEditSchemaProvider<AutocompleteItemDto>
 	{
-		private static readonly EntityEditModel _model = new EntityEditModel
+		private static readonly EntityEditFormModel FormModel = new EntityEditFormModel
 		{
-			EntitiesName = "autocompleteItems",
-			Title = "Пункт автодополнения",
-			RemoveDialog = new RemoveDialogOptions
+			DisplayedLayoutIds = new[] {"mainGroup"},
+			EntityEdit = new EntityEdit
 			{
-				ValueId = "title",
-			},
-
-			Layouts = new Dictionary<string, FormLayout>
-			{
+				EntitiesName = "autocompleteItems",
+				Title = "Пункт автодополнения",
+				RemoveDialog = new RemoveDialogOptions
 				{
-					"MainGroup", new FormLayout
+					ValueId = "title",
+				},
+
+				Layouts = new Dictionary<string, FormLayout>
+				{
 					{
-						Rows = new[]
+						"mainGroup", new FormLayout
 						{
-							new FormLayoutRow
+							Rows = new[]
 							{
-								Content = new FormLayoutControls
+								new FormLayoutRow{Content = new FormLayoutHiddenItems
 								{
-									Items = new[]
+									Items = new []{ "id", "autocompleteKindTitle" }
+								}}, 
+								new FormLayoutRow
+								{
+									Content = new FormLayoutControls
 									{
-										new FormLayoutItem
+										Items = new[]
 										{
-											FlexExpression = FormItemFlexExpression.TwoItemsExpressions,
-											Control = new TextBoxControl
+											new FormLayoutItem
 											{
-												Kind = TextBoxControlKind.Textbox,
-												Id = "title",
-												Label = "Название",
-												Hint = "Название пункта автодополнения",
-												ValueKind = ControlValueKind.String,
-												Validators = new TextBoxControlValidators
+												FlexExpression = FormItemFlexExpression.TwoItemsExpressions,
+												Control = new TextBoxControl
 												{
-													Required = true
+													Kind = TextBoxControlKind.Textbox,
+													Id = "title",
+													Label = "Название",
+													Hint = "Название пункта автодополнения",
+													ValueKind = ControlValueKind.String,
+													Validators = new TextBoxControlValidators
+													{
+														Required = true
+													}
+												},
+
+											},
+											new FormLayoutItem
+											{
+												FlexExpression = FormItemFlexExpression.TwoItemsExpressions,
+												Control = new SelectBoxControl
+												{
+													Kind = SelectBoxControlKind.Selectbox,
+													Id = "autocompleteKindId",
+													ValueKind = ControlValueKind.Number,
+													Label = "Тип автодополнения",
+													Hint = "Тип автодополнения",
+													Validators = new SelectBoxControlValidators
+													{
+														Required = true,
+													},
+													Source = SelectBoxItemsSourceExtensions
+														.SourceFromEnum<AutocompleteKind, AutocompleteKinds>()
 												}
 											},
-											
-										},
-										new FormLayoutItem
-										{
-											FlexExpression = FormItemFlexExpression.TwoItemsExpressions,
-											Control = new SelectBoxControl
-											{
-												Kind = SelectBoxControlKind.Selectbox,
-												Id = "autocompleteKindId",
-												ValueKind = ControlValueKind.Number,
-												Label = "Тип автодополнения",
-												Hint = "Тип автодополнения",
-												Validators = new SelectBoxControlValidators
-												{
-													Required = true,
-												},
-												Source = SelectBoxItemsSourceExtensions.SourceFromEnum<AutocompleteKind,AutocompleteKinds>()
-											}
-										}, 
+										}
 									}
-								}
-							},
+								},
+							}
 						}
 					}
 				}
 			}
 		};
 
-		public EntityEditModel GetModel(EntityEditSchemaProviderContext context)
+		public Task<EntityEditFormModel> GetModelAsync(EntityEditSchemaProviderContext context)
 		{
-			return _model;
+			return Task.FromResult(FormModel);
 		}
 	}
 }

@@ -111,6 +111,11 @@ export interface RaEntityEdit {
 	};
 }
 
+export interface EntityFormModel {
+	displayedLayoutIds: string[];
+	entityEdit: RaEntityEdit;
+}
+
 
 export const flexExpressions = {
 	oneItemExpressions: {

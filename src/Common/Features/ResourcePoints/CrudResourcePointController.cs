@@ -189,7 +189,7 @@ namespace Common.Features.ResourcePoints
 		[HttpGet("/api/[controller]/editSchema")]
 		[ProducesResponseType(StatusCodes.Status403Forbidden)]
 		[ProducesResponseType(StatusCodes.Status200OK)]
-		public async Task<ActionResult<EntityEditModel>> GridSchema([FromServices] IAuthorizationService authorizationService, [FromServices] CrudResourcePointControllerFactory<TEntity, TEntityDto, TFilterableEntity, TKey> controllerFactory)
+		public async Task<ActionResult<EntityEditFormModel>> GridSchema([FromServices] IAuthorizationService authorizationService, [FromServices] CrudResourcePointControllerFactory<TEntity, TEntityDto, TFilterableEntity, TKey> controllerFactory)
 		{
 			var createResult = await authorizationService.AuthorizeAsync(User, typeof(TEntity), CrudOperations.Create);
 			var updateResult = await authorizationService.AuthorizeAsync(User, typeof(TEntity), CrudOperations.Update);
@@ -201,7 +201,7 @@ namespace Common.Features.ResourcePoints
 
 			var schemaProvider = controllerFactory.GetEntityEditSchemaProvider();
 
-			var model = schemaProvider.GetModel(new EntityEditSchemaProviderContext());
+			var model = await schemaProvider.GetModelAsync(new EntityEditSchemaProviderContext());
 			return Ok(model);
 		}
 

@@ -21,7 +21,8 @@ import {
 	flexExpressions,
 	RemoveDialogData,
 	ControlValueType,
-	LayoutGroups
+	LayoutGroups,
+	EntityFormModel
 
 
 
@@ -75,6 +76,7 @@ export {
 	RemoveDialogData,
 	ControlValueType,
 	LayoutGroups,
+	EntityFormModel,
 
 
 	GridContentOptions,

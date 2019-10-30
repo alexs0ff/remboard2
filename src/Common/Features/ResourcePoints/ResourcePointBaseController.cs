@@ -64,7 +64,7 @@ namespace Common.Features.ResourcePoints
 
 			var schemaProvider = controllerFactory.GetEntitySchemaProvider();
 
-			var model = schemaProvider.GetModel(new EntitySchemaProviderContext());
+			var model = await schemaProvider.GetModelAsync(new EntitySchemaProviderContext());
 			return Ok(model);
 		}
 	}

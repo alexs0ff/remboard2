@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Common.Features.ResourcePoints.Filterable.Schema;
 using Common.Features.ResourcePoints.Schema;
 
@@ -28,9 +29,9 @@ namespace Orders.Autocomplete
 			}
 
 		};
-		public ServerDataGridModel GetModel(EntitySchemaProviderContext context)
+		public Task<ServerDataGridModel> GetModelAsync(EntitySchemaProviderContext context)
 		{
-			return _model;
+			return Task.FromResult(_model);
 		}
 	}
 }

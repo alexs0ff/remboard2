@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Common.Features.ResourcePoints.Schema
 {
-	public class EntityEditModel
+	public class EntityEdit
 	{
 		public string EntitiesName { get; set; }
 
