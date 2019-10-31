@@ -32,17 +32,21 @@ namespace Users
 
         protected override IEnumerable<IResourcePointConfigurator> RegisterResourcePoints()
         {
+	        var userIncludeProperties = new[] {"ProjectRole", "UserBranches", "UserBranches.Branch"};
 			yield return new CrudResourcePointConfigurator<User, UserDto, UserDto, Guid>()
 				.AddModifyRoles()
 				.UseValidator<UserDtoValidator>()
-				.UseCrudOperation<EntityContextCrudOperation<User, UserDto, Guid>>()
+				.UseEntityContextCrudOperation<EntityContextCrudOperation<User, UserDto, Guid>>(p =>
+					{
+						p.IncludeProperties = userIncludeProperties;
+					})
 				.SetEntityPluralName("Users")
 				.UseFilterableEntityOperation<EntityContextFilterOperation<
 					User, UserDto, Guid>>(
 					parameters =>
 					{
 						parameters.DirectProject = false;
-						parameters.IncludeProperties = new[] { "ProjectRole", "UserBranches", "UserBranches.Branch" };
+						parameters.IncludeProperties = userIncludeProperties;
 						parameters.AddSortFieldsMapping(nameof(UserDto.ProjectRoleTitle), nameof(User.ProjectRole) + "." + nameof(User.ProjectRole.Name));
 					});
 		}

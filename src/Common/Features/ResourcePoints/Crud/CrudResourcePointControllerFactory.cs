@@ -23,7 +23,7 @@ namespace Common.Features.ResourcePoints.Crud
 
 		public ICrudOperation<TEntity, TEntityDto, TKey> GetCrudOperation()
 		{
-			return (ICrudOperation<TEntity, TEntityDto, TKey>)context.Resolve(_parameters.CrudOperationType);
+			return (ICrudOperation<TEntity, TEntityDto, TKey>)context.Resolve(_parameters.CrudOperationType, new NamedParameter("parameters", _parameters.CrudOperationParameters));
 		}
 
 

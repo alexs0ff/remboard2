@@ -31,6 +31,8 @@ namespace Common.Features.ResourcePoints
 
 		private Type _entityEditSchemaProviderType = null;
 
+		private CrudOperationParameters _crudOperationParameters;
+
 		/// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
 		public CrudResourcePointConfigurator()
 		{
@@ -54,10 +56,24 @@ namespace Common.Features.ResourcePoints
 			return this;
 		}
 
-		public CrudResourcePointConfigurator<TEntity, TEntityDto, TFilterableEntity, TKey> UseCrudOperation<TCrudOperation>()
+		public CrudResourcePointConfigurator<TEntity, TEntityDto, TFilterableEntity, TKey> UseCrudOperation<TCrudOperation, TOperationParameters>(Action<TOperationParameters> cfg)
 			where TCrudOperation : ICrudOperation<TEntity, TEntityDto, TKey>
+			where TOperationParameters : CrudOperationParameters,new()
 		{
+			var parameters = new TOperationParameters();
+			cfg(parameters);
 			_crudOperation = typeof(TCrudOperation);
+			_crudOperationParameters = parameters;
+			return this;
+		}
+
+		public CrudResourcePointConfigurator<TEntity, TEntityDto, TFilterableEntity, TKey> UseEntityContextCrudOperation<TCrudOperation>(Action<EntityContextCrudOperationParameters> cfg)
+			where TCrudOperation : EntityContextCrudOperation<TEntity, TEntityDto, TKey>
+		{
+			var parameters = new EntityContextCrudOperationParameters();
+			cfg(parameters);
+			_crudOperation = typeof(TCrudOperation);
+			_crudOperationParameters = parameters;
 			return this;
 		}
 
@@ -96,7 +112,10 @@ namespace Common.Features.ResourcePoints
 				typeof(TFilterableEntity), typeof(TKey));
 			typedParameters.ControllerType = controllerType;
 			typedParameters.EntityValidatorType = _entityValidator;
+			
 			typedParameters.CrudOperationType = _crudOperation;
+			typedParameters.CrudOperationParameters = _crudOperationParameters;
+
 			typedParameters.EntityEditSchemaProviderType = _entityEditSchemaProviderType;
 			typedParameters.AccessRuleMap = new AccessRuleMap(_readRoles.ToArray(),_modifyRoles.ToArray());
 			typedParameters.EntityCorrectorTypes = _entityCorrectorTypes;

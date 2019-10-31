@@ -14,5 +14,7 @@ namespace Common.Features.ResourcePoints.Crud
 
 
 		public Type EntityEditSchemaProviderType { get; set; }
+
+		public CrudOperationParameters CrudOperationParameters { get; set; }
 	}
 }

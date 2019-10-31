@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -22,13 +23,15 @@ namespace Common.Features.ResourcePoints.Crud
 		private readonly IMapper _mapper;
 		private readonly ILogger<EntityContextCrudOperation<TEntity, TEntityDto, TKey>> _logger;
 		private readonly OnlyTenantEntitiesSpecification<TEntity, TKey> _onlyTenantEntitiesSpecification;
+		private readonly EntityContextCrudOperationParameters _parameters;
 
 		/// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
-		public EntityContextCrudOperation(IMapper mapper,ILogger<EntityContextCrudOperation<TEntity, TEntityDto, TKey>> logger, OnlyTenantEntitiesSpecification<TEntity,TKey> onlyTenantEntitiesSpecification)
+		public EntityContextCrudOperation(IMapper mapper,ILogger<EntityContextCrudOperation<TEntity, TEntityDto, TKey>> logger, OnlyTenantEntitiesSpecification<TEntity,TKey> onlyTenantEntitiesSpecification, EntityContextCrudOperationParameters parameters)
 		{
 			_mapper = mapper;
 			_logger = logger;
 			_onlyTenantEntitiesSpecification = onlyTenantEntitiesSpecification;
+			_parameters = parameters;
 		}
 
 		public async Task<TEntityDto> Get(string id, DbContext context, IResourceMandatoryPredicateFactory<TEntity, TKey> mandatoryPredicateFactory)
@@ -45,7 +48,7 @@ namespace Common.Features.ResourcePoints.Crud
 			return entityDto;
 		}
 
-		protected static async Task<TEntity> GetById(string id, DbContext context,ExpressionStarter<TEntity> predicate)
+		protected async Task<TEntity> GetById(string id, DbContext context,ExpressionStarter<TEntity> predicate)
 		{
 			var idRaw = GetIdRaw(id);
 
@@ -53,7 +56,15 @@ namespace Common.Features.ResourcePoints.Crud
 			
 			predicate.And(getByIdSpec.IsSatisfiedBy());
 
-			var entity = await context.Set<TEntity>().AsExpandable().FirstOrDefaultAsync(predicate);
+			var query = context.Set<TEntity>().AsQueryable();
+
+			foreach (var property in _parameters.IncludeProperties)
+			{
+				query = query.Include(property);
+			}
+
+			var entity = await query.AsExpandable().FirstOrDefaultAsync(predicate);
+
 			return entity;
 		}
 

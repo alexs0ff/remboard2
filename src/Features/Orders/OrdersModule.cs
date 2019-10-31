@@ -60,7 +60,7 @@ namespace Orders
 	        yield return new CrudResourcePointConfigurator<OrderType, OrderTypeDto, OrderTypeDto, Guid>()
 		        .AddModifyRoles()
 		        .UseValidator<OrderTypeDtoValidator>()
-		        .UseCrudOperation<EntityContextCrudOperation<OrderType,OrderTypeDto,Guid>>()
+		        .UseEntityContextCrudOperation<EntityContextCrudOperation<OrderType,OrderTypeDto,Guid>>(p=>{})
 				.SetEntityPluralName("OrderTypes")
 		        .UseFilterableEntityOperation<Common.Features.ResourcePoints.Filterable.EntityContextFilterOperation<
 			        OrderType, OrderTypeDto, Guid>>(
@@ -72,7 +72,7 @@ namespace Orders
 		        .AddModifyRoles()
 		        .UseValidator<AutocompleteItemDtoValidator>()
 		        .UseEntityEditSchemaProvider<AutocompleteItemEditSchemaProvider>()
-		        .UseCrudOperation<EntityContextCrudOperation<AutocompleteItem, AutocompleteItemDto, Guid>>()
+		        .UseEntityContextCrudOperation<EntityContextCrudOperation<AutocompleteItem, AutocompleteItemDto, Guid>>(p => { })
 		        .UseEntitySchemaProvider<AutocompleteItemSchemaProvider>()
 		        .UseFilterableEntityOperation<EntitySqlFilterOperation<AutocompleteItem, AutocompleteItemDto,Guid>>(
 			        parameters =>
@@ -107,7 +107,7 @@ namespace Orders
 	        yield return new CrudResourcePointConfigurator<OrderStatus, OrderStatusDto, OrderStatusDto, Guid>()
 		        .AddModifyRoles()
 		        .UseValidator<OrderStatusDtoValidator>()
-		        .UseCrudOperation<EntityContextCrudOperation<OrderStatus, OrderStatusDto, Guid>>()
+		        .UseEntityContextCrudOperation<EntityContextCrudOperation<OrderStatus, OrderStatusDto, Guid>>(p => { })
 		        .SetEntityPluralName("OrderStatuses")
 		        .UseFilterableEntityOperation<Common.Features.ResourcePoints.Filterable.EntityContextFilterOperation<
 			        OrderStatus, OrderStatusDto, Guid>>(
@@ -119,7 +119,7 @@ namespace Orders
 	        yield return new CrudResourcePointConfigurator<Branch, BranchDto, BranchDto, Guid>()
 		        .AddModifyRoles()
 		        .UseValidator<BranchDtoValidator>()
-		        .UseCrudOperation<EntityContextCrudOperation<Branch, BranchDto, Guid>>()
+		        .UseEntityContextCrudOperation<EntityContextCrudOperation<Branch, BranchDto, Guid>>(p => { })
 		        .SetEntityPluralName("Branches")
 		        .UseFilterableEntityOperation<Common.Features.ResourcePoints.Filterable.EntityContextFilterOperation<
 			        Branch, BranchDto, Guid>>(
