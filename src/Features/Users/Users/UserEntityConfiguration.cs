@@ -25,8 +25,10 @@ namespace Users.Users
             
 
             builder.HasOne(p=>p.ProjectRole).WithMany().HasForeignKey(p=>p.ProjectRoleId).IsRequired();
+            builder.HasMany(p => p.UserBranches).WithOne(b => b.User);
 
-            builder.HasIndex(p => p.LoginName).AddUniqueWithoutDeleted();
+
+			builder.HasIndex(p => p.LoginName).AddUniqueWithoutDeleted();
             builder.HasIndex(p => p.Email).AddUniqueWithoutDeleted();
         }
     }

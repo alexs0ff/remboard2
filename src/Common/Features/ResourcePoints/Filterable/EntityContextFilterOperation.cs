@@ -59,8 +59,7 @@ namespace Common.Features.ResourcePoints.Filterable
 
             var count = await context.Set<TEntity>().AsExpandable().Where(mandatoryPredicate).Where(predicate).LongCountAsync();
 
-            var entityQuery = context.Set<TEntity>().AsExpandable();
-
+            var entityQuery = context.Set<TEntity>().AsQueryable();
 
             if (_parameters.IncludeProperties!=null)
             {
@@ -70,7 +69,7 @@ namespace Common.Features.ResourcePoints.Filterable
 	            }
             }
             
-			var query = entityQuery.Where(mandatoryPredicate).Where(predicate);
+			var query = entityQuery.AsExpandable().Where(mandatoryPredicate).Where(predicate);
 
             if (!string.IsNullOrWhiteSpace(filterParameters.OrderBy))
             {
