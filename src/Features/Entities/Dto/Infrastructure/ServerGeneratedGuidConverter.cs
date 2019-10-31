@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace Common.Features.TypeConverters
+namespace Entities.Dto.Infrastructure
 {
     public class ServerGeneratedGuidConverter: JsonConverter<Guid>
     {

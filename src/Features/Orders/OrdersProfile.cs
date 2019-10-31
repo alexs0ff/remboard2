@@ -4,6 +4,7 @@ using System.Text;
 using AutoMapper;
 using Common.Features;
 using Entities;
+using Entities.Dto;
 using Orders.Autocomplete;
 using Orders.Branches;
 using Orders.OrderStatuses;

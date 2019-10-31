@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Common.Features.ResourcePoints.Schema;
 using Entities;
+using Entities.Dto;
 
 namespace Orders.Autocomplete
 {

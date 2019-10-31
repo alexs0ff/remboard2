@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Common.Features.Binders;
-using Common.Features.TypeConverters;
 using Entities;
-using Microsoft.AspNetCore.Mvc;
+using Entities.Dto.Infrastructure;
 using Newtonsoft.Json;
 
-namespace Orders.Autocomplete
+namespace Entities.Dto
 {
     public class AutocompleteItemDto
     {

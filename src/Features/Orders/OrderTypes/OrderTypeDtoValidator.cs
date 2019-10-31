@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Common.Features;
+using Entities.Dto;
 using FluentValidation;
 
 namespace Orders.OrderTypes

@@ -4,7 +4,6 @@ using System.Linq;
 using Entities;
 using Autofac;
 using Common.Extensions;
-using Entities;
 using Common.Features.BaseEntity;
 using Common.Features.ResourcePoints.Crud;
 using Common.Features.ResourcePoints.Filterable;

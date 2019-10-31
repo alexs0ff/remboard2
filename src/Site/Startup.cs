@@ -13,7 +13,6 @@ using AutoMapper;
 using Common.Data;
 using Common.Extensions;
 using Common.Features;
-using Common.Features.TypeConverters;
 using Common.Features.Users;
 using Common.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Common.Features.TypeConverters;
+using Entities.Dto.Infrastructure;
 using Newtonsoft.Json;
 
-namespace Orders.Branches
+namespace Entities.Dto
 {
 	public class BranchDto
 	{

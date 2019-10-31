@@ -15,6 +15,7 @@
   <ItemGroup>
     <Folder Include="Composers\" />
     <Folder Include="Controlles\" />
+    <Folder Include="Features\TypeConverters\" />
   </ItemGroup>
 
   <ItemGroup>
