@@ -20,6 +20,7 @@ namespace Users
         {
 			modelBuilder.ApplyConfiguration(new UserEntityConfiguration());
 			modelBuilder.ApplyConfiguration(new ProjectRoleConfiguration());
+			modelBuilder.ApplyConfiguration(new UserBranchConfiguration());
 		}
     }
 }

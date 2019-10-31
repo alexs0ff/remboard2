@@ -42,5 +42,10 @@ namespace Entities
         /// Задает или получает Email пользователя.
         /// </summary>
         public string Email { get; set; }
+
+		/// <summary>
+		/// Задает или получает филиалы пользователя.
+		/// </summary>
+        public ICollection<UserBranch> UserBranches { get; set; }
     }
 }

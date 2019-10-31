@@ -24,5 +24,9 @@ namespace Entities
 		/// </summary>
 		public string LegalName { get; set; }
 
+		/// <summary>
+		/// Задает или получает связанных пользователей.
+		/// </summary>
+		public ICollection<UserBranch> UserBranches { get; set; }
 	}
 }
