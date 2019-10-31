@@ -13,6 +13,8 @@ namespace Entities
         /// </summary>
         public ProjectRoles ProjectRoleId { get; set; }
 
+        public ProjectRole ProjectRole { get; set; }
+
         /// <summary>
         /// Задает или получает логин пользователя.
         /// </summary>

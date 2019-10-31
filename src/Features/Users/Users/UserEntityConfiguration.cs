@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Users
+namespace Users.Users
 {
     public class UserEntityConfiguration: BaseEntityGuidKeyConfiguration<User>
     {
@@ -24,7 +24,7 @@ namespace Users
             
             
 
-            builder.HasOne<ProjectRole>().WithMany().HasForeignKey(p=>p.ProjectRoleId).IsRequired();
+            builder.HasOne(p=>p.ProjectRole).WithMany().HasForeignKey(p=>p.ProjectRoleId).IsRequired();
 
             builder.HasIndex(p => p.LoginName).AddUniqueWithoutDeleted();
             builder.HasIndex(p => p.Email).AddUniqueWithoutDeleted();

@@ -46,6 +46,7 @@ RaCrudsModule.prepareReducersMap(configCrudsEntityMetadata, configEntitySchemaMe
 			{ path: 'counter', component: CounterComponent },
 			{ path: 'fetch-data', component: FetchDataComponent },
 			{ path: 'orders', loadChildren: () => import('./features/orders/orders.module').then(m => m.OrdersModule) },
+			{ path: 'users', loadChildren: () => import('./features/users/users.module').then(m => m.UsersModule) },
 		]),
 		UiCommonModule,
 		MenuModule,

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Common.Extensions;
 using Common.Features.BaseEntity;
 using Common.Features.ResourcePoints.Filterable;
 using Common.Features.Tenant;
@@ -74,20 +75,15 @@ namespace Common.Features.ResourcePoints.Crud
 
 			_logger.LogInformation("Start add the new entity {entity} with id {id}", entity, entity.Id);
 
-			foreach (var entityCorrector in correctors)
-			{
-				await entityCorrector.CorrectEntityAsync(entity, entityDto);
-			}
+			correctors.CorrectEntityAsync(entity, entityDto);
+
 
 			context.Set<TEntity>().Add(entity);
 			await context.SaveChangesAsync();
 
 			entityDto = _mapper.Map<TEntityDto>(entity);
 
-			foreach (var entityCorrector in correctors)
-			{
-				await entityCorrector.CorrectEntityDtoAsync(entityDto, entity);
-			}
+			correctors.CorrectEntityDtoAsync(entityDto, entity);
 
 			return entityDto;
 		}
@@ -103,21 +99,15 @@ namespace Common.Features.ResourcePoints.Crud
 
 			_mapper.Map(entityDto, foundEntity);
 
-			foreach (var entityCorrector in correctors)
-			{
-				await entityCorrector.CorrectEntityAsync(foundEntity, entityDto);
-			}
-
+			correctors.CorrectEntityAsync(foundEntity, entityDto);
+			
 
 			context.Set<TEntity>().Update(foundEntity);
 			await context.SaveChangesAsync();
 
 			entityDto = _mapper.Map<TEntityDto>(foundEntity);
-
-			foreach (var entityCorrector in correctors)
-			{
-				await entityCorrector.CorrectEntityDtoAsync(entityDto, foundEntity);
-			}
+	
+			correctors.CorrectEntityDtoAsync(entityDto, foundEntity);
 
 			return entityDto;
 		}

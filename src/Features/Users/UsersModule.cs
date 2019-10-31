@@ -4,8 +4,14 @@ using System.Text;
 using Autofac;
 using Common.Data;
 using Common.Features;
+using Common.Features.ResourcePoints;
+using Common.Features.ResourcePoints.Crud;
+using Common.Features.ResourcePoints.Filterable;
+using Entities;
+using Entities.Dto;
 using Microsoft.EntityFrameworkCore;
 using Users.Api;
+using Users.Users;
 
 namespace Users
 {
@@ -14,13 +20,29 @@ namespace Users
         protected override void RegisterServices(ContainerBuilder builder)
         {
             builder.RegisterType<UserService>().As<IUserService>();
-        }
+            AddMapperProfile<UsersProfile>(builder);
+		}
 
         public void OnContextFeatureCreating(ModelBuilder modelBuilder, RemboardContextParameters contextParameters)
         {
 			modelBuilder.ApplyConfiguration(new UserEntityConfiguration());
 			modelBuilder.ApplyConfiguration(new ProjectRoleConfiguration());
 			modelBuilder.ApplyConfiguration(new UserBranchConfiguration());
+		}
+
+        protected override IEnumerable<IResourcePointConfigurator> RegisterResourcePoints()
+        {
+			yield return new CrudResourcePointConfigurator<User, UserDto, UserDto, Guid>()
+				.AddModifyRoles()
+				.UseValidator<UserDtoValidator>()
+				.UseCrudOperation<EntityContextCrudOperation<User, UserDto, Guid>>()
+				.SetEntityPluralName("Users")
+				.UseFilterableEntityOperation<EntityContextFilterOperation<
+					User, UserDto, Guid>>(
+					parameters =>
+					{
+						parameters.AddSortFieldsMapping(nameof(UserDto.ProjectRoleTitle), nameof(User.ProjectRole) + "." + nameof(User.ProjectRole.Name));
+					});
 		}
     }
 }
