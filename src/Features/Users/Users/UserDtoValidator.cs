@@ -11,6 +11,7 @@ namespace Users.Users
 	{
 		public UserDtoValidator()
 		{
+			RuleFor(u => u.LoginName).NotEmpty();
 			RuleFor(u => u.Email).EmailAddress();
 			RuleFor(u => u.ProjectRoleId).IsInEnum();
 			RuleFor(u => u.FirstName).NotEmpty();

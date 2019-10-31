@@ -5,9 +5,11 @@ import { UserListComponent } from './user/user-list.component';
 import { CrudsEntityMetadata, CrudEntityConfigurator, RaCrudsModule, EntitySchemaConfigurator, EntitySchemaMetadata, EntityEditSchemaMetadata, EntityEditSchemaConfigurator } from "../ra-cruds/ra-cruds.module";
 import { UserEntity } from "./user/user.models";
 import { UiCommonModule } from "../../ui-common/ui-common.module";
+import { UserEditComponent } from "./user/user-edit.component";
 
 const routes: Routes = [
-	{ path: '', component: UserListComponent },
+	{ path: 'user', component: UserListComponent },
+	{ path: 'user/:id', component: UserEditComponent },
 	
 ];
 
@@ -24,7 +26,8 @@ const configEditSchema: EntityEditSchemaMetadata = {
 }
 @NgModule({
 	declarations: [
-		UserListComponent
+		UserListComponent,
+		UserEditComponent
 	],
 	imports: [
 		CommonModule,

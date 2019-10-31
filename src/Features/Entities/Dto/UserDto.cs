@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Entities.Dto.Infrastructure;
+using Newtonsoft.Json;
 
 namespace Entities.Dto
 {
 	public class UserDto
 	{
+		[JsonConverter(typeof(ServerGeneratedGuidConverter))]
 		public Guid Id { get; set; }
 
 		/// <summary>

@@ -5,8 +5,11 @@ import { RaUtils } from "../ra-cruds.utils";
 
 import { EMPTY, of } from 'rxjs';
 import { loadEditModelWithQuery, EntityEditSchemaActions } from "./ra-edit-schema-cruds.actions";
-import { EntityEditSchemaServiceApiFactory, EntityEditSchemaConfiguratorRegistry, IEntityEditSchemaApiService } from "./ra-edit-schema-cruds.services";
-import { EntityEditSchemaServiceFactory, IEntityEditSchemaService } from "../ra-cruds.module";
+import { EntityEditSchemaServiceApiFactory, EntityEditSchemaConfiguratorRegistry, IEntityEditSchemaApiService,
+	EntityEditSchemaServiceFactory
+} from "./ra-edit-schema-cruds.services";
+import { IEntityEditSchemaService } from "./ra-edit-schema-cruds.models";
+
 
 @Injectable()
 export class EntityEditSchemaEffects {

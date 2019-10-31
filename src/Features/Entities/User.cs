@@ -48,6 +48,6 @@ namespace Entities
 		/// <summary>
 		/// Задает или получает филиалы пользователя.
 		/// </summary>
-        public ICollection<UserBranch> UserBranches { get; set; }
+        public List<UserBranch> UserBranches { get; set; }
     }
 }

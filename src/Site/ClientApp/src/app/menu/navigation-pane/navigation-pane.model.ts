@@ -18,7 +18,7 @@ export const navigationPaneItems: NavigationGroup[] = [
     name: "Управление",
     items: [
       { name: "Редактор документов", url: "/СustomizeReport", roles: ['Admin'] },
-		{ name: "Пользователи", url: "users", roles: ['Admin'] },
+		{ name: "Пользователи", url: "users/user", roles: ['Admin'] },
 		  { name: "Филиалы", url: "orders/branch", roles: ['Admin'] },
 		  { name: "Статусы", url: "orders/order-status", roles: ['Admin'] },
 		  { name: "Типы заказов", url: "orders/order-type", roles: ['Admin'] },
