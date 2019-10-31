@@ -41,6 +41,8 @@ namespace Users
 					User, UserDto, Guid>>(
 					parameters =>
 					{
+						parameters.DirectProject = false;
+						parameters.IncludeProperties = new[] { "ProjectRole", "UserBranches", "UserBranches.Branch" };
 						parameters.AddSortFieldsMapping(nameof(UserDto.ProjectRoleTitle), nameof(User.ProjectRole) + "." + nameof(User.ProjectRole.Name));
 					});
 		}

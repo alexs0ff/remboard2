@@ -59,9 +59,19 @@ namespace Common.Features.ResourcePoints.Filterable
 
             var count = await context.Set<TEntity>().AsExpandable().Where(mandatoryPredicate).Where(predicate).LongCountAsync();
 
-            var query = context.Set<TEntity>().AsExpandable().Where(mandatoryPredicate).Where(predicate);
+            var entityQuery = context.Set<TEntity>().AsExpandable();
 
+
+            if (_parameters.IncludeProperties!=null)
+            {
+	            foreach (var includedProperty in _parameters.IncludeProperties)
+	            {
+		            entityQuery = entityQuery.Include(includedProperty);
+	            }
+            }
             
+			var query = entityQuery.Where(mandatoryPredicate).Where(predicate);
+
             if (!string.IsNullOrWhiteSpace(filterParameters.OrderBy))
             {
                 var sortOrder = filterParameters.OrderKind == OrderKind.Asc? ListSortDirection.Ascending: ListSortDirection.Descending;
@@ -83,7 +93,18 @@ namespace Common.Features.ResourcePoints.Filterable
                 query = query.Skip(pageData.skip).Take(pageData.take);
             }
 
-            var entities = await _mapper.ProjectTo<TFilterableEntity>(query).ToArrayAsync();
+            TFilterableEntity[] entities;
+
+            if (_parameters.DirectProject)
+            {
+				entities = await _mapper.ProjectTo<TFilterableEntity>(query).ToArrayAsync();    
+			}
+            else
+            {
+				var queryEntities = await query.ToArrayAsync();
+
+				entities = _mapper.Map<TFilterableEntity[]>(queryEntities);
+			}
 
             return new PagedResult<TFilterableEntity>(count,entities);
         }

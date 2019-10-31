@@ -8,6 +8,10 @@ namespace Common.Features.ResourcePoints.Filterable
     {
         public IDictionary<string, string> SortFieldsMaping { get; } = new Dictionary<string, string>();
 
+        public string[] IncludeProperties { get; set; }
+
+        public bool DirectProject { get; set; } = true;
+
         public EntityContextFilterOperationParameters AddSortFieldsMapping(string fromColumn, string toColumn)
         {
             SortFieldsMaping.Add(fromColumn.ToLower(),toColumn);
