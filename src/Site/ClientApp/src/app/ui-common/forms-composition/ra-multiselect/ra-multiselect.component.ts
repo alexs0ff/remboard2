@@ -18,22 +18,20 @@ import { FormErrorService } from "../form-error-service";
 	selector: 'ra-multiselect',
 	template: `
 <div [formGroup]="form">
-<input type="hidden" name="{{model.id}}" [formControlName]="model.id"/>
   <mat-form-field class="ra-mat-field">
+	<input type="hidden" name="{{model.id}}" [formControlName]="model.id"/>
     <mat-label>{{model.label}}</mat-label>
-	<mat-chip-list #chipList [attr.aria-label]="model.label" *ngIf="form.get(model.id).valueChanges | async as chipItems">
+	<mat-chip-list #chipList [attr.aria-label]="model.label">
 		<mat-chip
-			*ngFor="let sm of chipItems"
+			*ngFor="let sm of form.get(model.id).valueChanges | async"
 			[selectable]="true"
 			[removable]="true"
 			(removed)="remove(sm)">
 			{{displayFn(sm)}}
 			<mat-icon matChipRemove>cancel</mat-icon>
 		</mat-chip>
-		<input
+		<input			
 			placeholder="{{model.label}}"
-			matInput
-			#fruitInput
 			[formControl]="searchItemsCtrl"
 			[matAutocomplete]="auto"
 			[matChipInputFor]="chipList"
