@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatToolbarModule, MatIconModule, MatSidenavModule, MatListModule, MatButtonModule } from '@angular/material';
+import { MatToolbarModule, MatIconModule, MatSidenavModule, MatListModule, MatButtonModule, MatChipsModule} from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { MatInputModule } from '@angular/material/input';
@@ -36,28 +36,29 @@ import { RaMultiselectComponent } from "./forms-composition/ra-multiselect/ra-mu
 
 
 const commonUi = [
-  MatToolbarModule,
-  MatIconModule,
-  MatSidenavModule,
-  MatSortModule,
-  MatListModule,
-  MatButtonModule,
-  FlexLayoutModule,
-  CdkAccordionModule,
-  MatInputModule,
-  ReactiveFormsModule,
-  MatDialogModule,
-  MatCardModule,
-  MatProgressSpinnerModule,
-  MatSnackBarModule,
-  MatExpansionModule,
-  MatTableModule,
-  CommonModule,
-  MatPaginatorModule,
-  MatDividerModule,
-  MatTooltipModule,
-  MatAutocompleteModule,
-  MatSelectModule
+	MatToolbarModule,
+	MatIconModule,
+	MatSidenavModule,
+	MatSortModule,
+	MatListModule,
+	MatButtonModule,
+	FlexLayoutModule,
+	CdkAccordionModule,
+	MatInputModule,
+	ReactiveFormsModule,
+	MatDialogModule,
+	MatCardModule,
+	MatProgressSpinnerModule,
+	MatSnackBarModule,
+	MatExpansionModule,
+	MatTableModule,
+	CommonModule,
+	MatPaginatorModule,
+	MatDividerModule,
+	MatTooltipModule,
+	MatAutocompleteModule,
+	MatSelectModule,
+	MatChipsModule
 ];
 
 const commonUiImport = [...commonUi];

@@ -7,19 +7,19 @@ import { MatChipInputEvent } from '@angular/material';
 import { FormControl } from '@angular/forms';
 import { RaMultiselect, RaMultiselectRemoteSource, RaMultiselectSources } from "../../../ra-schema/ra-schema.module";
 import { EntityServiceApiFactory, QueryParams, QueryParamsConfigurator, PagedResult } from "../../../features/ra-cruds/ra-cruds.module";
-import { FormErrorService } from "../../ui-common.module";
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { HttpClient } from '@angular/common/http';
 import { RaUtils } from "../../../features/ra-cruds/ra-cruds.utils";
 import { HttpParams } from "@angular/common/http/http";
+import { FormErrorService } from "../form-error-service";
 
 
 @Component({
 	selector: 'ra-multiselect',
 	template: `
 <div [formGroup]="form">
+<input type="hidden" name="{{model.id}}" [formControlName]="model.id"/>
   <mat-form-field class="ra-mat-field">
-	<input type="hidden" name="{{model.id}}" [formControlName]="model.id"/>
     <mat-label>{{model.label}}</mat-label>
 	<mat-chip-list #chipList [attr.aria-label]="model.label" *ngIf="form.get(model.id).valueChanges | async as chipItems">
 		<mat-chip
@@ -31,7 +31,8 @@ import { HttpParams } from "@angular/common/http/http";
 			<mat-icon matChipRemove>cancel</mat-icon>
 		</mat-chip>
 		<input
-			placeholder="Select movie"
+			placeholder="{{model.label}}"
+			matInput
 			#fruitInput
 			[formControl]="searchItemsCtrl"
 			[matAutocomplete]="auto"
@@ -41,7 +42,8 @@ import { HttpParams } from "@angular/common/http/http";
 			(matChipInputTokenEnd)="add($event)">
 	</mat-chip-list>
 	<mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="selectItem($event)">
-		<ng-container>
+		<mat-option *ngIf="isLoading">Loading...</mat-option>
+		<ng-container *ngIf="!isLoading">
 			<mat-option *ngFor="let item of filteredItems | async" [value]="item">
 				{{displayFn(item)}}
 			</mat-option>
@@ -57,7 +59,6 @@ import { HttpParams } from "@angular/common/http/http";
   `,
 })
 export class RaMultiselectComponent implements OnInit{
-
 	@Input() model: RaMultiselect;
 
 	@Input()
@@ -66,6 +67,7 @@ export class RaMultiselectComponent implements OnInit{
 	filteredItems: Observable<any[]>;
 
 	searchItemsCtrl = new FormControl();
+	isLoading = false;
 
 	constructor(public formErrorService: FormErrorService, private http: HttpClient) { }
 

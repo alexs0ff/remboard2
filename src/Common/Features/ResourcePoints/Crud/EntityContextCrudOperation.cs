@@ -58,10 +58,14 @@ namespace Common.Features.ResourcePoints.Crud
 
 			var query = context.Set<TEntity>().AsQueryable();
 
-			foreach (var property in _parameters.IncludeProperties)
+			if (_parameters.IncludeProperties != null)
 			{
-				query = query.Include(property);
+				foreach (var property in _parameters.IncludeProperties)
+				{
+					query = query.Include(property);
+				}
 			}
+
 
 			var entity = await query.AsExpandable().FirstOrDefaultAsync(predicate);
 
