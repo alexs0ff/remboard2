@@ -22,7 +22,10 @@ import {
 	RemoveDialogData,
 	ControlValueType,
 	LayoutGroups,
-	EntityFormModel
+	EntityFormModel,
+	RaMultiselect,
+	RaMultiselectSources,
+	RaMultiselectRemoteSource
 
 
 
@@ -77,6 +80,9 @@ export {
 	ControlValueType,
 	LayoutGroups,
 	EntityFormModel,
+	RaMultiselect,
+	RaMultiselectSources,
+	RaMultiselectRemoteSource,
 
 
 	GridContentOptions,

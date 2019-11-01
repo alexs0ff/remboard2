@@ -114,6 +114,7 @@ namespace Common.Features.ResourcePoints.Crud
 			
 
 			context.Set<TEntity>().Update(foundEntity);
+			//TODO: virtual method beforePutSaveChanges.
 			await context.SaveChangesAsync();
 
 			entityDto = _mapper.Map<TEntityDto>(foundEntity);

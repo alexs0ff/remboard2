@@ -21,7 +21,7 @@ export interface RaTextBox {
 
 export interface RaSelectBoxRemoteSource {
 	kind: 'remote',
-	entitiesName: string;
+	url: string;
 	displayColumns: string[];
 	keyColumn: string;
 	clientFilter: boolean;
@@ -57,7 +57,29 @@ export interface RaAutocompleteBox {
 	hint?: string | null;
 }
 
-export type RaControls = RaTextBox | RaSelectBox | RaAutocompleteBox;
+export interface RaMultiselectRemoteSource {
+	kind: 'remote',
+	url: string,
+	filterColumns: string[];
+	remoteMapping?: {
+		[key:string]:string
+	},
+	maxItems?: number;
+}
+
+export type RaMultiselectSources = RaMultiselectRemoteSource;
+
+export interface RaMultiselect {
+	kind: 'multiselect';
+	id: string;
+	label: string;
+	displayColumns: string[];
+	validators: { required: boolean };
+	source: RaMultiselectSources;
+	hint?: string | null;
+}
+
+export type RaControls = RaTextBox | RaSelectBox | RaAutocompleteBox | RaMultiselect;
 
 export interface RaFormItemFlexExpression {
 	fxFlexCommonExpression: string;

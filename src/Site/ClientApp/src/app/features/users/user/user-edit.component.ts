@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RaEntityEdit, flexExpressions } from "../../../ra-schema/ra-schema.module";
+import { RaEntityEdit, flexExpressions, RaMultiselect } from "../../../ra-schema/ra-schema.module";
 import { EntityEditSchemaServiceFactory } from "../../ra-cruds/ra-cruds.module";
 
 @Component({
@@ -11,6 +11,7 @@ import { EntityEditSchemaServiceFactory } from "../../ra-cruds/ra-cruds.module";
 export class UserEditComponent implements OnInit {
 	
 	constructor(entityEditSchemaServiceFactory: EntityEditSchemaServiceFactory) {
+
 		const model: RaEntityEdit = {
 			entitiesName: "users",
 			title: "Пользователи",
@@ -18,7 +19,7 @@ export class UserEditComponent implements OnInit {
 			layouts: {
 				"mainGroup": {
 					rows: [
-						{ content: { kind: 'hidden', items: ['id', 'projectRoleTitle','branches'] } },
+						{ content: { kind: 'hidden', items: ['id', 'projectRoleTitle'] } },
 						{
 							content: {
 								kind: 'controls',
@@ -119,7 +120,30 @@ export class UserEditComponent implements OnInit {
 												required: true
 											}
 										}
+									},
+									{
+										flexExpression: flexExpressions.oneItemExpressions,
+										control: {
+											id: 'branches',
+											kind: 'multiselect',
+											label: 'Филиалы',
+											hint: 'Филиалы пользователя',
+											displayColumns: ['branchTitle'],
+											validators: {
+												required: false,
+											},
+											source: {
+												kind: 'remote',
+												url: 'api/branches',
+												filterColumns: ['title'],
+												remoteMapping: {
+													'id': 'branchId',
+													'title': 'branchTitle',
+												},
+											}
+										}
 									}
+									
 								]
 							}
 						}

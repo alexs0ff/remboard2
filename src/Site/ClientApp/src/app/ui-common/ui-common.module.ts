@@ -32,6 +32,7 @@ import { RaTextareaComponent } from "./forms-composition/ra-textarea/ra-textarea
 import { RaGridFilterComponent } from './list-composition/ra-grid-filter/ra-grid-filter.component';
 import { FilterData, FilterStatement } from "./ra-filter.models";
 import { GridModelComposer } from "./list-composition/ra-serverdata-grid/ra-serverdata-grid.services";
+import { RaMultiselectComponent } from "./forms-composition/ra-multiselect/ra-multiselect.component";
 
 
 const commonUi = [
@@ -68,6 +69,7 @@ const commonUiExport = [...commonUi, RaServerdataGridComponent, RaFormComponent,
 		RaFormComponent,
 		RaControlComponent,
 		RaTextareaComponent,
+		RaMultiselectComponent,
 		RaAutocompleteboxComponent,
 		RaSelectboxComponent,
 		RaTextboxComponent,

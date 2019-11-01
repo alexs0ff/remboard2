@@ -10,6 +10,9 @@ import { EntityServiceApiFactory, QueryParams, QueryParamsConfigurator } from ".
 import { PagedResult } from "../../../features/ra-cruds/ra-cruds.models";
 import { FormErrorService } from "../form-error-service";
 import { RaSelectBox, RaSelectBoxRemoteSource, RaSelectBoxSources, RaSelectBoxItemsSource } from "../../../ra-schema/ra-schema.module";
+import { HttpClient } from '@angular/common/http';
+import { HttpParams } from "@angular/common/http/http";
+import { RaUtils } from "../../../features/ra-cruds/ra-cruds.utils";
 
 @Component({
   selector: 'ra-selectbox',
@@ -50,8 +53,7 @@ import { RaSelectBox, RaSelectBoxRemoteSource, RaSelectBoxSources, RaSelectBoxIt
 })
 export class RaSelectboxComponent implements OnInit, OnDestroy {
 
-  private lifeTimeObject: Subject<boolean> = new Subject<boolean>();
-
+  
   @Input() model: RaSelectBox;
   searchControl = new FormControl();
 
@@ -61,7 +63,7 @@ export class RaSelectboxComponent implements OnInit, OnDestroy {
 
   filteredOptions: Observable<KeyValue<string>[]>;
 
-	constructor(private entityServiceApiFactory: EntityServiceApiFactory, public formErrorService: FormErrorService) {
+	constructor(private http: HttpClient, public formErrorService: FormErrorService) {
     
   }
 
@@ -74,16 +76,15 @@ export class RaSelectboxComponent implements OnInit, OnDestroy {
           startWith(''),
           map(value => this.filter(value))
         );
-    } else if (this.isRemoteSource(this.model.source)) {
-      const entitiesService = this.entityServiceApiFactory.getApiService(this.model.source.entitiesName);
+    } else if (this.isRemoteSource(this.model.source)) {;
       const source: RaSelectBoxRemoteSource = <RaSelectBoxRemoteSource>this.model.source;
       this.filteredOptions = this.searchControl.valueChanges
         .pipe(
           startWith(''),
           debounceTime(200),
           distinctUntilChanged(),
-          map((value: string) => this.mapToQuery(value, source)),
-          switchMap(query => entitiesService.getWithQuery(query)),
+          map((value: string) => this.mapToHttpParams(value, source)),
+			switchMap(query => this.http.get<PagedResult>(source.url, { params: query })),
           map(result=>this.pagedResultToKeyValues(result,source))
         );
     }
@@ -92,33 +93,34 @@ export class RaSelectboxComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.lifeTimeObject.next(true);
-    this.lifeTimeObject.complete();
+   
   }
 
-  private mapToQuery(searchText, source: RaSelectBoxRemoteSource): QueryParams {
+private mapToHttpParams(searchText, source: RaSelectBoxRemoteSource): HttpParams {
 
-    if (source.clientFilter) {
-      return null;
-    }
+	if (source.clientFilter) {
+		return null;
+	}
 
-    const queryConfigurator = new QueryParamsConfigurator();
-    queryConfigurator.setPageSize(source.maxItems || 50);
-    queryConfigurator.setCurrentPage(1);
+	const queryConfigurator = new QueryParamsConfigurator();
+	queryConfigurator.setPageSize(source.maxItems || 50);
+	queryConfigurator.setCurrentPage(1);
 
-    source.displayColumns.forEach(column => {
-      queryConfigurator.orContains(column, searchText);
-    });
+	source.displayColumns.forEach(column => {
+		queryConfigurator.orContains(column, searchText);
+	});
 
-    const idValue = this.form.controls[source.keyColumn].value;
-    if (idValue) {
-      queryConfigurator.orEquals(source.keyColumn, idValue);
-    }
+	const idValue = this.form.controls[source.keyColumn].value;
+	if (idValue) {
+		queryConfigurator.orEquals(source.keyColumn, idValue);
+	}
 
-    return queryConfigurator.toQueryParams();
-  }
+	const queryParams = queryConfigurator.toQueryParams();
 
-  private pagedResultToKeyValues(pagedResult: PagedResult, source: RaSelectBoxRemoteSource): KeyValue<string>[] {
+	return RaUtils.toHttpParams(queryParams);
+}
+
+private pagedResultToKeyValues(pagedResult: PagedResult, source: RaSelectBoxRemoteSource): KeyValue<string>[] {
     let array = new Array<KeyValue<string>>();
     if (pagedResult.entities && pagedResult.entities.length) {
       
