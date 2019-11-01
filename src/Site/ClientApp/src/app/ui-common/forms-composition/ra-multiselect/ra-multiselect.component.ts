@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, ViewChild, ElementRef} from '@angular/core';
 import { FormGroup } from "@angular/forms";
 import { Observable, Subject } from 'rxjs';
 import { map, startWith, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
@@ -12,6 +12,7 @@ import { HttpClient } from '@angular/common/http';
 import { RaUtils } from "../../../features/ra-cruds/ra-cruds.utils";
 import { HttpParams } from "@angular/common/http/http";
 import { FormErrorService } from "../form-error-service";
+import { HiddenErrorStateMatcher } from "../forms-composition-service";
 
 
 @Component({
@@ -19,7 +20,7 @@ import { FormErrorService } from "../form-error-service";
 	template: `
 <div [formGroup]="form">
   <mat-form-field class="ra-mat-field">
-	<input type="hidden" name="{{model.id}}" [formControlName]="model.id"/>
+	<input matInput class="invisible" name="{{model.id}}" [formControlName]="model.id" [errorStateMatcher]="matcher"/>
     <mat-label>{{model.label}}</mat-label>
 	<mat-chip-list #chipList [attr.aria-label]="model.label">
 		<mat-chip
@@ -30,8 +31,7 @@ import { FormErrorService } from "../form-error-service";
 			{{displayFn(sm)}}
 			<mat-icon matChipRemove>cancel</mat-icon>
 		</mat-chip>
-		<input			
-			placeholder="{{model.label}}"
+		<input	#filterInput placeholder="{{model.label}}"
 			[formControl]="searchItemsCtrl"
 			[matAutocomplete]="auto"
 			[matChipInputFor]="chipList"
@@ -55,6 +55,14 @@ import { FormErrorService } from "../form-error-service";
 </mat-form-field>
 </div>
   `,
+	styles: [`
+.invisible{
+	display: block;
+	visibility: hidden;
+	height: 0;
+	width: 0;
+}
+`]
 })
 export class RaMultiselectComponent implements OnInit{
 	@Input() model: RaMultiselect;
@@ -62,10 +70,15 @@ export class RaMultiselectComponent implements OnInit{
 	@Input()
 	form: FormGroup;
 
+	@ViewChild('filterInput', {static:false})
+	filterInput: ElementRef;
+
 	filteredItems: Observable<any[]>;
 
 	searchItemsCtrl = new FormControl();
 	isLoading = false;
+
+	matcher: HiddenErrorStateMatcher = new HiddenErrorStateMatcher();
 
 	constructor(public formErrorService: FormErrorService, private http: HttpClient) { }
 
@@ -90,7 +103,7 @@ export class RaMultiselectComponent implements OnInit{
 
 		// Reset the input value
 		if (input) {
-			input.value = '';
+			this.filterInput.nativeElement.value = '';
 		}
 	}
 
@@ -100,6 +113,10 @@ export class RaMultiselectComponent implements OnInit{
 		}
 
 		let result: string = "";
+
+		if (!this.model) {
+			return "WRONG STATE";
+		}
 
 		for (let i = 0; i < this.model.displayColumns.length; i++) {
 			if (i) {
@@ -116,16 +133,26 @@ export class RaMultiselectComponent implements OnInit{
 		const index = items.indexOf(item);
 
 		if (index >= 0) {
+			this.setCurrentSelectedItems(items);
+			items = items.slice();
 			items.splice(index, 1);
+			this.setCurrentSelectedItems(items);
 		}
 	}
 
 	selectItem(event: MatAutocompleteSelectedEvent) {
 		let items = this.getCurrentSelectedItems();
-
+		
 		if (items) {
-			items.push(event.option.value);
+			items = items.slice();
+		} else {
+			items = [];
 		}
+
+		items.push(event.option.value);
+
+		this.setCurrentSelectedItems(items);
+		this.filterInput.nativeElement.value = '';
 	}
 
 	isRemoteSource(source: RaMultiselectSources): source is RaMultiselectRemoteSource {
@@ -136,6 +163,10 @@ export class RaMultiselectComponent implements OnInit{
 		let value: any[] = this.form.get(this.model.id).value;
 
 		return value;
+	}
+
+	private setCurrentSelectedItems(newItems: any[]){
+		this.form.get(this.model.id).setValue(newItems);
 	}
 
 	private mapToHttpParams(searchText, source: RaMultiselectRemoteSource): HttpParams {

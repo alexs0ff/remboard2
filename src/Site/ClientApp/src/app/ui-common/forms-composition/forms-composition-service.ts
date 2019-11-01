@@ -6,6 +6,7 @@ import { RaControls, RaFormLayout, RaFormLayoutRowContent, RaFormLayoutItems, Ra
 	LayoutGroups,
 	RaMultiselect
 } from "../../ra-schema/ra-schema.module";
+import { notEmptyArrayValidator } from "../custom.validators";
 
 
 @Injectable()
@@ -57,7 +58,7 @@ export class FormsCompositionService {
 
 		if (this.isRaMultiselect(raControl)) {
 			validators = Array<ValidatorFn>();
-			//TODO: add required validator
+			validators.push(notEmptyArrayValidator());
 			value = [];
 		}
 
@@ -90,6 +91,14 @@ export class RedirectedErrorStateMatcher implements ErrorStateMatcher {
     const isSubmitted = form && form.submitted;
     return !!(this.parentControl && this.parentControl.invalid && (control.dirty || control.touched || isSubmitted));
   }
+}
+
+export class HiddenErrorStateMatcher implements ErrorStateMatcher {
+	isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+		const isSubmitted = form && form.submitted;
+		const state = !!(control && control.invalid);
+		return state;
+	}
 }
 
 export class TypedItemsUtils {
