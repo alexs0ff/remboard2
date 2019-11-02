@@ -1,4 +1,5 @@
-import { Component, OnInit, Input, OnDestroy, ViewChild, ElementRef} from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { MatAutocompleteTrigger } from '@angular/material';
 import { FormGroup } from "@angular/forms";
 import { Observable, Subject } from 'rxjs';
 import { map, startWith, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
@@ -32,6 +33,7 @@ import { HiddenErrorStateMatcher } from "../forms-composition-service";
 			<mat-icon matChipRemove>cancel</mat-icon>
 		</mat-chip>
 		<input	#filterInput placeholder="{{model.label}}"
+			(focus)="onFilterFocus()"
 			[formControl]="searchItemsCtrl"
 			[matAutocomplete]="auto"
 			[matChipInputFor]="chipList"
@@ -73,14 +75,19 @@ export class RaMultiselectComponent implements OnInit{
 	@ViewChild('filterInput', {static:false})
 	filterInput: ElementRef;
 
+	@ViewChild('filterInput', { static: false, read: MatAutocompleteTrigger }) autoCompleteTrigger: MatAutocompleteTrigger;
+	
+
 	filteredItems: Observable<any[]>;
 
 	searchItemsCtrl = new FormControl();
 	isLoading = false;
 
-	matcher: HiddenErrorStateMatcher = new HiddenErrorStateMatcher();
+	matcher: HiddenErrorStateMatcher;
 
-	constructor(public formErrorService: FormErrorService, private http: HttpClient) { }
+	constructor(public formErrorService: FormErrorService, private http: HttpClient) {
+		this.matcher = new HiddenErrorStateMatcher(this.searchItemsCtrl);
+	}
 
 	ngOnInit(): void {
 		if (this.isRemoteSource(this.model.source)) {
@@ -126,6 +133,11 @@ export class RaMultiselectComponent implements OnInit{
 		}
 
 		return result;
+	}
+
+	onFilterFocus() {
+		this.autoCompleteTrigger._onChange('');
+		this.autoCompleteTrigger.openPanel();
 	}
 
 	remove(item: any): void {

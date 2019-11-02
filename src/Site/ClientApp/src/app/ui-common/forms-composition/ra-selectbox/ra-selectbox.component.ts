@@ -5,7 +5,7 @@ import { map, startWith, takeUntil, debounceTime, distinctUntilChanged, switchMa
 import { KeyValue } from "../../../app.models";
 import { FormControl } from '@angular/forms';
 import { DictionaryUtils } from "../../../app.utils";
-import { RedirectedErrorStateMatcher, TypedItemsUtils } from "../forms-composition-service";
+import { TypedItemsUtils } from "../forms-composition-service";
 import { EntityServiceApiFactory, QueryParams, QueryParamsConfigurator } from "../../../features/ra-cruds/ra-cruds.module";
 import { PagedResult } from "../../../features/ra-cruds/ra-cruds.models";
 import { FormErrorService } from "../form-error-service";

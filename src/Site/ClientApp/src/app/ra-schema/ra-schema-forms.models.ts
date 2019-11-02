@@ -4,6 +4,7 @@ export type ControlValueType = 'number' | 'string';
 
 export interface RaValidators {
 	required: boolean;
+	email?: boolean | null;
 	maxLength?: number | null;
 	minLength?: number | null;
 }

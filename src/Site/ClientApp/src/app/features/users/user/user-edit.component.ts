@@ -117,7 +117,8 @@ export class UserEditComponent implements OnInit {
 											hint: "Эл почта пользователя",
 											valueKind: 'string',
 											validators: {
-												required: true
+												required: true,
+												email:true
 											}
 										}
 									},

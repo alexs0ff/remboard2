@@ -132,7 +132,7 @@ export class CrudEntityConfigurator<T extends IEntityBase> implements ICrudEntit
         return { ...state, loading:true,error:null,hasError:false };
       }),
       on(this.entityActions.setApiError, (state: IState<T>, { error }) => {
-        return { ...state, hasError:true,error:error };
+		  return { ...state, hasError: true, error: error, loading: false };
       }),
     );
 
@@ -243,6 +243,10 @@ export class EntityService<T extends IEntityBase> implements IEntityService<T> {
 	delete(id: string) {
 		this.store.dispatch(this.entityActions.startApiFetch());
 		this.store.dispatch(deleteEntity({ entitiesName: this.entitiesName, id: id }));
+	}
+
+	directUpdateCurrentEntity(entity: T) {
+		this.entityActions.upsertEntityAndSetCurrentId({ entity: entity });
 	}
 }
 

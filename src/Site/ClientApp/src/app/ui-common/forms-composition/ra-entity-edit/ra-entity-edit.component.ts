@@ -14,6 +14,8 @@ import { FormErrorService } from "../../ui-common.module";
 import { EntityCorrelationIds } from "../../../features/ra-cruds/ra-cruds.models";
 import { RaEntityEdit, RaFormLayout, RemoveDialogData } from "../../../ra-schema/ra-schema.module";
 
+const newEntityId:string = 'newEntity';
+
 @Component({
 	selector: 'ra-entity-edit',
 	templateUrl: './ra-entity-edit.component.html',
@@ -51,6 +53,8 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 
 	private lastAddedEntityCorrelationId: string;
 
+	
+
 	constructor(private location: Location,
 		private route: ActivatedRoute,
 		private router: Router,
@@ -64,7 +68,6 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 		this.entityService = this.entityServiceFactory.getService(this.entitiesName);
 		this.entityEditSchemaService = this.entityEditSchemaServiceFactory.getService(this.entitiesName);
-		this.entityEditSchemaService.getIfEmpty();
 
 		this.layouts$ = this.entityEditSchemaService.layoutIds.pipe(filter(l=>l!=null));
 
@@ -81,9 +84,9 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 		editModel$.pipe(
 			filter(i => i != null),
 			withLatestFrom(currentEntity$))
-			.subscribe(m => {
-				this.form = this.compositionService.toFormGroup(m[0].layouts);
-				this.updateFormValue(this.form,m[1]);
+			.subscribe(([model,entity]) => {
+				this.form = this.compositionService.toFormGroup(model.layouts);
+				this.updateFormValue(this.form, entity, model);
 		});
 
 		this.hasServerError$ = this.entityService.hasError;
@@ -91,8 +94,8 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 		this.serverErrors$ = this.entityService.errorResponse.pipe(map(r => r.validationErrors));
 		this.serverMessage$ = this.entityService.errorResponse.pipe(map(r => r.message));
 		
-		currentEntity$.pipe(filter(e => e != null)).subscribe(e => {
-			this.updateFormValue(this.form, e);
+		currentEntity$.pipe(filter(e => e != null), withLatestFrom(editModel$)).subscribe(([entity,model]) => {
+			this.updateFormValue(this.form, entity,model);
 		});
 
 		this.entityService.lastRemovedIds.pipe(takeUntil(this.lifeTimeObject)).subscribe(removedIds => {
@@ -137,11 +140,13 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 			if (currentId.toLowerCase() === 'new') {
 				this.isNewEntity = true;
 				this.form.reset();
+				this.entityService.directUpdateCurrentEntity({ id: newEntityId});
 			} else {
 				this.entityService.getById(currentId);
 				this.currentId = currentId;
 				this.isNewEntity = false;
 			}
+			this.entityEditSchemaService.getIfEmpty();
 		});
 
 	}
@@ -185,9 +190,13 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	private updateFormValue(form: FormGroup, data: any) {
-		if (form && data) {
+	private updateFormValue(form: FormGroup, data: any,raEntityEdit:RaEntityEdit) {
+		if (form && data && raEntityEdit) {
+			if (data.id === newEntityId) {
+				data = this.compositionService.createDefaultObject(raEntityEdit.layouts);
+			}
 			form.setValue(data);
 		}
 	}
+	
 }

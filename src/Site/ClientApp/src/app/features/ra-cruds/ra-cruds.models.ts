@@ -43,22 +43,23 @@ export interface QueryParams {
 }
 
 export interface IEntityService<T extends IEntityBase> {
-  entities: Observable<T[]>;
-  totalLength: Observable<number>;
-  currentEntity: Observable<T>;
-  isLoading: Observable<boolean>;
-  hasError: Observable<boolean>;
-  errorResponse: Observable<EntityResponse>;
+	entities: Observable<T[]>;
+	totalLength: Observable<number>;
+	currentEntity: Observable<T>;
+	isLoading: Observable<boolean>;
+	hasError: Observable<boolean>;
+	errorResponse: Observable<EntityResponse>;
 	lastRemovedIds: Observable<string[] | null>;
 	lastAddedIds: Observable<EntityCorrelationIds[] | null>;
 
-  getAll();
-  getById(id: string);
-  getWithQuery(queryParams: QueryParams);
-  addMany(entities: T[]);
-  add(entity: T):string;
-  update(entity: T);
-  delete(id: string);
+	getAll();
+	getById(id: string);
+	getWithQuery(queryParams: QueryParams);
+	addMany(entities: T[]);
+	add(entity: T): string;
+	update(entity: T);
+	delete(id: string);
+	directUpdateCurrentEntity(entity: T);
 }
 
 export interface ICrudEntityConfigurator<T extends IEntityBase> {
