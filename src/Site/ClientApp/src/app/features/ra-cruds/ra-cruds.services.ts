@@ -246,7 +246,7 @@ export class EntityService<T extends IEntityBase> implements IEntityService<T> {
 	}
 
 	directUpdateCurrentEntity(entity: T) {
-		this.entityActions.upsertEntityAndSetCurrentId({ entity: entity });
+		this.store.dispatch(this.entityActions.upsertEntityAndSetCurrentId({ entity: entity }));
 	}
 }
 

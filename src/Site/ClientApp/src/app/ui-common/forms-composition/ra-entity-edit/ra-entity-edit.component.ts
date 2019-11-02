@@ -71,33 +71,59 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 		this.entityService = this.entityServiceFactory.getService(this.entitiesName);
 		this.entityEditSchemaService = this.entityEditSchemaServiceFactory.getService(this.entitiesName);
 
-		this.layouts$ = this.entityEditSchemaService.layoutIds.pipe(filter(l=>l!=null));
-
-		const editModel$ = this.entityEditSchemaService.editModel.pipe(
-			takeUntil(this.lifeTimeObject)
-		);
-		
-		this.editModel$ = editModel$;
-		
-		editModel$.pipe(
-			filter(i => i != null))
-			.subscribe((model) => {
-				this.form = this.compositionService.toFormGroup(model.layouts);
-
-				if (this.currentId === newEntityId) {
-					const data = this.compositionService.createDefaultObject(model.layouts);
-					const entity = { ...data, id: newEntityId };
-					this.entityService.directUpdateCurrentEntity(entity);
-				} else {
-					this.entityService.getById(this.currentId);
-				}
-		});
-
+		this.layouts$ = this.entityEditSchemaService.layoutIds.pipe(filter(l => l != null));
 		this.hasServerError$ = this.entityService.hasError;
 		this.isLoading$ = this.entityService.isLoading;
 		this.serverErrors$ = this.entityService.errorResponse.pipe(map(r => r.validationErrors));
 		this.serverMessage$ = this.entityService.errorResponse.pipe(map(r => r.message));
-		
+
+
+		//1) watch for route, take a form schema
+		this.route.paramMap.pipe(takeUntil(this.lifeTimeObject), map(p => p.get("id"))).subscribe(currentId => {
+			if (!currentId) {
+				return;
+			}
+
+			if (currentId.toLowerCase() === 'new') {
+				this.isNewEntity = true;
+				this.currentId = newEntityId;
+			} else {
+				this.currentId = currentId;
+				this.isNewEntity = false;
+			}
+			let event: SchemaFetchEvent = { isNewEntity: this.isNewEntity, customSchema: null };
+
+			this.schemaFetch.emit(event);
+
+			if (event.customSchema && event.customSchema.layouts && event.customSchema.editForm) {
+				this.entityEditSchemaService.updateModel(event.customSchema.editForm, event.customSchema.layouts);
+			} else {
+				this.entityEditSchemaService.getWithQuery({ "isNewEntity": String(this.isNewEntity) });
+			}
+		});
+
+
+		const editModel$ = this.entityEditSchemaService.editModel.pipe(
+			takeUntil(this.lifeTimeObject)
+		);
+
+		this.editModel$ = editModel$;
+		//2) watch for schema, take an entity
+		editModel$.pipe(
+			filter(i => i != null))
+			.subscribe((model) => {
+				this.form = this.compositionService.toFormGroup(model.layouts);
+				if (this.currentId === newEntityId) {
+					const data = this.compositionService.createDefaultObject(model.layouts);
+					const entity = { ...data, id: newEntityId };
+					this.entityService.directUpdateCurrentEntity(entity);
+				} else if (this.currentId){
+					this.entityService.getById(this.currentId);
+				}
+		});
+
+
+		//3) watch for an entity
 		this.entityService.currentEntity.pipe(takeUntil(this.lifeTimeObject), filter(e => e != null)).subscribe((entity) => {
 			this.form.setValue(entity);
 		});
@@ -137,29 +163,7 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 			}
 		});
 
-		this.route.paramMap.pipe(takeUntil(this.lifeTimeObject), map(p => p.get("id"))).subscribe(currentId => {
-			if (!currentId) {
-				return;
-			}
-			
-			if (currentId.toLowerCase() === 'new') {
-				this.isNewEntity = true;
-				this.currentId = newEntityId;
-			} else {
-				this.currentId = currentId;
-				this.isNewEntity = false;
-			}
-
-			let event: SchemaFetchEvent = { isNewEntity: this.isNewEntity,customSchema:null};
-
-			this.schemaFetch.emit(event);
-
-			if (event.customSchema && event.customSchema.layouts && event.customSchema.editForm) {
-				this.entityEditSchemaService.updateModel(event.customSchema.editForm, event.customSchema.layouts);
-			} else {
-				this.entityEditSchemaService.getWithQuery({ "isNewEntity": String(this.isNewEntity) });
-			}
-		});
+		
 
 	}
 
