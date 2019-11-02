@@ -57,8 +57,6 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 
 	private lastAddedEntityCorrelationId: string;
 
-	
-
 	constructor(private location: Location,
 		private route: ActivatedRoute,
 		private router: Router,
@@ -78,19 +76,21 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 		const editModel$ = this.entityEditSchemaService.editModel.pipe(
 			takeUntil(this.lifeTimeObject)
 		);
-
-		const currentEntity$ = this.entityService.currentEntity.pipe(
-			takeUntil(this.lifeTimeObject)
-		);
-
+		
 		this.editModel$ = editModel$;
 		
 		editModel$.pipe(
-			filter(i => i != null),
-			withLatestFrom(currentEntity$))
-			.subscribe(([model,entity]) => {
+			filter(i => i != null))
+			.subscribe((model) => {
 				this.form = this.compositionService.toFormGroup(model.layouts);
-				this.updateFormValue(this.form, entity, model);
+
+				if (this.currentId === newEntityId) {
+					const data = this.compositionService.createDefaultObject(model.layouts);
+					const entity = { ...data, id: newEntityId };
+					this.entityService.directUpdateCurrentEntity(entity);
+				} else {
+					this.entityService.getById(this.currentId);
+				}
 		});
 
 		this.hasServerError$ = this.entityService.hasError;
@@ -98,8 +98,8 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 		this.serverErrors$ = this.entityService.errorResponse.pipe(map(r => r.validationErrors));
 		this.serverMessage$ = this.entityService.errorResponse.pipe(map(r => r.message));
 		
-		currentEntity$.pipe(filter(e => e != null), withLatestFrom(editModel$)).subscribe(([entity,model]) => {
-			this.updateFormValue(this.form, entity,model);
+		this.entityService.currentEntity.pipe(takeUntil(this.lifeTimeObject), filter(e => e != null)).subscribe((entity) => {
+			this.form.setValue(entity);
 		});
 
 		this.entityService.lastRemovedIds.pipe(takeUntil(this.lifeTimeObject)).subscribe(removedIds => {
@@ -141,12 +141,11 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 			if (!currentId) {
 				return;
 			}
+			
 			if (currentId.toLowerCase() === 'new') {
 				this.isNewEntity = true;
-				this.form.reset();
-				this.entityService.directUpdateCurrentEntity({ id: newEntityId});
+				this.currentId = newEntityId;
 			} else {
-				this.entityService.getById(currentId);
 				this.currentId = currentId;
 				this.isNewEntity = false;
 			}
@@ -202,14 +201,4 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 			}
 		});
 	}
-
-	private updateFormValue(form: FormGroup, data: any,raEntityEdit:RaEntityEdit) {
-		if (form && data && raEntityEdit) {
-			if (data.id === newEntityId) {
-				data = this.compositionService.createDefaultObject(raEntityEdit.layouts);
-			}
-			form.setValue(data);
-		}
-	}
-	
 }
