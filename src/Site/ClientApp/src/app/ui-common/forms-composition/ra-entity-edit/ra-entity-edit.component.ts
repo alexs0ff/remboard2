@@ -1,4 +1,4 @@
-import { Component, OnInit,OnDestroy,Input } from '@angular/core';
+import { Component, OnInit,OnDestroy,Input,EventEmitter,Output } from '@angular/core';
 import { Location } from '@angular/common';
 import { Subject, Observable,of } from "rxjs";
 import { takeUntil, map, filter, bufferWhen,shareReplay,withLatestFrom  } from "rxjs/operators";
@@ -13,6 +13,7 @@ import { RaEntityEditRemoveDialog } from "./ra-entity-edit-remove-dialog";
 import { FormErrorService } from "../../ui-common.module";
 import { EntityCorrelationIds } from "../../../features/ra-cruds/ra-cruds.models";
 import { RaEntityEdit, RaFormLayout, RemoveDialogData } from "../../../ra-schema/ra-schema.module";
+import { SchemaFetchEvent } from "../forms-composition.models";
 
 const newEntityId:string = 'newEntity';
 
@@ -24,7 +25,10 @@ const newEntityId:string = 'newEntity';
 export class RaEntityEditComponent implements OnInit, OnDestroy {
 
 	@Input()
-	entitiesName:string;
+	entitiesName: string;
+
+	@Output()
+	schemaFetch = new EventEmitter <SchemaFetchEvent>();
 
 	layouts$:Observable<string[]>;
 
@@ -146,7 +150,16 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 				this.currentId = currentId;
 				this.isNewEntity = false;
 			}
-			this.entityEditSchemaService.getIfEmpty();
+
+			let event: SchemaFetchEvent = { isNewEntity: this.isNewEntity,customSchema:null};
+
+			this.schemaFetch.emit(event);
+
+			if (event.customSchema && event.customSchema.layouts && event.customSchema.editForm) {
+				this.entityEditSchemaService.updateModel(event.customSchema.editForm, event.customSchema.layouts);
+			} else {
+				this.entityEditSchemaService.getWithQuery({ "isNewEntity": String(this.isNewEntity) });
+			}
 		});
 
 	}

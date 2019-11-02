@@ -1,17 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { RaEntityEdit, flexExpressions } from "../../../ra-schema/ra-schema.module";
 import { EntityEditSchemaServiceFactory } from "../../ra-cruds/ra-cruds.module";
+import { SchemaFetchEvent } from "../../../ui-common/ui-common.module";
 
 @Component({
 	selector: 'order-status-edit',
-	template: `<ra-entity-edit entitiesName="orderStatuses"></ra-entity-edit>`,
+	template: `<ra-entity-edit entitiesName="orderStatuses" (schemaFetch)="onSchemaFetch($event);"></ra-entity-edit>`,
 	
 	styles: []
 })
 export class OrderStatusEditComponent implements OnInit {
-	
-	constructor(entityEditSchemaServiceFactory: EntityEditSchemaServiceFactory) {
-		const model: RaEntityEdit = {
+	private model: RaEntityEdit;
+	constructor() {
+		this.model = {
 			entitiesName: "orderStatuses",
 			title: "Статус заказа",
 			removeDialog: { valueId: "title" },
@@ -64,12 +65,18 @@ export class OrderStatusEditComponent implements OnInit {
 				}
 			}
 		};
-
-		entityEditSchemaServiceFactory.getService("orderStatuses").updateModel(model, ['mainGroup']);
-
 	}
 
+
+
 	ngOnInit() {
+	}
+
+	onSchemaFetch(event: SchemaFetchEvent) {
+		event.customSchema = {
+			editForm: this.model,
+			layouts: ['mainGroup']
+		};
 	}
 
 }

@@ -15,11 +15,7 @@ import { IEntityEditSchemaService } from "./ra-edit-schema-cruds.models";
 export class EntityEditSchemaEffects {
 	loadwithQueryEntities$ = createEffect(() => this.actions$.pipe(
 		ofType(loadEditModelWithQuery),
-		mergeMap((e) => this.getService(e.entitiesName).editModel.pipe(first(), map(model => [{ action: e, model: model }]))),
-		mergeMap(([{ action, model }]) => {
-			if (!action.force && model) {
-				return EMPTY;
-			}
+		mergeMap((action) => {
 			return this.getApiService(action.entitiesName).getWithQuery(action.queryParams).pipe(
 				map(result => this.getEntityActions(action.entitiesName).updateEditModel({ model: result.entityEdit, layouts: result.displayedLayoutIds })),
 				catchError((error) => {

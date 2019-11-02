@@ -108,11 +108,7 @@ export class EntityEditSchemaService<T extends IEntityBase> implements IEntityEd
 	}
 
 	getWithQuery(queryParams: QueryParams) {
-		this.store.dispatch(loadEditModelWithQuery({ entitiesName: this.entitiesName, queryParams: queryParams,force:true }));
-	}
-
-	getIfEmpty() {
-		this.store.dispatch(loadEditModelWithQuery({ entitiesName: this.entitiesName, queryParams: null, force: false }));
+		this.store.dispatch(loadEditModelWithQuery({ entitiesName: this.entitiesName, queryParams: queryParams}));
 	}
 
 	updateModel(model: RaEntityEdit, layouts: string[]) {

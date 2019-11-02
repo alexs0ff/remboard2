@@ -1,17 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { RaEntityEdit, flexExpressions } from "../../../ra-schema/ra-schema.module";
-import { EntityEditSchemaServiceFactory } from "../../ra-cruds/ra-cruds.module";
+import { SchemaFetchEvent } from "../../../ui-common/ui-common.module";
+
 
 @Component({
 	selector: 'branch-edit',
-	template: `<ra-entity-edit entitiesName="branches"></ra-entity-edit>`,
+	template: `<ra-entity-edit entitiesName="branches" (schemaFetch)="onSchemaFetch($event);"></ra-entity-edit>`,
 	
 	styles: []
 })
 export class BranchEditComponent implements OnInit {
-
-	constructor(entityEditSchemaServiceFactory: EntityEditSchemaServiceFactory) {
-		const model: RaEntityEdit = {
+	private model: RaEntityEdit;
+	constructor() {
+		this.model= {
 			entitiesName: "branches",
 			title: "Филиалы",
 			removeDialog: { valueId: "title" },
@@ -69,12 +70,17 @@ export class BranchEditComponent implements OnInit {
 				}
 			}
 		};
-
-		entityEditSchemaServiceFactory.getService("branches").updateModel(model, ['mainGroup']);
-
 	}
 
 	ngOnInit() {
+	}
+
+
+	onSchemaFetch(event: SchemaFetchEvent) {
+		event.customSchema = {
+			editForm: this.model,
+			layouts: ['mainGroup']
+		};
 	}
 
 }

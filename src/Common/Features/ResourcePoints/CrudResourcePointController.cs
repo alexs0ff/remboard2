@@ -200,8 +200,20 @@ namespace Common.Features.ResourcePoints
 			}
 
 			var schemaProvider = controllerFactory.GetEntityEditSchemaProvider();
+			var context = new EntityEditSchemaProviderContext();
+			var isNewEntity = Request.Query["isNewEntity"];
+			bool? isNew = null;
+			
+			if (!string.IsNullOrWhiteSpace(isNewEntity))
+			{
+				if (bool.TryParse(isNewEntity,out bool res))
+				{
+					isNew = res;
+				}
+			}
 
-			var model = await schemaProvider.GetModelAsync(new EntityEditSchemaProviderContext());
+			context.IsNewEntity = isNew;
+			var model = await schemaProvider.GetModelAsync(context);
 			return Ok(model);
 		}
 

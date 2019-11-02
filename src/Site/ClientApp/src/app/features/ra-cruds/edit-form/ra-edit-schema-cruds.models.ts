@@ -21,7 +21,6 @@ export interface IEntityEditSchemaService<T extends IEntityBase> {
 	editModel: Observable<RaEntityEdit>;
 	layoutIds: Observable<string[]>;
 	getWithQuery(queryParams: QueryParams);
-	getIfEmpty();
 	updateModel(model: RaEntityEdit, layouts: string[]);
 }
 

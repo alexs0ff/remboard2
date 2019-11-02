@@ -1,18 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { RaEntityEdit, flexExpressions, RaMultiselect } from "../../../ra-schema/ra-schema.module";
 import { EntityEditSchemaServiceFactory } from "../../ra-cruds/ra-cruds.module";
+import { SchemaFetchEvent } from "../../../ui-common/ui-common.module";
 
 @Component({
 	selector: 'user-edit',
-	template: `<ra-entity-edit entitiesName="users"></ra-entity-edit>`,
+	template: `<ra-entity-edit entitiesName="users" (schemaFetch)="onSchemaFetch($event);"></ra-entity-edit>`,
 	
 	styles: []
 })
 export class UserEditComponent implements OnInit {
-	
-	constructor(entityEditSchemaServiceFactory: EntityEditSchemaServiceFactory) {
+	private model: RaEntityEdit;
+	constructor() {
 
-		const model: RaEntityEdit = {
+		this.model= {
 			entitiesName: "users",
 			title: "Пользователи",
 			removeDialog: { valueId: "title" },
@@ -152,12 +153,15 @@ export class UserEditComponent implements OnInit {
 				}
 			}
 		};
-
-		entityEditSchemaServiceFactory.getService("users").updateModel(model, ['mainGroup']);
-
 	}
 
 	ngOnInit() {
 	}
 
+	onSchemaFetch(event: SchemaFetchEvent) {
+		event.customSchema = {
+			editForm: this.model,
+			layouts: ['mainGroup']
+		};
+	}
 }
