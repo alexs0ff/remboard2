@@ -250,7 +250,6 @@ export class UserEditComponent implements OnInit {
 
 		const updateLayout: RaFormLayout = {
 			rows: [
-				{ content: { kind: 'hidden', items: ['passwordSecond'] } },
 				{
 					content: {
 						kind: 'controls',
@@ -267,8 +266,6 @@ export class UserEditComponent implements OnInit {
 			title: "Пользователи",
 			removeDialog: { valueId: "title" },
 			layouts: {
-				"createGroup":createLayout,
-				"updateGroup":updateLayout,
 				"mainGroup": {
 					rows: [
 						{ content: { kind: 'hidden', items: ['id', 'projectRoleTitle'] } },
@@ -390,7 +387,13 @@ export class UserEditComponent implements OnInit {
 					]
 				}
 			}
-		};;
+		};
+		
+		if (isNewEntity) {
+			model.layouts["createGroup"] = createLayout;
+		} else {
+			model.layouts["updateGroup"] = updateLayout;
+		}
 
 		return model;
 	}
