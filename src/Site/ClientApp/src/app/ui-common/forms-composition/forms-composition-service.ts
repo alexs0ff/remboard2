@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { FormControl, FormGroup, Validators, ValidatorFn, FormGroupDirective, NgForm, AbstractControl  } from '@angular/forms';
+import { FormControl, FormGroup, Validators, ValidatorFn, FormGroupDirective, NgForm, AbstractControl, AsyncValidatorFn } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { KeyValue } from "../../app.models";
 import {
-	RaControls, RaFormLayout, RaFormLayoutRowContent, RaFormLayoutItems, RaFormLayoutHiddenItems, RaTextBox, ControlValueType, RaSelectBox,LayoutGroups,RaMultiselect
+	RaControls, RaFormLayout, RaFormLayoutRowContent, RaFormLayoutItems, RaFormLayoutHiddenItems, RaTextBox, ControlValueType, RaSelectBox,LayoutGroups,RaMultiselect,
+	ControlUpdateOnEvent
 } from "../../ra-schema/ra-schema.module";
 import { notEmptyArrayValidator } from "../custom.validators";
 import { ExtensionParts } from "./forms-composition.models";
@@ -21,7 +22,7 @@ export class FormsCompositionService {
 			layout.rows.forEach(row => {
 				if (this.isLayoutItems(row.content)) {
 					row.content.items.forEach(item => {
-						group[item.control.id] = this.createFormControl(item.control);
+						group[item.control.id] = this.createFormControl(item.control, extensions);
 					});
 				}
 
@@ -38,14 +39,20 @@ export class FormsCompositionService {
 		return new FormGroup(group);
 	}
 
-	private createFormControl(raControl: RaControls): FormControl {
-		let validators = Array<ValidatorFn>();
+	private createFormControl(raControl: RaControls, extensions: ExtensionParts): FormControl {
+		let validators: Array<ValidatorFn> = [];
+		let asyncValidators: Array<AsyncValidatorFn> = [];
+
+		let updateOn: ControlUpdateOnEvent = 'change';
 		
 		if (raControl.validators.required) {
 			validators.push(Validators.required);
 		}
 
 		if (this.isRaTextBox(raControl)) {
+			if (raControl.updateOn) {
+				updateOn = raControl.updateOn;
+			}
 			if (raControl.validators.maxLength != null) {
 				validators.push(Validators.maxLength(raControl.validators.maxLength));
 			}
@@ -57,6 +64,24 @@ export class FormsCompositionService {
 			if (raControl.validators.email) {
 				validators.push(Validators.email);
 			}
+
+			if (raControl.validators.validators && raControl.validators.validators.length) {
+				raControl.validators.validators.forEach(val => {
+					const storedValidator = extensions.validators[val];
+					if (storedValidator) {
+						validators.push(storedValidator);
+					}
+				});
+			}
+
+			if (raControl.validators.asyncValidators && raControl.validators.asyncValidators) {
+				raControl.validators.asyncValidators.forEach(val => {
+					const storedValidator = extensions.asyncValidators[val];
+					if (storedValidator) {
+						asyncValidators.push(storedValidator);
+					}
+				});
+			}
 		}
 
 		if (this.isRaMultiselect(raControl)) {
@@ -65,7 +90,7 @@ export class FormsCompositionService {
 			
 		}
 		const value = this.valueFromControl(raControl);
-		const result = new FormControl(raControl.value || value, validators);
+		const result = new FormControl(raControl.value || value, { validators: validators, asyncValidators: asyncValidators, updateOn: updateOn});
 
 		return result;
 	}

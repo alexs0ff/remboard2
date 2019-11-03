@@ -25,7 +25,8 @@ import {
 	EntityFormModel,
 	RaMultiselect,
 	RaMultiselectSources,
-	RaMultiselectRemoteSource
+	RaMultiselectRemoteSource,
+	ControlUpdateOnEvent
 
 
 
@@ -83,6 +84,7 @@ export {
 	RaMultiselect,
 	RaMultiselectSources,
 	RaMultiselectRemoteSource,
+	ControlUpdateOnEvent,
 
 
 	GridContentOptions,

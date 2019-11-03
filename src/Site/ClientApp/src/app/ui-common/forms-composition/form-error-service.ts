@@ -8,6 +8,7 @@ export class FormErrorService {
   private readonly errors: Dictionary<string> = {
     "required": "Нужно задать или ввести значение",
     "email": "Не корректный email",
+    "uniqueUserLogin": "Пользователь с таким именем уже существует",
   };
 
   private readonly default: string = "Общая ошибка";

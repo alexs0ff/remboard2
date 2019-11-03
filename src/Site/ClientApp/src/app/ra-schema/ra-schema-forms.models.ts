@@ -7,6 +7,8 @@ export interface RaValidators {
 	email?: boolean | null;
 	maxLength?: number | null;
 	minLength?: number | null;
+	validators?:string[];
+	asyncValidators?:string[];
 }
 
 export interface RaTextBox {
@@ -17,6 +19,7 @@ export interface RaTextBox {
 	validators: RaValidators;
 	value?: any | null;
 	hint?: string | null;
+	updateOn?: ControlUpdateOnEvent;
 }
 
 
@@ -35,6 +38,8 @@ export interface RaSelectBoxItemsSource {
 }
 
 export type RaSelectBoxSources = RaSelectBoxItemsSource | RaSelectBoxRemoteSource;
+
+export type ControlUpdateOnEvent = 'change' | 'blur' | 'submit';
 
 export interface RaSelectBox {
 	kind: 'selectbox';

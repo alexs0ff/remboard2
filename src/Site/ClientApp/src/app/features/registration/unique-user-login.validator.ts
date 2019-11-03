@@ -14,7 +14,7 @@ export class UniqueUserLoginAsyncValidator implements AsyncValidator
 	}
 
 	validate(control: AbstractControl): Promise<{ [index: string]: any; }> | Observable<{ [index: string]: any; }> {
-		return this.http.get<LoginInfo>("https://localhost:44378/api/login/userinfo/" + control.value).pipe(
+		return this.http.get<LoginInfo>("/api/login/userinfo/" + control.value).pipe(
 			map(li => (li && li.userExists) ? { uniqueUserLogin:true } : null),
 			catchError(() => null));
 	}

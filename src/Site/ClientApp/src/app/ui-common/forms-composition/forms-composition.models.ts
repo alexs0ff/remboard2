@@ -1,4 +1,4 @@
-import { ValidatorFn, AsyncValidator  } from "@angular/forms";
+import { ValidatorFn, AsyncValidatorFn } from "@angular/forms";
 import { RaEntityEdit } from "../../ra-schema/ra-schema.module";
 
 export interface SchemaFetchEvent {
@@ -14,6 +14,6 @@ export interface ExtensionParts {
 		[key: string]: ValidatorFn
 	};
 	asyncValidators?: {
-		[key: string]: AsyncValidator
+		[key: string]: AsyncValidatorFn
 	};
 }

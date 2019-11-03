@@ -19,7 +19,7 @@ export class UserEditComponent implements OnInit {
 	constructor(uniqueUserLoginAsyncValidator: UniqueUserLoginAsyncValidator) {
 
 		this.extensions = {
-			asyncValidators: { "ss": uniqueUserLoginAsyncValidator}
+			asyncValidators: { "uniqueUserLogin": uniqueUserLoginAsyncValidator.validate.bind(uniqueUserLoginAsyncValidator)}
 		}
 
 		this.model= {
@@ -62,8 +62,10 @@ export class UserEditComponent implements OnInit {
 											hint: "Логин пользователя",
 											valueKind: 'string',
 											validators: {
-												required: true
-											}
+												required: true,
+												asyncValidators: ['uniqueUserLogin'],
+											},
+											updateOn:'blur',
 										}
 									},
 									{
