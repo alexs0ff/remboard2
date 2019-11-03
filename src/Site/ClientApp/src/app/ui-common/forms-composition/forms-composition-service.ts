@@ -6,13 +6,14 @@ import {
 	RaControls, RaFormLayout, RaFormLayoutRowContent, RaFormLayoutItems, RaFormLayoutHiddenItems, RaTextBox, ControlValueType, RaSelectBox,LayoutGroups,RaMultiselect
 } from "../../ra-schema/ra-schema.module";
 import { notEmptyArrayValidator } from "../custom.validators";
+import { ExtensionParts } from "./forms-composition.models";
 
 
 @Injectable()
 export class FormsCompositionService {
 	constructor() {}
 
-	public toFormGroup(layouts: LayoutGroups) {
+	public toFormGroup(layouts: LayoutGroups, extensions:ExtensionParts) {
 		let group: any = {};
 
 		for (const key in layouts) {

@@ -13,7 +13,7 @@ import { RaEntityEditRemoveDialog } from "./ra-entity-edit-remove-dialog";
 import { FormErrorService } from "../../ui-common.module";
 import { EntityCorrelationIds } from "../../../features/ra-cruds/ra-cruds.models";
 import { RaEntityEdit, RaFormLayout, RemoveDialogData } from "../../../ra-schema/ra-schema.module";
-import { SchemaFetchEvent } from "../forms-composition.models";
+import { SchemaFetchEvent, ExtensionParts } from "../forms-composition.models";
 
 const newEntityId:string = 'newEntity';
 
@@ -26,6 +26,9 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 
 	@Input()
 	entitiesName: string;
+
+	@Input()
+	extensionParts: ExtensionParts;
 
 	@Output()
 	schemaFetch = new EventEmitter <SchemaFetchEvent>();
@@ -112,7 +115,7 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 		editModel$.pipe(
 			filter(i => i != null))
 			.subscribe((model) => {
-				this.form = this.compositionService.toFormGroup(model.layouts);
+				this.form = this.compositionService.toFormGroup(model.layouts,this.extensionParts);
 				if (this.currentId === newEntityId) {
 					const data = this.compositionService.createDefaultObject(model.layouts);
 					const entity = { ...data, id: newEntityId };

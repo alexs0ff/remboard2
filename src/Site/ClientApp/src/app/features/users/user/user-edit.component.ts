@@ -2,16 +2,25 @@ import { Component, OnInit } from '@angular/core';
 import { RaEntityEdit, flexExpressions, RaMultiselect } from "../../../ra-schema/ra-schema.module";
 import { EntityEditSchemaServiceFactory } from "../../ra-cruds/ra-cruds.module";
 import { SchemaFetchEvent } from "../../../ui-common/ui-common.module";
+import { ExtensionParts } from "../../../ui-common/forms-composition/forms-composition.models";
+import { UniqueUserLoginAsyncValidator } from "../../registration/registration.module";
 
 @Component({
 	selector: 'user-edit',
-	template: `<ra-entity-edit entitiesName="users" (schemaFetch)="onSchemaFetch($event);"></ra-entity-edit>`,
+	template: `<ra-entity-edit entitiesName="users" (schemaFetch)="onSchemaFetch($event);" [extensionParts]="extensions"></ra-entity-edit>`,
 	
 	styles: []
 })
 export class UserEditComponent implements OnInit {
 	private model: RaEntityEdit;
-	constructor() {
+
+	extensions: ExtensionParts;
+
+	constructor(uniqueUserLoginAsyncValidator: UniqueUserLoginAsyncValidator) {
+
+		this.extensions = {
+			asyncValidators: { "ss": uniqueUserLoginAsyncValidator}
+		}
 
 		this.model= {
 			entitiesName: "users",

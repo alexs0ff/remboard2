@@ -4,12 +4,14 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Remboard.Models;
 using Users.Api;
 
 namespace Remboard.Auth
@@ -49,7 +51,24 @@ namespace Remboard.Auth
             return response;
         }
 
-        private async Task<string> GenerateJSONWebToken(IdentityUser userInfo)
+
+        [AllowAnonymous]
+		[HttpGet()]
+		[Route("api/login/userinfo/{userName}")]
+        public async Task<LoginInfo> UserInfo([FromRoute]string userName, [FromServices]IUserStore<IdentityUser> userStore)
+        {
+	        if (string.IsNullOrWhiteSpace(userName))
+	        {
+		        return new LoginInfo { UserExists = false };
+	        }
+
+	        var user = await userStore.FindByNameAsync(userName.ToUpper(), CancellationToken.None);
+
+	        return new LoginInfo { UserExists = user != null };
+
+        }
+
+		private async Task<string> GenerateJSONWebToken(IdentityUser userInfo)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
