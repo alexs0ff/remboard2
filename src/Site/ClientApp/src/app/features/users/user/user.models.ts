@@ -9,6 +9,7 @@ export interface UserEntity extends IEntityBase {
 	middleName: string;
 	phone: string;
 	email: string;
+	password: string;
 	branches: UserBranchDto[];
 }
 

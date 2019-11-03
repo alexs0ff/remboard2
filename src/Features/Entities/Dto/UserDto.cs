@@ -49,6 +49,11 @@ namespace Entities.Dto
 		public string Email { get; set; }
 
 		/// <summary>
+		/// Задает или получает пароль пользователя (используется только в create)
+		/// </summary>
+		public string Password { get; set; }
+
+		/// <summary>
 		/// Задает или получает филиалы пользователя.
 		/// </summary>
 		public List<UserBranchDto> Branches { get; set; }

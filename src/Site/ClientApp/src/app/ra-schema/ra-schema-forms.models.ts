@@ -17,6 +17,7 @@ export interface RaTextBox {
 	id: string;
 	label: string;
 	validators: RaValidators;
+	disabled?: boolean;
 	value?: any | null;
 	hint?: string | null;
 	updateOn?: ControlUpdateOnEvent;
@@ -47,6 +48,7 @@ export interface RaSelectBox {
 	id: string;
 	label: string;
 	validators: { required: boolean };
+	disabled?:boolean;
 	source: RaSelectBoxSources;
 	value?: any | null;
 	hint?: string | null;
@@ -58,6 +60,7 @@ export interface RaAutocompleteBox {
 	id: string;
 	label: string;
 	validators: { required: boolean };
+	disabled?: boolean;
 	items: Dictionary<string>;
 	value?: any | null;
 	hint?: string | null;
@@ -81,6 +84,7 @@ export interface RaMultiselect {
 	label: string;
 	displayColumns: string[];
 	validators: { required: boolean };
+	disabled?: boolean;
 	value?: any | null;
 	source: RaMultiselectSources;
 	hint?: string | null;

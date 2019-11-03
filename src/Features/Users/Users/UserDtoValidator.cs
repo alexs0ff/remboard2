@@ -14,6 +14,7 @@ namespace Users.Users
 		public UserDtoValidator()
 		{
 			RuleFor(u => u.LoginName).NotEmpty();
+			RuleFor(u => u.LoginName).MaximumLength(50);
 			RuleFor(u => u.LoginName).Must(login =>
 			{
 				if (string.IsNullOrWhiteSpace(login))

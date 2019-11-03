@@ -90,7 +90,12 @@ export class FormsCompositionService {
 			
 		}
 		const value = this.valueFromControl(raControl);
-		const result = new FormControl(raControl.value || value, { validators: validators, asyncValidators: asyncValidators, updateOn: updateOn});
+		
+		let controlDisabled: boolean = false;
+		if (raControl.disabled) {
+			controlDisabled = true;
+		}
+		const result = new FormControl({ value: value, disabled: controlDisabled }, { validators: validators, asyncValidators: asyncValidators, updateOn: updateOn});
 
 		return result;
 	}
