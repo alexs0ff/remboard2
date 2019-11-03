@@ -4,6 +4,7 @@ import { EntityEditSchemaServiceFactory } from "../../ra-cruds/ra-cruds.module";
 import { SchemaFetchEvent } from "../../../ui-common/ui-common.module";
 import { ExtensionParts } from "../../../ui-common/forms-composition/forms-composition.models";
 import { UniqueUserLoginAsyncValidator } from "../../registration/registration.module";
+import { UserLoginValidator } from "../../registration/user-login.validator";
 
 @Component({
 	selector: 'user-edit',
@@ -16,10 +17,11 @@ export class UserEditComponent implements OnInit {
 
 	extensions: ExtensionParts;
 
-	constructor(uniqueUserLoginAsyncValidator: UniqueUserLoginAsyncValidator) {
-
+	constructor(uniqueUserLoginAsyncValidator: UniqueUserLoginAsyncValidator, userLoginValidator: UserLoginValidator) {
+	
 		this.extensions = {
-			asyncValidators: { "uniqueUserLogin": uniqueUserLoginAsyncValidator.validate.bind(uniqueUserLoginAsyncValidator)}
+			asyncValidators: { "uniqueUserLogin": uniqueUserLoginAsyncValidator.validate.bind(uniqueUserLoginAsyncValidator) },
+			validators: { "userLogin": userLoginValidator.validate.bind(userLoginValidator)}
 		}
 
 		this.model= {
@@ -64,6 +66,7 @@ export class UserEditComponent implements OnInit {
 											validators: {
 												required: true,
 												asyncValidators: ['uniqueUserLogin'],
+												validators: ['userLogin']
 											},
 											updateOn:'blur',
 										}

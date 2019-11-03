@@ -20,8 +20,9 @@ namespace Users
         protected override void RegisterServices(ContainerBuilder builder)
         {
             builder.RegisterType<UserService>().As<IUserService>();
+            builder.RegisterType<UserCorrector>().AsSelf();
             AddMapperProfile<UsersProfile>(builder);
-		}
+        }
 
         public void OnContextFeatureCreating(ModelBuilder modelBuilder, RemboardContextParameters contextParameters)
         {
@@ -36,6 +37,7 @@ namespace Users
 			yield return new CrudResourcePointConfigurator<User, UserDto, UserDto, Guid>()
 				.AddModifyRoles()
 				.UseValidator<UserDtoValidator>()
+				.AddEntityCorrector<UserCorrector>()
 				.UseEntityContextCrudOperation<EntityContextCrudOperation<User, UserDto, Guid>>(p =>
 					{
 						p.IncludeProperties = userIncludeProperties;

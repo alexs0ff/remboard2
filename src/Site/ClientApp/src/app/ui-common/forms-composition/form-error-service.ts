@@ -9,6 +9,7 @@ export class FormErrorService {
     "required": "Нужно задать или ввести значение",
     "email": "Не корректный email",
     "uniqueUserLogin": "Пользователь с таким именем уже существует",
+    "userLoginFormat": "Ошибочный формат логина пользователя",
   };
 
   private readonly default: string = "Общая ошибка";

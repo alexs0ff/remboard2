@@ -10,8 +10,8 @@ namespace Common.Features
         where TEntity : BaseEntity<TKey>
 		where TKey:struct
     {
-        Task CorrectEntityAsync(TEntity entity, TEntityDto receivedEntityDto);
+        Task CorrectEntityAsync(EntityCorrectorContext context, TEntity entity, TEntityDto receivedEntityDto);
 
-        Task CorrectEntityDtoAsync(TEntityDto entityDto, TEntity entity);
+        Task CorrectEntityDtoAsync(EntityCorrectorContext context, TEntityDto entityDto, TEntity entity);
     }
 }

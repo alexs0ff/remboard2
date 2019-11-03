@@ -73,7 +73,7 @@ namespace Remboard
             services.AddDbContext<RemboardContext>
                 (options => options.UseSqlServer(connection));
 
-            services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<IdentityDbContext>();
+            services.AddDefaultIdentity<IdentityUser>(opt=>{ IdentityOptionsConfigurator.Configure(opt);}).AddEntityFrameworkStores<IdentityDbContext>();
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

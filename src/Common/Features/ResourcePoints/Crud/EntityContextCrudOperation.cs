@@ -89,16 +89,18 @@ namespace Common.Features.ResourcePoints.Crud
 			var entity = _mapper.Map<TEntity>(entityDto);
 
 			_logger.LogInformation("Start add the new entity {entity} with id {id}", entity, entity.Id);
-
-			correctors.CorrectEntityAsync(entity, entityDto);
-
+			var correctorContext = new EntityCorrectorContext
+			{
+				OperationKind = CrudOperationKind.Post
+			};
+			await correctors.CorrectEntityAsync(correctorContext,entity, entityDto);
 
 			context.Set<TEntity>().Add(entity);
 			await context.SaveChangesAsync();
 
 			entityDto = _mapper.Map<TEntityDto>(entity);
 
-			correctors.CorrectEntityDtoAsync(entityDto, entity);
+			await correctors.CorrectEntityDtoAsync(correctorContext, entityDto, entity);
 
 			return entityDto;
 		}
@@ -114,16 +116,20 @@ namespace Common.Features.ResourcePoints.Crud
 
 			_mapper.Map(entityDto, foundEntity);
 
-			correctors.CorrectEntityAsync(foundEntity, entityDto);
-			
+			var correctorContext = new EntityCorrectorContext
+			{
+				OperationKind = CrudOperationKind.Put
+			};
+
+			await correctors.CorrectEntityAsync(correctorContext, foundEntity, entityDto);
 
 			context.Set<TEntity>().Update(foundEntity);
-			//TODO: virtual method beforePutSaveChanges.
+			
 			await context.SaveChangesAsync();
 
 			entityDto = _mapper.Map<TEntityDto>(foundEntity);
 	
-			correctors.CorrectEntityDtoAsync(entityDto, foundEntity);
+			await correctors.CorrectEntityDtoAsync(correctorContext, entityDto, foundEntity);
 
 			return entityDto;
 		}

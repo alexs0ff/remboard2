@@ -57,15 +57,15 @@ namespace Users.Users
 
 			_logger.LogInformation("Start add the new user with id {id}", entity, entity.Id);
 
-			correctors.CorrectEntityAsync(entity, entityDto);
+			//await correctors.CorrectEntityAsync(entity, entityDto);
 
 
-			context.Set<User>().Add(entity);
-			await context.SaveChangesAsync();
+			//context.Set<User>().Add(entity);
+			//await context.SaveChangesAsync();
 
-			entityDto = _mapper.Map<UserDto>(entity);
+			//entityDto = _mapper.Map<UserDto>(entity);
 
-			correctors.CorrectEntityDtoAsync(entityDto, entity);
+			//await correctors.CorrectEntityDtoAsync(entityDto, entity);
 
 			return entityDto;
 		}
