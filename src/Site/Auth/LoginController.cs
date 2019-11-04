@@ -58,17 +58,31 @@ namespace Remboard.Auth
         public async Task<LoginInfo> UserInfo([FromRoute]string userName, [FromServices]IUserStore<IdentityUser> userStore)
         {
 	        if (string.IsNullOrWhiteSpace(userName))
-	        {
+			{
 		        return new LoginInfo { UserExists = false };
 	        }
 
 	        var user = await userStore.FindByNameAsync(userName.ToUpper(), CancellationToken.None);
 
 	        return new LoginInfo { UserExists = user != null };
-
         }
 
-		private async Task<string> GenerateJSONWebToken(IdentityUser userInfo)
+        [AllowAnonymous]
+		[HttpGet()]
+        [Route("api/login/emailinfo/{email}")]
+		public async Task<EmailInfo> EmailInfo([FromRoute] string email,[FromServices] IUserStore<IdentityUser> userStore)
+        {
+	        if (string.IsNullOrWhiteSpace(email))
+	        {
+		        return new EmailInfo{EmailExists = false};
+	        }
+
+	        var user = await _userService.GetUserByEmail(email);
+
+			return new EmailInfo { EmailExists = user != null };
+		}
+
+        private async Task<string> GenerateJSONWebToken(IdentityUser userInfo)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);

@@ -35,18 +35,6 @@ namespace Common.Extensions
 			}
 		}
 
-		public static async Task CorrectCreateEntityDtoAsync<TEntity, TCreateEntityDto, TEditEntityDto, TKey>(
-			this List<IEntityCorrector<TEntity, TCreateEntityDto,TEditEntityDto, TKey>> correctors, EntityCorrectorContext context, TCreateEntityDto receivedCreateEntityDto, TEntity entity)
-			where TEntity : BaseEntity<TKey>
-			where TKey : struct
-			where TCreateEntityDto : class
-			where TEditEntityDto : class
-		{
-			foreach (var entityCorrector in correctors)
-			{
-				await entityCorrector.CorrectEntityDtoAsync(context, receivedCreateEntityDto, entity);
-			}
-		}
 
 		public static async Task CorrectEditEntityDtoAsync<TEntity, TCreateEntityDto, TEditEntityDto, TKey>(
 			this List<IEntityCorrector<TEntity, TCreateEntityDto, TEditEntityDto, TKey>> correctors, EntityCorrectorContext context,TEditEntityDto receivedEditEntityDto, TEntity entity)

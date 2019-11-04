@@ -26,7 +26,22 @@ namespace Users
         public async Task<User> GetUserByLogin(string login)
         {
             _logger.LogInformation(@"Start get user by login {login}",login);
-            return await _context.Set<User>().FirstOrDefaultAsync(u => u.IsDeleted == false && u.LoginName == login);
+            var norm = login.ToUpper();
+            return await _context.Set<User>().FirstOrDefaultAsync(u => u.IsDeleted == false && u.LoginName.ToUpper() == norm);
         }
+
+		public async Task<User> GetUserByEmail(string email)
+		{
+			_logger.LogInformation(@"Start get user by email {email}", email);
+
+			if (string.IsNullOrWhiteSpace(email))
+			{
+				return null;
+			}
+
+			var normEmail = email.ToUpper();
+			return await _context.Set<User>().FirstOrDefaultAsync(u => u.IsDeleted == false && u.Email.ToUpper() == normEmail);
+		}
+
     }
 }

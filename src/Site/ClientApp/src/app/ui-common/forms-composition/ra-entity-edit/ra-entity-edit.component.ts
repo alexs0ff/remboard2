@@ -77,8 +77,8 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 		this.layouts$ = this.entityEditSchemaService.layoutIds.pipe(filter(l => l != null));
 		this.hasServerError$ = this.entityService.hasError;
 		this.isLoading$ = this.entityService.isLoading;
-		this.serverErrors$ = this.entityService.errorResponse.pipe(map(r => r.validationErrors));
-		this.serverMessage$ = this.entityService.errorResponse.pipe(map(r => r.message));
+		this.serverErrors$ = this.entityService.errorResponse.pipe(filter(r => r != null),map(r => r.validationErrors));
+		this.serverMessage$ = this.entityService.errorResponse.pipe(filter(r => r != null),map(r => r.message));
 
 
 		//1) watch for route, take a form schema

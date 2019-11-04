@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { RaEntityEdit, flexExpressions, RaMultiselect, RaFormLayout, RaTextBox, RaFormLayoutItem } from "../../../ra-schema/ra-schema.module";
 import { EntityEditSchemaServiceFactory } from "../../ra-cruds/ra-cruds.module";
-import { SchemaFetchEvent } from "../../../ui-common/ui-common.module";
+import { SchemaFetchEvent, matchToControlValidator } from "../../../ui-common/ui-common.module";
 import { ExtensionParts } from "../../../ui-common/forms-composition/forms-composition.models";
-import { UniqueUserLoginAsyncValidator } from "../../registration/registration.module";
+import { UniqueUserLoginAsyncValidator, passwordFormatValidator, UniqueUserEmailAsyncValidator } from "../../registration/registration.module";
 import { UserLoginValidator } from "../../registration/user-login.validator";
 
 @Component({
@@ -19,8 +19,14 @@ export class UserEditComponent implements OnInit {
 	constructor(uniqueUserLoginAsyncValidator: UniqueUserLoginAsyncValidator, userLoginValidator: UserLoginValidator) {
 	
 		this.extensions = {
-			asyncValidators: { "uniqueUserLogin": uniqueUserLoginAsyncValidator.validate.bind(uniqueUserLoginAsyncValidator) },
-			validators: { "userLogin": userLoginValidator.validate.bind(userLoginValidator)}
+			asyncValidators: {
+				 "uniqueUserLogin": uniqueUserLoginAsyncValidator.validate.bind(uniqueUserLoginAsyncValidator),
+			},
+			validators: {
+				"userLogin": userLoginValidator.validate.bind(userLoginValidator),
+				"passwordMatch": matchToControlValidator("password","passwordMismatch"),
+				"passwordFormat": passwordFormatValidator("passwordFormat"),
+			}
 		}
 	}
 
@@ -77,7 +83,8 @@ export class UserEditComponent implements OnInit {
 									hint: "Пароль пользователя",
 									valueKind: 'string',
 									validators: {
-										required: true
+										required: true,
+										validators: ["passwordFormat"]
 									}
 								},
 
@@ -91,7 +98,8 @@ export class UserEditComponent implements OnInit {
 									hint: "Повторите пароль",
 									valueKind: 'string',
 									validators: {
-										required: true
+										required: true,
+										validators: ['passwordMatch']
 									}
 								},
 

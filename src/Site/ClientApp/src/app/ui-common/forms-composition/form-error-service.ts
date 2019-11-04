@@ -9,7 +9,10 @@ export class FormErrorService {
     "required": "Нужно задать или ввести значение",
     "email": "Не корректный email",
     "uniqueUserLogin": "Пользователь с таким именем уже существует",
+    "uniqueUserEmail": "Пользователь с таким email уже существует",
     "userLoginFormat": "Ошибочный формат логина пользователя",
+    "passwordMismatch": "Пароли должны совпадать",
+    "passwordFormat": "Пароль должен содержать латинские буквы разного регистра, цифры и быть длиной не менее 8 символов",
   };
 
   private readonly default: string = "Общая ошибка";

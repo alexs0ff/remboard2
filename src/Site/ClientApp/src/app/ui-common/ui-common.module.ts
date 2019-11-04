@@ -34,6 +34,7 @@ import { FilterData, FilterStatement } from "./ra-filter.models";
 import { GridModelComposer } from "./list-composition/ra-serverdata-grid/ra-serverdata-grid.services";
 import { RaMultiselectComponent } from "./forms-composition/ra-multiselect/ra-multiselect.component";
 import { SchemaFetchEvent, ExtensionParts } from "./forms-composition/forms-composition.models";
+import { notEmptyArrayValidator, matchToControlValidator } from "./custom.validators";
 
 
 const commonUi = [
@@ -84,4 +85,4 @@ const commonUiExport = [...commonUi, RaServerdataGridComponent, RaFormComponent,
 })
 class UiCommonModule { }
 
-export { UiCommonModule, storeMessageValidator, FormErrorService, FilterData, FilterStatement, SchemaFetchEvent, ExtensionParts}
+export { UiCommonModule, storeMessageValidator, FormErrorService, FilterData, FilterStatement, SchemaFetchEvent, ExtensionParts, notEmptyArrayValidator, matchToControlValidator}

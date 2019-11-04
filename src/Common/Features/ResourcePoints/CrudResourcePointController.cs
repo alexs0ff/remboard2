@@ -69,7 +69,7 @@ namespace Common.Features.ResourcePoints
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(EntityResponse), StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status403Forbidden)]
-		public async Task<ActionResult<TCreateEntityDto>> Post([FromBody] TCreateEntityDto entityDto, [FromServices] RemboardContext context, [FromServices] IAuthorizationService authorizationService, [FromServices] CrudResourcePointControllerFactory<TEntity, TCreateEntityDto, TEditEntityDto, TFilterableEntity, TKey> controllerFactory)
+		public async Task<ActionResult<TEditEntityDto>> Post([FromBody] TCreateEntityDto entityDto, [FromServices] RemboardContext context, [FromServices] IAuthorizationService authorizationService, [FromServices] CrudResourcePointControllerFactory<TEntity, TCreateEntityDto, TEditEntityDto, TFilterableEntity, TKey> controllerFactory)
 		{
 			var result = await authorizationService.AuthorizeAsync(User, typeof(TEntity), CrudOperations.Create);
 
@@ -87,6 +87,7 @@ namespace Common.Features.ResourcePoints
 				var operation = controllerFactory.GetCrudOperation();
 				var correctors = controllerFactory.GetCorrectors();
 				var saved = await operation.Post(entityDto, context, correctors);
+
 
 				return Ok(saved);
 			}

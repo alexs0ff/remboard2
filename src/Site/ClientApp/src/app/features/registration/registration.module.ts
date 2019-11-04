@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UniqueUserLoginAsyncValidator } from './unique-user-login.validator';
+import { passwordFormatValidator } from "./password-format.validator";
 
 @NgModule({
 	declarations: [],
@@ -13,4 +14,4 @@ import { UniqueUserLoginAsyncValidator } from './unique-user-login.validator';
 })
 class RegistrationModule { }
 
-export { RegistrationModule, UniqueUserLoginAsyncValidator};
+export { RegistrationModule, UniqueUserLoginAsyncValidator, passwordFormatValidator};

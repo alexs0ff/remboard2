@@ -9,5 +9,6 @@ namespace Users.Api
     public interface IUserService
     {
         Task<User> GetUserByLogin(string login);
+        Task<User> GetUserByEmail(string email);
     }
 }

@@ -25,11 +25,6 @@ namespace Common.Features.Tenant
 			return Task.CompletedTask;
 		}
 
-		public Task CorrectEntityDtoAsync(EntityCorrectorContext context, TCreateEntityDto entityDto, BaseEntity<TKey> entity)
-		{
-			return Task.CompletedTask;
-		}
-
 		public Task CorrectEntityAsync(EntityCorrectorContext context, BaseEntity<TKey> entity, TEditEntityDto receivedEntityDto)
 		{
 			((ITenantedEntity)entity).TenantId = _tenantInfoProvider.GetCurrentTenantId() ?? Guid.Empty;
