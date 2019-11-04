@@ -11,8 +11,10 @@ export interface RaValidators {
 	asyncValidators?:string[];
 }
 
+export type RaTextBoxKind = 'textbox' | 'textarea' | 'password';
+
 export interface RaTextBox {
-	kind: 'textbox' | 'textarea';
+	kind: RaTextBoxKind;
 	valueKind: ControlValueType;
 	id: string;
 	label: string;

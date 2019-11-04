@@ -35,6 +35,7 @@ import { GridModelComposer } from "./list-composition/ra-serverdata-grid/ra-serv
 import { RaMultiselectComponent } from "./forms-composition/ra-multiselect/ra-multiselect.component";
 import { SchemaFetchEvent, ExtensionParts } from "./forms-composition/forms-composition.models";
 import { notEmptyArrayValidator, matchToControlValidator } from "./custom.validators";
+import { RaPasswordComponent } from "./forms-composition/ra-password/ra-password.component";
 
 
 const commonUi = [
@@ -72,6 +73,7 @@ const commonUiExport = [...commonUi, RaServerdataGridComponent, RaFormComponent,
 		RaFormComponent,
 		RaControlComponent,
 		RaTextareaComponent,
+		RaPasswordComponent,
 		RaMultiselectComponent,
 		RaAutocompleteboxComponent,
 		RaSelectboxComponent,

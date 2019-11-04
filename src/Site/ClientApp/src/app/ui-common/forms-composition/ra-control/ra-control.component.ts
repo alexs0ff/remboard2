@@ -10,6 +10,7 @@ import { RaControls } from "../../../ra-schema/ra-schema.module";
 <ra-selectbox *ngSwitchCase="'selectbox'"  [model]="control" [form]="form"></ra-selectbox>  
 <ra-textarea *ngSwitchCase="'textarea'"  [model]="control" [form]="form"></ra-textarea>  
 <ra-multiselect *ngSwitchCase="'multiselect'"  [model]="control" [form]="form"></ra-multiselect>  
+<ra-password *ngSwitchCase="'password'"  [model]="control" [form]="form"></ra-password>  
 </div>
   `,
 	styles: [`

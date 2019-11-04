@@ -146,7 +146,7 @@ export class FormsCompositionService {
 	}
 
 	private isRaTextBox(raControl: RaControls): raControl is RaTextBox {
-		return raControl.kind === "textbox";
+		return raControl.kind === 'textbox' || raControl.kind === 'textarea' || raControl.kind === 'password';
 	}
 
 	private isRaSelectBox(raControl: RaControls): raControl is RaSelectBox {

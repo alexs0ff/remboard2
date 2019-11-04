@@ -3,7 +3,7 @@ import { RaEntityEdit, flexExpressions, RaMultiselect, RaFormLayout, RaTextBox, 
 import { EntityEditSchemaServiceFactory } from "../../ra-cruds/ra-cruds.module";
 import { SchemaFetchEvent, matchToControlValidator } from "../../../ui-common/ui-common.module";
 import { ExtensionParts } from "../../../ui-common/forms-composition/forms-composition.models";
-import { UniqueUserLoginAsyncValidator, passwordFormatValidator, UniqueUserEmailAsyncValidator } from "../../registration/registration.module";
+import { UniqueUserLoginAsyncValidator, passwordFormatValidator } from "../../registration/registration.module";
 import { UserLoginValidator } from "../../registration/user-login.validator";
 
 @Component({
@@ -78,7 +78,7 @@ export class UserEditComponent implements OnInit {
 								flexExpression: flexExpressions.twoItemsExpressions,
 								control: {
 									id: "password",
-									kind: 'textbox',
+									kind: 'password',
 									label: 'Пароль',
 									hint: "Пароль пользователя",
 									valueKind: 'string',
@@ -93,7 +93,7 @@ export class UserEditComponent implements OnInit {
 								flexExpression: flexExpressions.twoItemsExpressions,
 								control: {
 									id: "passwordSecond",
-									kind: 'textbox',
+									kind: 'password',
 									label: 'Пароль',
 									hint: "Повторите пароль",
 									valueKind: 'string',

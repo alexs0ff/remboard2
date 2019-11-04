@@ -23,7 +23,7 @@ namespace Users.Users
 					return true;
 				}
 
-				if (StringComparer.OrdinalIgnoreCase.Equals(dto.LoginName, user.LoginName))
+				if (dto.Id == user.Id)
 				{
 					return true;
 				}
