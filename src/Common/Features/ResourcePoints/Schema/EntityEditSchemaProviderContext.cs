@@ -6,6 +6,6 @@ namespace Common.Features.ResourcePoints.Schema
 {
 	public class EntityEditSchemaProviderContext
 	{
-		public bool? IsNewEntity{ get; set; }
+
 	}
 }

@@ -9,7 +9,6 @@ namespace Common.Features.ResourcePoints
 		string EntityName { get; }
 		string EntityPluralName { get; }
 		Type EntityTypeInfo { get; }
-		Type EntityDtoTypeInfo { get; }
 		Type FilterableEntityTypeInfo { get; }
 		Type KeyType { get; set; }
 	}

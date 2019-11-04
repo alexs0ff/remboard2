@@ -22,17 +22,18 @@ namespace Common.Features.ResourcePoints
 	[ApiController]
 	[Route("api/[controller]")]
 	[Authorize]
-	public class CrudResourcePointController<TEntity, TEntityDto, TFilterableEntity, TKey>: ResourcePointBaseController<TEntity, TEntityDto, TFilterableEntity, TKey>
+	public class CrudResourcePointController<TEntity, TCreateEntityDto, TEditEntityDto, TFilterableEntity, TKey>: ResourcePointBaseController<TEntity, TFilterableEntity, TKey>
 		where TEntity : BaseEntity<TKey>
 		where TFilterableEntity : class
 		where TKey : struct
-		where TEntityDto : class
+		where TCreateEntityDto : class
+		where TEditEntityDto : class
 	{
 		[HttpGet("{id}")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		[ProducesResponseType(StatusCodes.Status403Forbidden)]
-		public async Task<ActionResult<TEntityDto>> Get([FromRoute]string id, [FromServices] RemboardContext context, [FromServices] IAuthorizationService authorizationService, [FromServices] ILogger<ResourcePointBaseController<TEntity, TEntityDto, TFilterableEntity, TKey>> logger, [FromServices] CrudResourcePointControllerFactory<TEntity, TEntityDto, TFilterableEntity, TKey> controllerFactory)
+		public async Task<ActionResult<TCreateEntityDto>> Get([FromRoute]string id, [FromServices] RemboardContext context, [FromServices] IAuthorizationService authorizationService, [FromServices] ILogger<CrudResourcePointController<TEntity, TCreateEntityDto, TEditEntityDto, TFilterableEntity, TKey>> logger, [FromServices] CrudResourcePointControllerFactory<TEntity, TCreateEntityDto, TEditEntityDto, TFilterableEntity, TKey> controllerFactory)
 		{
 			var result = await authorizationService.AuthorizeAsync(User, typeof(TEntity), CrudOperations.Read);
 
@@ -68,7 +69,7 @@ namespace Common.Features.ResourcePoints
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(EntityResponse), StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status403Forbidden)]
-		public async Task<ActionResult<TEntityDto>> Post([FromBody] TEntityDto entityDto, [FromServices] RemboardContext context, [FromServices] IAuthorizationService authorizationService, [FromServices] CrudResourcePointControllerFactory<TEntity, TEntityDto, TFilterableEntity, TKey> controllerFactory)
+		public async Task<ActionResult<TCreateEntityDto>> Post([FromBody] TCreateEntityDto entityDto, [FromServices] RemboardContext context, [FromServices] IAuthorizationService authorizationService, [FromServices] CrudResourcePointControllerFactory<TEntity, TCreateEntityDto, TEditEntityDto, TFilterableEntity, TKey> controllerFactory)
 		{
 			var result = await authorizationService.AuthorizeAsync(User, typeof(TEntity), CrudOperations.Create);
 
@@ -77,7 +78,7 @@ namespace Common.Features.ResourcePoints
 				return Forbid();
 			}
 
-			var validator = controllerFactory.GetValidator();
+			var validator = controllerFactory.GetCreateDtoValidator();
 
 			var validationResult = await ValidateAsync(validator,entityDto);
 
@@ -104,7 +105,7 @@ namespace Common.Features.ResourcePoints
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		[ProducesResponseType(StatusCodes.Status403Forbidden)]
 		[ProducesResponseType(typeof(EntityResponse), StatusCodes.Status400BadRequest)]
-		public async Task<ActionResult<TEntityDto>> Put([FromRoute] string id, [FromBody] TEntityDto entityDto, [FromServices] RemboardContext context, [FromServices] IAuthorizationService authorizationService, [FromServices] CrudResourcePointControllerFactory<TEntity, TEntityDto, TFilterableEntity, TKey> controllerFactory, [FromServices] ILogger<ResourcePointBaseController<TEntity, TEntityDto, TFilterableEntity, TKey>> logger)
+		public async Task<ActionResult<TEditEntityDto>> Put([FromRoute] string id, [FromBody] TEditEntityDto entityDto, [FromServices] RemboardContext context, [FromServices] IAuthorizationService authorizationService, [FromServices] CrudResourcePointControllerFactory<TEntity, TCreateEntityDto, TEditEntityDto, TFilterableEntity, TKey> controllerFactory, [FromServices] ILogger<CrudResourcePointController<TEntity, TCreateEntityDto, TEditEntityDto, TFilterableEntity, TKey>> logger)
 		{
 			var result = await authorizationService.AuthorizeAsync(User, typeof(TEntity), CrudOperations.Create);
 
@@ -113,7 +114,7 @@ namespace Common.Features.ResourcePoints
 				return Forbid();
 			}
 
-			var validator = controllerFactory.GetValidator();
+			var validator = controllerFactory.GetEditDtoValidator();
 
 			var validationResult = await ValidateAsync(validator, entityDto);
 
@@ -155,7 +156,7 @@ namespace Common.Features.ResourcePoints
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		[ProducesResponseType(StatusCodes.Status403Forbidden)]
-		public async Task<IActionResult> Delete([FromRoute] string id, [FromServices] RemboardContext context, [FromServices] IAuthorizationService authorizationService, [FromServices] CrudResourcePointControllerFactory<TEntity, TEntityDto, TFilterableEntity, TKey> controllerFactory, [FromServices] ILogger<ResourcePointBaseController<TEntity, TEntityDto, TFilterableEntity, TKey>> logger)
+		public async Task<IActionResult> Delete([FromRoute] string id, [FromServices] RemboardContext context, [FromServices] IAuthorizationService authorizationService, [FromServices] CrudResourcePointControllerFactory<TEntity, TCreateEntityDto,TEditEntityDto, TFilterableEntity, TKey> controllerFactory, [FromServices] ILogger<CrudResourcePointController<TEntity, TCreateEntityDto,TEditEntityDto, TFilterableEntity, TKey>> logger)
 		{
 			var result = await authorizationService.AuthorizeAsync(User, typeof(TEntity), CrudOperations.Delete);
 
@@ -186,38 +187,46 @@ namespace Common.Features.ResourcePoints
 			return Ok();
 		}
 
-		[HttpGet("/api/[controller]/editSchema")]
+		[HttpGet("/api/[controller]/createSchema")]
 		[ProducesResponseType(StatusCodes.Status403Forbidden)]
 		[ProducesResponseType(StatusCodes.Status200OK)]
-		public async Task<ActionResult<EntityEditFormModel>> GridSchema([FromServices] IAuthorizationService authorizationService, [FromServices] CrudResourcePointControllerFactory<TEntity, TEntityDto, TFilterableEntity, TKey> controllerFactory)
+		public async Task<ActionResult<EntityEditFormModel>> GetCreateSchema([FromServices] IAuthorizationService authorizationService, [FromServices] CrudResourcePointControllerFactory<TEntity, TCreateEntityDto, TEditEntityDto, TFilterableEntity, TKey> controllerFactory)
 		{
 			var createResult = await authorizationService.AuthorizeAsync(User, typeof(TEntity), CrudOperations.Create);
-			var updateResult = await authorizationService.AuthorizeAsync(User, typeof(TEntity), CrudOperations.Update);
 
-			if (!(createResult.Succeeded || updateResult.Succeeded))
+			if (!createResult.Succeeded)
 			{
 				return Forbid();
 			}
 
-			var schemaProvider = controllerFactory.GetEntityEditSchemaProvider();
+			var schemaProvider = controllerFactory.GetEntityFormSchemaProvider();
 			var context = new EntityEditSchemaProviderContext();
-			var isNewEntity = Request.Query["isNewEntity"];
-			bool? isNew = null;
 			
-			if (!string.IsNullOrWhiteSpace(isNewEntity))
-			{
-				if (bool.TryParse(isNewEntity,out bool res))
-				{
-					isNew = res;
-				}
-			}
-
-			context.IsNewEntity = isNew;
-			var model = await schemaProvider.GetModelAsync(context);
+			var model = await schemaProvider.GetCreateModelAsync(context);
 			return Ok(model);
 		}
 
-		private async Task<ValidationErrorItem[]> ValidateAsync(IValidator<TEntityDto> validator, TEntityDto entityDto)
+		[HttpGet("/api/[controller]/editSchema")]
+		[ProducesResponseType(StatusCodes.Status403Forbidden)]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		public async Task<ActionResult<EntityEditFormModel>> GetEditSchema([FromServices] IAuthorizationService authorizationService, [FromServices] CrudResourcePointControllerFactory<TEntity, TCreateEntityDto, TEditEntityDto, TFilterableEntity, TKey> controllerFactory)
+		{
+			var updateResult = await authorizationService.AuthorizeAsync(User, typeof(TEntity), CrudOperations.Update);
+
+			if (!updateResult.Succeeded)
+			{
+				return Forbid();
+			}
+
+			var schemaProvider = controllerFactory.GetEntityFormSchemaProvider();
+			var context = new EntityEditSchemaProviderContext();
+			
+			var model = await schemaProvider.GetEditModelAsync(context);
+			return Ok(model);
+		}
+
+		private async Task<ValidationErrorItem[]> ValidateAsync<TEntityDto>(IValidator<TEntityDto> validator, TEntityDto entityDto)
+		where TEntityDto:class
 		{
 			var result = await validator.ValidateAsync(entityDto);
 

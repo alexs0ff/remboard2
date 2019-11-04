@@ -34,11 +34,11 @@ namespace Users
         protected override IEnumerable<IResourcePointConfigurator> RegisterResourcePoints()
         {
 	        var userIncludeProperties = new[] {"ProjectRole", "UserBranches", "UserBranches.Branch"};
-			yield return new CrudResourcePointConfigurator<User, UserDto, UserDto, Guid>()
+			yield return new CrudResourcePointConfigurator<User, UserDto, UserDto, UserDto, Guid>()
 				.AddModifyRoles()
-				.UseValidator<UserDtoValidator>()
+				.UseValidators<UserDtoValidator, UserDtoValidator>()
 				.AddEntityCorrector<UserCorrector>()
-				.UseEntityContextCrudOperation<EntityContextCrudOperation<User, UserDto, Guid>>(p =>
+				.UseEntityContextCrudOperation<EntityContextCrudOperation<User, UserDto, UserDto, Guid>>(p =>
 					{
 						p.IncludeProperties = userIncludeProperties;
 					})

@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 import { QueryParams, IEntityBase } from "../ra-cruds.module";
 import { EntityEditSchemaState, IEntityEditSchemaConfigurator, IEntityEditSchemaService } from "./ra-edit-schema-cruds.models";
 import { RaEntityEdit } from "../../../ra-schema/ra-schema-forms.models";
-import { EntityEditSchemaActions, loadEditModelWithQuery } from "./ra-edit-schema-cruds.actions";
+import { EntityEditSchemaActions, loadEditModelWithQuery, loadCreateModelWithQuery } from "./ra-edit-schema-cruds.actions";
 import { EntityFormModel } from "../../../ra-schema/ra-schema.module";
 
 
@@ -107,8 +107,12 @@ export class EntityEditSchemaService<T extends IEntityBase> implements IEntityEd
 		this.entityActions = configurator.entityActions;
 	}
 
-	getWithQuery(queryParams: QueryParams) {
+	getEditFormWithQuery(queryParams: QueryParams) {
 		this.store.dispatch(loadEditModelWithQuery({ entitiesName: this.entitiesName, queryParams: queryParams}));
+	}
+
+	getCreateFormWithQuery(queryParams: QueryParams) {
+		this.store.dispatch(loadCreateModelWithQuery({ entitiesName: this.entitiesName, queryParams: queryParams }));
 	}
 
 	updateModel(model: RaEntityEdit, layouts: string[]) {
@@ -117,16 +121,23 @@ export class EntityEditSchemaService<T extends IEntityBase> implements IEntityEd
 }
 
 export interface IEntityEditSchemaApiService {
-	getWithQuery(queryParams: QueryParams): Observable<EntityFormModel>;
+	getEditFormWithQuery(queryParams: QueryParams): Observable<EntityFormModel>;
+	getCreateFormWithQuery(queryParams: QueryParams): Observable<EntityFormModel>;
 }
 
 class EntityEditSchemaApiService implements IEntityEditSchemaApiService {
 
 	constructor(private entitiesName: string, private entitySingleName: string, private httpClient: HttpClient) { }
 
-	getWithQuery(queryParams): Observable<EntityFormModel> {
+	getEditFormWithQuery(queryParams): Observable<EntityFormModel> {
 		const httpParams = RaUtils.toHttpParams(queryParams);
 		return this.httpClient.get<EntityFormModel>("api/" + this.entitySingleName + "/editSchema",
+			{ params: httpParams });
+	}
+
+	getCreateFormWithQuery(queryParams): Observable<EntityFormModel> {
+		const httpParams = RaUtils.toHttpParams(queryParams);
+		return this.httpClient.get<EntityFormModel>("api/" + this.entitySingleName + "/createSchema",
 			{ params: httpParams });
 	}
 }

@@ -16,10 +16,9 @@ using EntitySqlFilterOperationParameters = Common.Features.ResourcePoints.Filter
 
 namespace Common.Features.ResourcePoints
 {
-	public class ResourcePointConfigurator<TEntity, TEntityDto, TFilterableEntity, TKey>: IResourcePointConfigurator
+	public class ResourcePointConfigurator<TEntity, TFilterableEntity, TKey>: IResourcePointConfigurator
 		where TEntity : BaseEntity<TKey>
 		where TFilterableEntity : class
-		where TEntityDto : class
 		where TKey:struct
 	{
 		private Type _filterableEntityOperation = null;
@@ -46,7 +45,7 @@ namespace Common.Features.ResourcePoints
 			}
 		}
 
-		public ResourcePointConfigurator<TEntity, TEntityDto, TFilterableEntity, TKey> UseFilterableEntityOperation<TFilterableOperation>(Action<EntityContextFilterOperationParameters> config)
+		public ResourcePointConfigurator<TEntity, TFilterableEntity, TKey> UseFilterableEntityOperation<TFilterableOperation>(Action<EntityContextFilterOperationParameters> config)
 			where TFilterableOperation : EntityContextFilterOperation<TEntity, TFilterableEntity,TKey>
 		{
 			var parameters = new EntityContextFilterOperationParameters();
@@ -57,7 +56,7 @@ namespace Common.Features.ResourcePoints
 			return this;
 		}
 
-		public ResourcePointConfigurator<TEntity, TEntityDto, TFilterableEntity, TKey> UseFilterableEntityOperation<TFilterableOperation>(Action<EntitySqlFilterOperationParameters> config)
+		public ResourcePointConfigurator<TEntity, TFilterableEntity, TKey> UseFilterableEntityOperation<TFilterableOperation>(Action<EntitySqlFilterOperationParameters> config)
 			where TFilterableOperation : EntitySqlFilterOperation<TEntity, TFilterableEntity, TKey>
 		{
 			_filterableEntityOperation = typeof(TFilterableOperation);
@@ -67,19 +66,19 @@ namespace Common.Features.ResourcePoints
 			return this;
 		}
 
-		public ResourcePointConfigurator<TEntity, TEntityDto, TFilterableEntity, TKey> SetEntityPluralName(string pluralName)
+		public ResourcePointConfigurator<TEntity, TFilterableEntity, TKey> SetEntityPluralName(string pluralName)
 		{
 			_entityPluralName = pluralName;
 			return this;
 		}
 
-		public ResourcePointConfigurator<TEntity, TEntityDto, TFilterableEntity, TKey> AddReadRoles(params ProjectRoles[] roles)
+		public ResourcePointConfigurator<TEntity, TFilterableEntity, TKey> AddReadRoles(params ProjectRoles[] roles)
 		{
 			AppendRoles(_readRoles, roles);
 			return this;
 		}
 
-		public ResourcePointConfigurator<TEntity, TEntityDto, TFilterableEntity, TKey> AddMandatorySpecification<TMandatorySpec>()
+		public ResourcePointConfigurator<TEntity, TFilterableEntity, TKey> AddMandatorySpecification<TMandatorySpec>()
 			where TMandatorySpec : ISpecification<TEntity>
 		{
 			_mandatorySpecifications.Add(typeof(TMandatorySpec));
@@ -87,7 +86,7 @@ namespace Common.Features.ResourcePoints
 		}
 
 		//SchemaProvider IEntitySchemaProvider
-		public ResourcePointConfigurator<TEntity, TEntityDto, TFilterableEntity, TKey> UseEntitySchemaProvider<TProvider>()
+		public ResourcePointConfigurator<TEntity, TFilterableEntity, TKey> UseEntitySchemaProvider<TProvider>()
 		where TProvider: IEntitySchemaProvider<TFilterableEntity>
 		{
 			_entitySchemaProviderType = typeof(TProvider);
@@ -127,7 +126,7 @@ namespace Common.Features.ResourcePoints
 
 		protected virtual Type GetResourcePointFactoryType(List<Type> listBaseTypes)
 		{
-			return typeof(ResourcePointControllerFactory<TEntity, TEntityDto, TFilterableEntity, TKey>);
+			return typeof(ResourcePointControllerFactory<TEntity, TFilterableEntity, TKey>);
 		}
 		protected virtual ControllerFactoryParameters CreateFactoryParameters()
 		{
@@ -137,7 +136,6 @@ namespace Common.Features.ResourcePoints
 		protected virtual void FillControllerFactoryParameters(ControllerFactoryParameters parameters)
 		{
 			var resourcePointDescriptor = new ResourcePointDescriptor();
-			resourcePointDescriptor.EntityDtoTypeInfo = typeof(TEntityDto);
 			resourcePointDescriptor.EntityName = typeof(TEntity).Name;
 
 			if (string.IsNullOrWhiteSpace(_entityPluralName))
@@ -153,7 +151,7 @@ namespace Common.Features.ResourcePoints
 			resourcePointDescriptor.EntityTypeInfo = typeof(TEntity);
 			resourcePointDescriptor.KeyType = typeof(TKey);
 
-			var controllerType = typeof(ResourcePointBaseController<,,,>).MakeGenericType(typeof(TEntity), typeof(TEntityDto),
+			var controllerType = typeof(ResourcePointBaseController<,,>).MakeGenericType(typeof(TEntity),
 				typeof(TFilterableEntity), typeof(TKey));
 			parameters.ControllerType = controllerType;
 			parameters.ResourcePoint = resourcePointDescriptor;

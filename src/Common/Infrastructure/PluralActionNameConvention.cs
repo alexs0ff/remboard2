@@ -53,7 +53,7 @@ namespace Common.Infrastructure
 			
 			
 			if (hasAttribute &&
-			         action.Controller.ControllerType.InheritsOrImplements(typeof(ResourcePointBaseController<,,,>)))
+			         action.Controller.ControllerType.InheritsOrImplements(typeof(ResourcePointBaseController<,,>)))
 			{
 				var entityType = action.Controller.ControllerType.GetEntityTypeOrNull();
 				if (entityType != null)

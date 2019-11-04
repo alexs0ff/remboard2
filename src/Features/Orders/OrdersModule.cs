@@ -57,22 +57,22 @@ namespace Orders
 
         protected override IEnumerable<IResourcePointConfigurator> RegisterResourcePoints()
         {
-	        yield return new CrudResourcePointConfigurator<OrderType, OrderTypeDto, OrderTypeDto, Guid>()
+	        yield return new CrudResourcePointConfigurator<OrderType, OrderTypeDto, OrderTypeDto, OrderTypeDto, Guid>()
 		        .AddModifyRoles()
-		        .UseValidator<OrderTypeDtoValidator>()
-		        .UseEntityContextCrudOperation<EntityContextCrudOperation<OrderType,OrderTypeDto,Guid>>(p=>{})
+		        .UseValidators<OrderTypeDtoValidator, OrderTypeDtoValidator>()
+		        .UseEntityContextCrudOperation<EntityContextCrudOperation<OrderType,OrderTypeDto, OrderTypeDto, Guid>>(p=>{})
 				.SetEntityPluralName("OrderTypes")
 		        .UseFilterableEntityOperation<Common.Features.ResourcePoints.Filterable.EntityContextFilterOperation<
 			        OrderType, OrderTypeDto, Guid>>(
 			        parameters => { })
 				.AddReadRoles(ProjectRoles.Admin,ProjectRoles.Engineer,ProjectRoles.Manager);
 
-	        yield return new CrudResourcePointConfigurator<AutocompleteItem, AutocompleteItemDto, AutocompleteItemDto,
+	        yield return new CrudResourcePointConfigurator<AutocompleteItem, AutocompleteItemDto, AutocompleteItemDto, AutocompleteItemDto,
 			        Guid>()
 		        .AddModifyRoles()
-		        .UseValidator<AutocompleteItemDtoValidator>()
+		        .UseValidators<AutocompleteItemDtoValidator, AutocompleteItemDtoValidator>()
 		        .UseEntityEditSchemaProvider<AutocompleteItemEditSchemaProvider>()
-		        .UseEntityContextCrudOperation<EntityContextCrudOperation<AutocompleteItem, AutocompleteItemDto, Guid>>(p => { })
+		        .UseEntityContextCrudOperation<EntityContextCrudOperation<AutocompleteItem, AutocompleteItemDto, AutocompleteItemDto, Guid>>(p => { })
 		        .UseEntitySchemaProvider<AutocompleteItemSchemaProvider>()
 		        .UseFilterableEntityOperation<EntitySqlFilterOperation<AutocompleteItem, AutocompleteItemDto,Guid>>(
 			        parameters =>
@@ -104,10 +104,10 @@ namespace Orders
 					        nameof(AutocompleteItem.AutocompleteKind) + "." + nameof(AutocompleteItem.AutocompleteKind.Name));
 			        })*/;
 
-	        yield return new CrudResourcePointConfigurator<OrderStatus, OrderStatusDto, OrderStatusDto, Guid>()
+	        yield return new CrudResourcePointConfigurator<OrderStatus, OrderStatusDto, OrderStatusDto, OrderStatusDto, Guid>()
 		        .AddModifyRoles()
-		        .UseValidator<OrderStatusDtoValidator>()
-		        .UseEntityContextCrudOperation<EntityContextCrudOperation<OrderStatus, OrderStatusDto, Guid>>(p => { })
+		        .UseValidators<OrderStatusDtoValidator, OrderStatusDtoValidator>()
+		        .UseEntityContextCrudOperation<EntityContextCrudOperation<OrderStatus, OrderStatusDto, OrderStatusDto, Guid>>(p => { })
 		        .SetEntityPluralName("OrderStatuses")
 		        .UseFilterableEntityOperation<Common.Features.ResourcePoints.Filterable.EntityContextFilterOperation<
 			        OrderStatus, OrderStatusDto, Guid>>(
@@ -116,10 +116,10 @@ namespace Orders
 				        parameters.AddSortFieldsMapping(nameof(OrderStatusDto.OrderStatusKindTitle), nameof(OrderStatus.OrderStatusKind) + "." + nameof(OrderStatus.OrderStatusKind.Name));
 					});
 
-	        yield return new CrudResourcePointConfigurator<Branch, BranchDto, BranchDto, Guid>()
+	        yield return new CrudResourcePointConfigurator<Branch, BranchDto, BranchDto, BranchDto, Guid>()
 		        .AddModifyRoles()
-		        .UseValidator<BranchDtoValidator>()
-		        .UseEntityContextCrudOperation<EntityContextCrudOperation<Branch, BranchDto, Guid>>(p => { })
+		        .UseValidators<BranchDtoValidator, BranchDtoValidator>()
+		        .UseEntityContextCrudOperation<EntityContextCrudOperation<Branch, BranchDto, BranchDto, Guid>>(p => { })
 		        .SetEntityPluralName("Branches")
 		        .UseFilterableEntityOperation<Common.Features.ResourcePoints.Filterable.EntityContextFilterOperation<
 			        Branch, BranchDto, Guid>>(

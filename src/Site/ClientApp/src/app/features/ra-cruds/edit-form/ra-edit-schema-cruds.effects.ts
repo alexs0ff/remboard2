@@ -4,7 +4,7 @@ import { map, mergeMap, catchError, tap, first } from 'rxjs/operators';
 import { RaUtils } from "../ra-cruds.utils";
 
 import { EMPTY, of } from 'rxjs';
-import { loadEditModelWithQuery, EntityEditSchemaActions } from "./ra-edit-schema-cruds.actions";
+import { loadEditModelWithQuery, EntityEditSchemaActions, loadCreateModelWithQuery } from "./ra-edit-schema-cruds.actions";
 import { EntityEditSchemaServiceApiFactory, EntityEditSchemaConfiguratorRegistry, IEntityEditSchemaApiService,
 	EntityEditSchemaServiceFactory
 } from "./ra-edit-schema-cruds.services";
@@ -13,10 +13,10 @@ import { IEntityEditSchemaService } from "./ra-edit-schema-cruds.models";
 
 @Injectable()
 export class EntityEditSchemaEffects {
-	loadwithQueryEntities$ = createEffect(() => this.actions$.pipe(
+	loadWithQueryEditFormSchemaEntities$ = createEffect(() => this.actions$.pipe(
 		ofType(loadEditModelWithQuery),
 		mergeMap((action) => {
-			return this.getApiService(action.entitiesName).getWithQuery(action.queryParams).pipe(
+			return this.getApiService(action.entitiesName).getEditFormWithQuery(action.queryParams).pipe(
 				map(result => this.getEntityActions(action.entitiesName).updateEditModel({ model: result.entityEdit, layouts: result.displayedLayoutIds })),
 				catchError((error) => {
 					const parsed = RaUtils.parseHttpError(error);
@@ -26,6 +26,21 @@ export class EntityEditSchemaEffects {
 			);
 		}))
 		
+	);
+
+	loadWithQueryCreateFormSchemaEntities$ = createEffect(() => this.actions$.pipe(
+			ofType(loadCreateModelWithQuery),
+			mergeMap((action) => {
+				return this.getApiService(action.entitiesName).getCreateFormWithQuery(action.queryParams).pipe(
+					map(result => this.getEntityActions(action.entitiesName).updateEditModel({ model: result.entityEdit, layouts: result.displayedLayoutIds })),
+					catchError((error) => {
+						const parsed = RaUtils.parseHttpError(error);
+						//return of(this.getEntityActions(e.entitiesName).setApiError({ error: parsed }));
+						return EMPTY;
+					})
+				);
+			}))
+
 	);
 
 	constructor(private actions$: Actions, private entityEditSchemaServiceApiFactory: EntityEditSchemaServiceApiFactory, private configuratorRegistry: EntityEditSchemaConfiguratorRegistry, private entityEditSchemaServiceFactory: EntityEditSchemaServiceFactory) {

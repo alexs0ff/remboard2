@@ -6,12 +6,17 @@ using Entities;
 
 namespace Common.Features
 {
-	public interface IEntityCorrector<in TEntity,in TEntityDto,TKey>
+	public interface IEntityCorrector<in TEntity,in TCreateEntityDto,in TEditEntityDto, TKey>
         where TEntity : BaseEntity<TKey>
 		where TKey:struct
+		where TEditEntityDto : class
+		where TCreateEntityDto : class
     {
-        Task CorrectEntityAsync(EntityCorrectorContext context, TEntity entity, TEntityDto receivedEntityDto);
+        Task CorrectEntityAsync(EntityCorrectorContext context, TEntity entity, TCreateEntityDto receivedEntityDto);
+        Task CorrectEntityAsync(EntityCorrectorContext context, TEntity entity, TEditEntityDto receivedEntityDto);
 
-        Task CorrectEntityDtoAsync(EntityCorrectorContext context, TEntityDto entityDto, TEntity entity);
+        Task CorrectEntityDtoAsync(EntityCorrectorContext context, TCreateEntityDto entityDto, TEntity entity);
+
+        Task CorrectEntityDtoAsync(EntityCorrectorContext context, TEditEntityDto entityDto, TEntity entity);
     }
 }

@@ -19,7 +19,7 @@ namespace Common.Infrastructure
             {
 				var entityType = controller.ControllerType.GenericTypeArguments[0];
 				controller.ControllerName = entityType.Name;
-            }else if (controller.ControllerType.InheritsOrImplements(typeof(ResourcePointBaseController<,,,>)))
+            }else if (controller.ControllerType.InheritsOrImplements(typeof(ResourcePointBaseController<,,>)))
 			{
 				var entityType = controller.ControllerType.GetEntityTypeOrNull();
 				controller.ControllerName = entityType.Name;

@@ -15,18 +15,19 @@ using Microsoft.Extensions.Logging;
 
 namespace Common.Features.ResourcePoints.Crud
 {
-	public class EntityContextCrudOperation<TEntity, TEntityDto, TKey> : ICrudOperation<TEntity, TEntityDto, TKey>
+	public class EntityContextCrudOperation<TEntity, TCreateEntityDto, TEditEntityDto, TKey> : ICrudOperation<TEntity, TCreateEntityDto,TEditEntityDto, TKey>
 		where TEntity : BaseEntity<TKey>
 		where TKey : struct
-		where TEntityDto : class
+		where TCreateEntityDto : class
+		where TEditEntityDto : class
 	{
 		private readonly IMapper _mapper;
-		private readonly ILogger<EntityContextCrudOperation<TEntity, TEntityDto, TKey>> _logger;
+		private readonly ILogger<EntityContextCrudOperation<TEntity, TCreateEntityDto, TEditEntityDto,TKey>> _logger;
 		private readonly OnlyTenantEntitiesSpecification<TEntity, TKey> _onlyTenantEntitiesSpecification;
 		private readonly EntityContextCrudOperationParameters _parameters;
 
 		/// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
-		public EntityContextCrudOperation(IMapper mapper,ILogger<EntityContextCrudOperation<TEntity, TEntityDto, TKey>> logger, OnlyTenantEntitiesSpecification<TEntity,TKey> onlyTenantEntitiesSpecification, EntityContextCrudOperationParameters parameters)
+		public EntityContextCrudOperation(IMapper mapper,ILogger<EntityContextCrudOperation<TEntity, TCreateEntityDto,TEditEntityDto, TKey>> logger, OnlyTenantEntitiesSpecification<TEntity,TKey> onlyTenantEntitiesSpecification, EntityContextCrudOperationParameters parameters)
 		{
 			_mapper = mapper;
 			_logger = logger;
@@ -34,7 +35,7 @@ namespace Common.Features.ResourcePoints.Crud
 			_parameters = parameters;
 		}
 
-		public async Task<TEntityDto> Get(string id, DbContext context, IResourceMandatoryPredicateFactory<TEntity, TKey> mandatoryPredicateFactory)
+		public async Task<TCreateEntityDto> Get(string id, DbContext context, IResourceMandatoryPredicateFactory<TEntity, TKey> mandatoryPredicateFactory)
 		{
 			var entity = await GetById(id, context, mandatoryPredicateFactory.GetMandatoryPredicates());
 
@@ -43,7 +44,7 @@ namespace Common.Features.ResourcePoints.Crud
 				return null;
 			}
 
-			var entityDto = _mapper.Map<TEntityDto>(entity);
+			var entityDto = _mapper.Map<TCreateEntityDto>(entity);
 
 			return entityDto;
 		}
@@ -84,7 +85,7 @@ namespace Common.Features.ResourcePoints.Crud
 			return idRaw;
 		}
 
-		public async Task<TEntityDto> Post(TEntityDto entityDto, DbContext context, List<IEntityCorrector<TEntity, TEntityDto, TKey>> correctors)
+		public async Task<TCreateEntityDto> Post(TCreateEntityDto entityDto, DbContext context, List<IEntityCorrector<TEntity,TCreateEntityDto,TEditEntityDto, TKey>> correctors)
 		{
 			var entity = _mapper.Map<TEntity>(entityDto);
 
@@ -93,19 +94,19 @@ namespace Common.Features.ResourcePoints.Crud
 			{
 				OperationKind = CrudOperationKind.Post
 			};
-			await correctors.CorrectEntityAsync(correctorContext,entity, entityDto);
+			await correctors.CorrectCreateEntityAsync(correctorContext,entity, entityDto);
 
 			context.Set<TEntity>().Add(entity);
 			await context.SaveChangesAsync();
 
-			entityDto = _mapper.Map<TEntityDto>(entity);
+			entityDto = _mapper.Map<TCreateEntityDto>(entity);
 
-			await correctors.CorrectEntityDtoAsync(correctorContext, entityDto, entity);
+			await correctors.CorrectCreateEntityDtoAsync(correctorContext, entityDto, entity);
 
 			return entityDto;
 		}
 
-		public async Task<TEntityDto> Put(string id, TEntityDto entityDto, DbContext context, IResourceMandatoryPredicateFactory<TEntity, TKey> mandatoryPredicateFactory,List<IEntityCorrector<TEntity, TEntityDto, TKey>> correctors)
+		public async Task<TEditEntityDto> Put(string id, TEditEntityDto entityDto, DbContext context, IResourceMandatoryPredicateFactory<TEntity, TKey> mandatoryPredicateFactory,List<IEntityCorrector<TEntity, TCreateEntityDto, TEditEntityDto, TKey>> correctors)
 		{
 			var foundEntity = await GetById(id, context, mandatoryPredicateFactory.GetMandatoryPredicates());
 
@@ -121,15 +122,15 @@ namespace Common.Features.ResourcePoints.Crud
 				OperationKind = CrudOperationKind.Put
 			};
 
-			await correctors.CorrectEntityAsync(correctorContext, foundEntity, entityDto);
+			await correctors.CorrectEditEntityAsync(correctorContext, foundEntity, entityDto);
 
 			context.Set<TEntity>().Update(foundEntity);
 			
 			await context.SaveChangesAsync();
 
-			entityDto = _mapper.Map<TEntityDto>(foundEntity);
+			entityDto = _mapper.Map<TEditEntityDto>(foundEntity);
 	
-			await correctors.CorrectEntityDtoAsync(correctorContext, entityDto, foundEntity);
+			await correctors.CorrectEditEntityDtoAsync(correctorContext, entityDto, foundEntity);
 
 			return entityDto;
 		}

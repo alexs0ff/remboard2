@@ -21,11 +21,10 @@ namespace Common.Features.ResourcePoints
 	[ApiController]
 	[Route("api/[controller]")]
 	[Authorize]
-	public class ResourcePointBaseController<TEntity, TEntityDto, TFilterableEntity, TKey> : ControllerBase
+	public class ResourcePointBaseController<TEntity, TFilterableEntity, TKey> : ControllerBase
 		where TEntity : BaseEntity<TKey>
 		where TFilterableEntity : class
 		where TKey:struct
-		where TEntityDto :class
 	{
 		public ResourcePointBaseController(/*!all dependencies should get [FromServices] attribute*/)
 		{
@@ -35,7 +34,7 @@ namespace Common.Features.ResourcePoints
 		[HttpGet("/api/[action]")]
 		[ProducesResponseType(StatusCodes.Status403Forbidden)]
 		[ProducesResponseType(StatusCodes.Status200OK)]
-		public async Task<ActionResult<PagedResult<TFilterableEntity>>> Get(FilterParameters filterParameters,[FromServices] RemboardContext context, [FromServices] IAuthorizationService authorizationService, [FromServices] ResourcePointControllerFactory<TEntity, TEntityDto, TFilterableEntity, TKey> controllerFactory)
+		public async Task<ActionResult<PagedResult<TFilterableEntity>>> Get(FilterParameters filterParameters,[FromServices] RemboardContext context, [FromServices] IAuthorizationService authorizationService, [FromServices] ResourcePointControllerFactory<TEntity, TFilterableEntity, TKey> controllerFactory)
 		{
 			var result = await authorizationService.AuthorizeAsync(User, typeof(TEntity), CrudOperations.Read);
 
@@ -53,7 +52,7 @@ namespace Common.Features.ResourcePoints
 		[HttpGet("/api/[controller]/gridSchema")]
 		[ProducesResponseType(StatusCodes.Status403Forbidden)]
 		[ProducesResponseType(StatusCodes.Status200OK)]
-		public async Task<ActionResult<ServerDataGridModel>> GridSchema([FromServices] IAuthorizationService authorizationService, [FromServices] ResourcePointControllerFactory<TEntity, TEntityDto, TFilterableEntity, TKey> controllerFactory)
+		public async Task<ActionResult<ServerDataGridModel>> GridSchema([FromServices] IAuthorizationService authorizationService, [FromServices] ResourcePointControllerFactory<TEntity, TFilterableEntity, TKey> controllerFactory)
 		{
 			var result = await authorizationService.AuthorizeAsync(User, typeof(TEntity), CrudOperations.Read);
 

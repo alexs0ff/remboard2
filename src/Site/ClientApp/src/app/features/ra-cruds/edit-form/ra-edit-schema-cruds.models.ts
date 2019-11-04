@@ -20,7 +20,8 @@ export interface IEntityEditSchemaConfigurator<T extends IEntityBase> {
 export interface IEntityEditSchemaService<T extends IEntityBase> {
 	editModel: Observable<RaEntityEdit>;
 	layoutIds: Observable<string[]>;
-	getWithQuery(queryParams: QueryParams);
+	getEditFormWithQuery(queryParams: QueryParams);
+	getCreateFormWithQuery(queryParams: QueryParams);
 	updateModel(model: RaEntityEdit, layouts: string[]);
 }
 

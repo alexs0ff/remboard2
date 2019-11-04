@@ -9,7 +9,7 @@ using Entities.Dto;
 
 namespace Orders.Autocomplete
 {
-	public class AutocompleteItemEditSchemaProvider: IEntityEditSchemaProvider<AutocompleteItemDto>
+	public class AutocompleteItemEditSchemaProvider: IEntityFormSchemaProvider<AutocompleteItemDto, AutocompleteItemDto>
 	{
 		private static readonly EntityEditFormModel FormModel = new EntityEditFormModel
 		{
@@ -85,7 +85,12 @@ namespace Orders.Autocomplete
 			}
 		};
 
-		public Task<EntityEditFormModel> GetModelAsync(EntityEditSchemaProviderContext context)
+		public Task<EntityEditFormModel> GetCreateModelAsync(EntityEditSchemaProviderContext context)
+		{
+			return Task.FromResult(FormModel);
+		}
+
+		public Task<EntityEditFormModel> GetEditModelAsync(EntityEditSchemaProviderContext context)
 		{
 			return Task.FromResult(FormModel);
 		}

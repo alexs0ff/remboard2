@@ -13,15 +13,17 @@ using Entities;
 
 namespace Common.Features.ResourcePoints
 {
-	public class CrudResourcePointConfigurator<TEntity, TEntityDto, TFilterableEntity, TKey>: ResourcePointConfigurator<TEntity, TEntityDto, TFilterableEntity, TKey>
+	public class CrudResourcePointConfigurator<TEntity, TCreateEntityDto, TEditEntityDto, TFilterableEntity, TKey>: ResourcePointConfigurator<TEntity, TFilterableEntity, TKey>
 		where TEntity : BaseEntity<TKey>
 		where TFilterableEntity : class
-		where TEntityDto : class
+		where TCreateEntityDto : class
+		where TEditEntityDto : class
 		where TKey : struct
 	{
 		private readonly HashSet<ProjectRoles> _modifyRoles = new HashSet<ProjectRoles>();
 
-		private Type _entityValidator = null;
+		private Type _entityCreateValidator = null;
+		private Type _entityEditValidator = null;
 
 		private Type _crudOperation;
 
@@ -38,26 +40,28 @@ namespace Common.Features.ResourcePoints
 		{
 			if (typeof(TEntity).HasImplementation<ITenantedEntity>())
 			{
-				_tenantedEntityCorrectorType = typeof(TenantedEntityCorrector<TEntityDto, TKey>);
+				_tenantedEntityCorrectorType = typeof(TenantedEntityCorrector<TCreateEntityDto,TEditEntityDto, TKey>);
 				_entityCorrectorTypes.Add(_tenantedEntityCorrectorType);
 			}
 		}
 
-		public CrudResourcePointConfigurator<TEntity, TEntityDto, TFilterableEntity, TKey> AddModifyRoles(params ProjectRoles[] roles)
+		public CrudResourcePointConfigurator<TEntity, TCreateEntityDto, TEditEntityDto, TFilterableEntity, TKey> AddModifyRoles(params ProjectRoles[] roles)
 		{
 			AppendRoles(_modifyRoles, roles);
 			return this;
 		}
 
-		public CrudResourcePointConfigurator<TEntity, TEntityDto, TFilterableEntity, TKey> UseValidator<TValidator>()
-			where TValidator : BaseEntityDtoValidator<TEntityDto>
+		public CrudResourcePointConfigurator<TEntity, TCreateEntityDto, TEditEntityDto, TFilterableEntity, TKey> UseValidators<TCreateValidator, TEditValidator>()
+			where TCreateValidator : BaseEntityDtoValidator<TCreateEntityDto>
+			where TEditValidator : BaseEntityDtoValidator<TEditEntityDto>
 		{
-			_entityValidator = typeof(TValidator);
+			_entityCreateValidator = typeof(TCreateValidator);
+			_entityEditValidator = typeof(TEditValidator);
 			return this;
 		}
 
-		public CrudResourcePointConfigurator<TEntity, TEntityDto, TFilterableEntity, TKey> UseCrudOperation<TCrudOperation, TOperationParameters>(Action<TOperationParameters> cfg)
-			where TCrudOperation : ICrudOperation<TEntity, TEntityDto, TKey>
+		public CrudResourcePointConfigurator<TEntity, TCreateEntityDto, TEditEntityDto, TFilterableEntity, TKey> UseCrudOperation<TCrudOperation, TOperationParameters>(Action<TOperationParameters> cfg)
+			where TCrudOperation : ICrudOperation<TEntity, TCreateEntityDto,TEditEntityDto, TKey>
 			where TOperationParameters : CrudOperationParameters,new()
 		{
 			var parameters = new TOperationParameters();
@@ -67,8 +71,8 @@ namespace Common.Features.ResourcePoints
 			return this;
 		}
 
-		public CrudResourcePointConfigurator<TEntity, TEntityDto, TFilterableEntity, TKey> UseEntityContextCrudOperation<TCrudOperation>(Action<EntityContextCrudOperationParameters> cfg)
-			where TCrudOperation : EntityContextCrudOperation<TEntity, TEntityDto, TKey>
+		public CrudResourcePointConfigurator<TEntity, TCreateEntityDto, TEditEntityDto, TFilterableEntity, TKey> UseEntityContextCrudOperation<TCrudOperation>(Action<EntityContextCrudOperationParameters> cfg)
+			where TCrudOperation : EntityContextCrudOperation<TEntity, TCreateEntityDto, TEditEntityDto, TKey>
 		{
 			var parameters = new EntityContextCrudOperationParameters();
 			cfg(parameters);
@@ -77,15 +81,15 @@ namespace Common.Features.ResourcePoints
 			return this;
 		}
 
-		public CrudResourcePointConfigurator<TEntity, TEntityDto, TFilterableEntity, TKey> AddEntityCorrector<TCorrector>()
-			where TCorrector : IEntityCorrector<TEntity, TEntityDto,TKey>
+		public CrudResourcePointConfigurator<TEntity, TCreateEntityDto, TEditEntityDto, TFilterableEntity, TKey> AddEntityCorrector<TCorrector>()
+			where TCorrector : IEntityCorrector<TEntity, TCreateEntityDto, TEditEntityDto, TKey>
 		{
 			_entityCorrectorTypes.Add(typeof(TCorrector));
 			return this;
 		}
 
-		public CrudResourcePointConfigurator<TEntity, TEntityDto, TFilterableEntity, TKey> UseEntityEditSchemaProvider<TProvider>()
-			where TProvider : IEntityEditSchemaProvider<TEntityDto>
+		public CrudResourcePointConfigurator<TEntity, TCreateEntityDto, TEditEntityDto, TFilterableEntity, TKey> UseEntityEditSchemaProvider<TProvider>()
+			where TProvider : IEntityFormSchemaProvider<TCreateEntityDto, TEditEntityDto>
 		{
 			_entityEditSchemaProviderType = typeof(TProvider);
 			return this;
@@ -93,8 +97,8 @@ namespace Common.Features.ResourcePoints
 
 		protected override Type GetResourcePointFactoryType(List<Type> listBaseTypes)
 		{
-			listBaseTypes.Add(typeof(ResourcePointControllerFactory<TEntity, TEntityDto, TFilterableEntity, TKey>));
-			return typeof(CrudResourcePointControllerFactory<TEntity, TEntityDto, TFilterableEntity, TKey>);
+			listBaseTypes.Add(typeof(ResourcePointControllerFactory<TEntity, TFilterableEntity, TKey>));
+			return typeof(CrudResourcePointControllerFactory<TEntity, TCreateEntityDto, TEditEntityDto, TFilterableEntity, TKey>);
 		}
 
 		protected override ControllerFactoryParameters CreateFactoryParameters()
@@ -108,22 +112,24 @@ namespace Common.Features.ResourcePoints
 			base.FillControllerFactoryParameters(typedParameters);
 
 
-			var controllerType = typeof(CrudResourcePointController<,,,>).MakeGenericType(typeof(TEntity), typeof(TEntityDto),
+			var controllerType = typeof(CrudResourcePointController<,,,,>).MakeGenericType(typeof(TEntity), typeof(TCreateEntityDto), typeof(TEditEntityDto),
 				typeof(TFilterableEntity), typeof(TKey));
 			typedParameters.ControllerType = controllerType;
-			typedParameters.EntityValidatorType = _entityValidator;
+			typedParameters.CreateEntityDtoValidatorType = _entityCreateValidator;
+			typedParameters.EditEntityDtoValidatorType = _entityEditValidator;
 			
 			typedParameters.CrudOperationType = _crudOperation;
 			typedParameters.CrudOperationParameters = _crudOperationParameters;
 
-			typedParameters.EntityEditSchemaProviderType = _entityEditSchemaProviderType;
+			typedParameters.EntityFormSchemaProviderType = _entityEditSchemaProviderType;
 			typedParameters.AccessRuleMap = new AccessRuleMap(_readRoles.ToArray(),_modifyRoles.ToArray());
 			typedParameters.EntityCorrectorTypes = _entityCorrectorTypes;
 		}
 
 		protected override void RegisterTypes(ContainerBuilder builder)
 		{
-			builder.RegisterType(_entityValidator).AsSelf();
+			builder.RegisterType(_entityCreateValidator).AsSelf();
+			builder.RegisterType(_entityEditValidator).AsSelf();
 			builder.RegisterType(_crudOperation).AsSelf();
 
 			if (_tenantedEntityCorrectorType!=null)

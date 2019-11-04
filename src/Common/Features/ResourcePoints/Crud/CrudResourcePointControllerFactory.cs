@@ -8,10 +8,11 @@ using FluentValidation;
 
 namespace Common.Features.ResourcePoints.Crud
 {
-	public class CrudResourcePointControllerFactory<TEntity, TEntityDto, TFilterableEntity, TKey>: ResourcePointControllerFactory<TEntity, TEntityDto, TFilterableEntity, TKey>
+	public class CrudResourcePointControllerFactory<TEntity, TCreateEntityDto, TEditEntityDto, TFilterableEntity, TKey>: ResourcePointControllerFactory<TEntity, TFilterableEntity, TKey>
 		where TEntity : BaseEntity<TKey>
 		where TFilterableEntity : class
-		where TEntityDto : class
+		where TCreateEntityDto : class
+		where TEditEntityDto : class
 		where TKey : struct
 	{
 		private readonly CrudControllerFactoryParameters _parameters;
@@ -21,33 +22,38 @@ namespace Common.Features.ResourcePoints.Crud
 			_parameters = parameters;
 		}
 
-		public ICrudOperation<TEntity, TEntityDto, TKey> GetCrudOperation()
+		public ICrudOperation<TEntity, TCreateEntityDto, TEditEntityDto, TKey> GetCrudOperation()
 		{
-			return (ICrudOperation<TEntity, TEntityDto, TKey>)context.Resolve(_parameters.CrudOperationType, new NamedParameter("parameters", _parameters.CrudOperationParameters));
+			return (ICrudOperation<TEntity, TCreateEntityDto, TEditEntityDto, TKey>)context.Resolve(_parameters.CrudOperationType, new NamedParameter("parameters", _parameters.CrudOperationParameters));
 		}
 
 
-		public IValidator<TEntityDto> GetValidator()
+		public IValidator<TCreateEntityDto> GetCreateDtoValidator()
 		{
-			return (IValidator<TEntityDto>) context.Resolve(_parameters.EntityValidatorType);
+			return (IValidator<TCreateEntityDto>) context.Resolve(_parameters.CreateEntityDtoValidatorType);
 		}
 
-		public List<IEntityCorrector<TEntity, TEntityDto, TKey>> GetCorrectors()
+		public IValidator<TEditEntityDto> GetEditDtoValidator()
 		{
-			var correctors =new List<IEntityCorrector<TEntity, TEntityDto, TKey>>();
+			return (IValidator<TEditEntityDto>)context.Resolve(_parameters.EditEntityDtoValidatorType);
+		}
+
+		public List<IEntityCorrector<TEntity, TCreateEntityDto, TEditEntityDto, TKey>> GetCorrectors()
+		{
+			var correctors =new List<IEntityCorrector<TEntity, TCreateEntityDto, TEditEntityDto, TKey>>();
 
 			foreach (var parametersEntityCorrectorType in _parameters.EntityCorrectorTypes)
 			{
-				var corrector = (IEntityCorrector <TEntity, TEntityDto, TKey>)context.Resolve(parametersEntityCorrectorType);
+				var corrector = (IEntityCorrector <TEntity, TCreateEntityDto, TEditEntityDto, TKey>)context.Resolve(parametersEntityCorrectorType);
 				correctors.Add(corrector);
 			}
 
 			return correctors;
 		}
 
-		public IEntityEditSchemaProvider<TEntityDto> GetEntityEditSchemaProvider()
+		public IEntityFormSchemaProvider<TCreateEntityDto, TEditEntityDto> GetEntityFormSchemaProvider()
 		{
-			return (IEntityEditSchemaProvider<TEntityDto>)context.Resolve(_parameters.EntityEditSchemaProviderType);
+			return (IEntityFormSchemaProvider<TCreateEntityDto, TEditEntityDto>)context.Resolve(_parameters.EntityFormSchemaProviderType);
 		}
 	}
 }

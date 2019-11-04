@@ -7,8 +7,9 @@ using Entities;
 
 namespace Common.Features.Tenant
 {
-	public class TenantedEntityCorrector<TEntityDto, TKey> : IEntityCorrector<BaseEntity<TKey>, TEntityDto, TKey>
-		where TEntityDto : class
+	public class TenantedEntityCorrector<TCreateEntityDto, TEditEntityDto, TKey> : IEntityCorrector<BaseEntity<TKey>, TCreateEntityDto, TEditEntityDto, TKey>
+		where TCreateEntityDto : class
+		where TEditEntityDto : class
 		where TKey : struct
 	{
 		private readonly ITenantInfoProvider _tenantInfoProvider;
@@ -18,16 +19,26 @@ namespace Common.Features.Tenant
 			_tenantInfoProvider = tenantInfoProvider;
 		}
 
-		public Task CorrectEntityAsync(EntityCorrectorContext context, BaseEntity<TKey> entity, TEntityDto receivedEntityDto)
+		public Task CorrectEntityAsync(EntityCorrectorContext context, BaseEntity<TKey> entity, TCreateEntityDto receivedEntityDto)
 		{
 			((ITenantedEntity) entity).TenantId = _tenantInfoProvider.GetCurrentTenantId() ?? Guid.Empty;
 			return Task.CompletedTask;
 		}
 
-		public Task CorrectEntityDtoAsync(EntityCorrectorContext context, TEntityDto entityDto, BaseEntity<TKey> entity)
+		public Task CorrectEntityDtoAsync(EntityCorrectorContext context, TCreateEntityDto entityDto, BaseEntity<TKey> entity)
 		{
 			return Task.CompletedTask;
-			;
+		}
+
+		public Task CorrectEntityAsync(EntityCorrectorContext context, BaseEntity<TKey> entity, TEditEntityDto receivedEntityDto)
+		{
+			((ITenantedEntity)entity).TenantId = _tenantInfoProvider.GetCurrentTenantId() ?? Guid.Empty;
+			return Task.CompletedTask;
+		}
+
+		public Task CorrectEntityDtoAsync(EntityCorrectorContext context, TEditEntityDto entityDto, BaseEntity<TKey> entity)
+		{
+			return Task.CompletedTask;
 		}
 	}
 }

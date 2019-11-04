@@ -7,16 +7,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Common.Features.ResourcePoints.Crud
 {
-	public interface ICrudOperation<TEntity, TEntityDto, TKey>
+	public interface ICrudOperation<TEntity, TCreateEntityDto, TEditEntityDto, TKey>
 		where TEntity : BaseEntity<TKey>
 		where TKey : struct
-		where TEntityDto : class
+		where TCreateEntityDto : class
+		where TEditEntityDto : class
 	{
-		Task<TEntityDto> Get(string id, DbContext context, IResourceMandatoryPredicateFactory<TEntity, TKey> mandatoryPredicateFactory);
+		Task<TCreateEntityDto> Get(string id, DbContext context, IResourceMandatoryPredicateFactory<TEntity, TKey> mandatoryPredicateFactory);
 
-		Task<TEntityDto> Post(TEntityDto entityDto, DbContext context,List<IEntityCorrector<TEntity, TEntityDto, TKey>> correctors);
+		Task<TCreateEntityDto> Post(TCreateEntityDto entityDto, DbContext context,List<IEntityCorrector<TEntity, TCreateEntityDto,TEditEntityDto, TKey>> correctors);
 
-		Task<TEntityDto> Put(string id, TEntityDto entityDto, DbContext context,IResourceMandatoryPredicateFactory<TEntity, TKey> mandatoryPredicateFactory,List<IEntityCorrector<TEntity, TEntityDto, TKey>> correctors);
+		Task<TEditEntityDto> Put(string id, TEditEntityDto entityDto, DbContext context,IResourceMandatoryPredicateFactory<TEntity, TKey> mandatoryPredicateFactory,List<IEntityCorrector<TEntity, TCreateEntityDto, TEditEntityDto, TKey>> correctors);
 
 		Task Delete(string id, DbContext context,IResourceMandatoryPredicateFactory<TEntity, TKey> mandatoryPredicateFactory);
 	}

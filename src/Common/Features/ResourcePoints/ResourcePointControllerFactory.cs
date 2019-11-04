@@ -11,10 +11,9 @@ using Entities;
 
 namespace Common.Features.ResourcePoints
 {
-	public class ResourcePointControllerFactory<TEntity, TEntityDto, TFilterableEntity, TKey> : IResourcePointControllerFactory
+	public class ResourcePointControllerFactory<TEntity,TFilterableEntity, TKey> : IResourcePointControllerFactory
 		where TEntity : BaseEntity<TKey>
 		where TFilterableEntity : class
-		where TEntityDto : class
 		where TKey : struct
 	{
 		private readonly Type _filterableEntityOperationType;

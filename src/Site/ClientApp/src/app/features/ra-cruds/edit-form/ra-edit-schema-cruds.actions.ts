@@ -10,3 +10,4 @@ export class EntityEditSchemaActions<T extends IEntityBase> {
 	updateEditModel = createAction('[' + this.entityName + ' Edit Schema] update data', props<{ model: RaEntityEdit,layouts:string[] }>());
 }
 export const loadEditModelWithQuery = createAction('Load edit form schema with query from API', props<{ entitiesName: string, queryParams: QueryParams}>());
+export const loadCreateModelWithQuery = createAction('Load create form schema with query from API', props<{ entitiesName: string, queryParams: QueryParams}>());

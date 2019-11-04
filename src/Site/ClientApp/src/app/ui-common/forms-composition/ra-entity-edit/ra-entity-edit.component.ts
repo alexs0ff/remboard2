@@ -101,7 +101,11 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 			if (event.customSchema && event.customSchema.layouts && event.customSchema.editForm) {
 				this.entityEditSchemaService.updateModel(event.customSchema.editForm, event.customSchema.layouts);
 			} else {
-				this.entityEditSchemaService.getWithQuery({ "isNewEntity": String(this.isNewEntity) });
+				if (this.isNewEntity) {
+					this.entityEditSchemaService.getCreateFormWithQuery(null);
+				} else {
+					this.entityEditSchemaService.getEditFormWithQuery(null);
+				}
 			}
 		});
 

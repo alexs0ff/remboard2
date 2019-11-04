@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Users.Users
 {
-	public class UserCorrector:IEntityCorrector<User,UserDto,Guid>
+	public class UserCorrector:IEntityCorrector<User,UserDto, UserDto, Guid>
 	{
 		private readonly RemboardContext _context;
 
