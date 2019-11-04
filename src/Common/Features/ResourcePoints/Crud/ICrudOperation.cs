@@ -13,7 +13,7 @@ namespace Common.Features.ResourcePoints.Crud
 		where TCreateEntityDto : class
 		where TEditEntityDto : class
 	{
-		Task<TCreateEntityDto> Get(string id, DbContext context, IResourceMandatoryPredicateFactory<TEntity, TKey> mandatoryPredicateFactory);
+		Task<TEditEntityDto> Get(string id, DbContext context, IResourceMandatoryPredicateFactory<TEntity, TKey> mandatoryPredicateFactory);
 
 		Task<TCreateEntityDto> Post(TCreateEntityDto entityDto, DbContext context,List<IEntityCorrector<TEntity, TCreateEntityDto,TEditEntityDto, TKey>> correctors);
 

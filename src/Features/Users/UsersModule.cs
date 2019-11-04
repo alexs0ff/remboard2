@@ -20,7 +20,6 @@ namespace Users
         protected override void RegisterServices(ContainerBuilder builder)
         {
             builder.RegisterType<UserService>().As<IUserService>();
-            builder.RegisterType<UserCorrector>().AsSelf();
             AddMapperProfile<UsersProfile>(builder);
         }
 
@@ -34,22 +33,21 @@ namespace Users
         protected override IEnumerable<IResourcePointConfigurator> RegisterResourcePoints()
         {
 	        var userIncludeProperties = new[] {"ProjectRole", "UserBranches", "UserBranches.Branch"};
-			yield return new CrudResourcePointConfigurator<User, UserDto, UserDto, UserDto, Guid>()
+			yield return new CrudResourcePointConfigurator<User, UserCreateDto, UserEditDto, UserCreateDto, Guid>()
 				.AddModifyRoles()
-				.UseValidators<UserDtoValidator, UserDtoValidator>()
-				.AddEntityCorrector<UserCorrector>()
-				.UseEntityContextCrudOperation<EntityContextCrudOperation<User, UserDto, UserDto, Guid>>(p =>
+				.UseValidators<UserCreateDtoValidator, UserEditDtoValidator>()
+				.UseEntityContextCrudOperation<EntityContextCrudOperation<User, UserCreateDto, UserEditDto, Guid>>(p =>
 					{
 						p.IncludeProperties = userIncludeProperties;
 					})
 				.SetEntityPluralName("Users")
 				.UseFilterableEntityOperation<EntityContextFilterOperation<
-					User, UserDto, Guid>>(
+					User, UserCreateDto, Guid>>(
 					parameters =>
 					{
 						parameters.DirectProject = false;
 						parameters.IncludeProperties = userIncludeProperties;
-						parameters.AddSortFieldsMapping(nameof(UserDto.ProjectRoleTitle), nameof(User.ProjectRole) + "." + nameof(User.ProjectRole.Name));
+						parameters.AddSortFieldsMapping(nameof(UserCreateDto.ProjectRoleTitle), nameof(User.ProjectRole) + "." + nameof(User.ProjectRole.Name));
 					});
 		}
     }

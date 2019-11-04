@@ -33,7 +33,7 @@ namespace Common.Features.ResourcePoints
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		[ProducesResponseType(StatusCodes.Status403Forbidden)]
-		public async Task<ActionResult<TCreateEntityDto>> Get([FromRoute]string id, [FromServices] RemboardContext context, [FromServices] IAuthorizationService authorizationService, [FromServices] ILogger<CrudResourcePointController<TEntity, TCreateEntityDto, TEditEntityDto, TFilterableEntity, TKey>> logger, [FromServices] CrudResourcePointControllerFactory<TEntity, TCreateEntityDto, TEditEntityDto, TFilterableEntity, TKey> controllerFactory)
+		public async Task<ActionResult<TEditEntityDto>> Get([FromRoute]string id, [FromServices] RemboardContext context, [FromServices] IAuthorizationService authorizationService, [FromServices] ILogger<CrudResourcePointController<TEntity, TCreateEntityDto, TEditEntityDto, TFilterableEntity, TKey>> logger, [FromServices] CrudResourcePointControllerFactory<TEntity, TCreateEntityDto, TEditEntityDto, TFilterableEntity, TKey> controllerFactory)
 		{
 			var result = await authorizationService.AuthorizeAsync(User, typeof(TEntity), CrudOperations.Read);
 

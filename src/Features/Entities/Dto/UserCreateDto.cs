@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace Entities.Dto
 {
-	public class UserDto
+	public class UserCreateDto
 	{
 		[JsonConverter(typeof(ServerGeneratedGuidConverter))]
 		public Guid Id { get; set; }

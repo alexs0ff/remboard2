@@ -9,10 +9,11 @@ using FluentValidation;
 
 namespace Users.Users
 {
-	public class UserDtoValidator : BaseEntityDtoValidator<UserDto>
+	public class UserCreateDtoValidator : BaseEntityDtoValidator<UserCreateDto>
 	{
-		public UserDtoValidator()
+		public UserCreateDtoValidator()
 		{
+			RuleFor(u => u.Password).NotEmpty();
 			RuleFor(u => u.LoginName).NotEmpty();
 			RuleFor(u => u.LoginName).MaximumLength(50);
 			RuleFor(u => u.LoginName).Must(login =>

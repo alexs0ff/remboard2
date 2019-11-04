@@ -35,7 +35,7 @@ namespace Common.Features.ResourcePoints.Crud
 			_parameters = parameters;
 		}
 
-		public async Task<TCreateEntityDto> Get(string id, DbContext context, IResourceMandatoryPredicateFactory<TEntity, TKey> mandatoryPredicateFactory)
+		public async Task<TEditEntityDto> Get(string id, DbContext context, IResourceMandatoryPredicateFactory<TEntity, TKey> mandatoryPredicateFactory)
 		{
 			var entity = await GetById(id, context, mandatoryPredicateFactory.GetMandatoryPredicates());
 
@@ -44,7 +44,7 @@ namespace Common.Features.ResourcePoints.Crud
 				return null;
 			}
 
-			var entityDto = _mapper.Map<TCreateEntityDto>(entity);
+			var entityDto = _mapper.Map<TEditEntityDto>(entity);
 
 			return entityDto;
 		}
