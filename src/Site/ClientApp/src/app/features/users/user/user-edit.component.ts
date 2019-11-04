@@ -57,7 +57,7 @@ export class UserEditComponent implements OnInit {
 					maxLength:50,
 				},
 				updateOn: 'blur',
-				disabled: false//!isNewEntity
+				disabled: !isNewEntity
 			}
 		};
 

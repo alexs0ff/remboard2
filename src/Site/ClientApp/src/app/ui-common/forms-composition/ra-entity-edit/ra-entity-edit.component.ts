@@ -119,7 +119,7 @@ export class RaEntityEditComponent implements OnInit, OnDestroy {
 		editModel$.pipe(
 			filter(i => i != null))
 			.subscribe((model) => {
-				this.form = this.compositionService.toFormGroup(model.layouts,this.extensionParts);
+				this.form = this.compositionService.toFormGroup(model.layouts, this.extensionParts);
 				if (this.currentId === newEntityId) {
 					const data = this.compositionService.createDefaultObject(model.layouts);
 					const entity = { ...data, id: newEntityId };

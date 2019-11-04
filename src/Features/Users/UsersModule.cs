@@ -33,7 +33,7 @@ namespace Users
         protected override IEnumerable<IResourcePointConfigurator> RegisterResourcePoints()
         {
 	        var userIncludeProperties = new[] {"ProjectRole", "UserBranches", "UserBranches.Branch"};
-			yield return new CrudResourcePointConfigurator<User, UserCreateDto, UserEditDto, UserCreateDto, Guid>()
+			yield return new CrudResourcePointConfigurator<User, UserCreateDto, UserEditDto, UserEditDto, Guid>()
 				.AddModifyRoles()
 				.UseValidators<UserCreateDtoValidator, UserEditDtoValidator>()
 				.UseEntityContextCrudOperation<EntityContextCrudOperation<User, UserCreateDto, UserEditDto, Guid>>(p =>
@@ -42,7 +42,7 @@ namespace Users
 					})
 				.SetEntityPluralName("Users")
 				.UseFilterableEntityOperation<EntityContextFilterOperation<
-					User, UserCreateDto, Guid>>(
+					User, UserEditDto, Guid>>(
 					parameters =>
 					{
 						parameters.DirectProject = false;
