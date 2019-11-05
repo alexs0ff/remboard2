@@ -85,7 +85,11 @@ export interface RaMultiselect {
 	id: string;
 	label: string;
 	displayColumns: string[];
-	validators: { required: boolean };
+	keyColumn:string;
+	validators: {
+		required: boolean,
+		unique: boolean;
+	};
 	disabled?: boolean;
 	value?: any | null;
 	source: RaMultiselectSources;

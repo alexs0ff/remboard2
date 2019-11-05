@@ -6,7 +6,7 @@ import {
 	RaControls, RaFormLayout, RaFormLayoutRowContent, RaFormLayoutItems, RaFormLayoutHiddenItems, RaTextBox, ControlValueType, RaSelectBox,LayoutGroups,RaMultiselect,
 	ControlUpdateOnEvent
 } from "../../ra-schema/ra-schema.module";
-import { notEmptyArrayValidator } from "../custom.validators";
+import { notEmptyArrayValidator, uniqueArrayValidator } from "../custom.validators";
 import { ExtensionParts } from "./forms-composition.models";
 
 
@@ -86,7 +86,12 @@ export class FormsCompositionService {
 
 		if (this.isRaMultiselect(raControl)) {
 			validators = Array<ValidatorFn>();
-			validators.push(notEmptyArrayValidator());
+			if (raControl.validators.required) {
+				validators.push(notEmptyArrayValidator());
+			}
+			if (raControl.validators.unique) {
+				validators.push(uniqueArrayValidator(raControl.keyColumn));
+			}
 			
 		}
 		const value = this.valueFromControl(raControl);

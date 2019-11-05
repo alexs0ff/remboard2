@@ -10,8 +10,35 @@ export function notEmptyArrayValidator(): ValidatorFn {
 
 		return forbidden ? { 'required': true } : null;
 	};
+}
 
+export function uniqueArrayValidator(keyColumn:string): ValidatorFn {
+	return (control: AbstractControl): { [key: string]: any } | null => {
+		let unique: boolean = true;
 
+		if (control.value && control.value.length) {
+			var hashSet = {};
+			for (var i = 0; i < control.value.length; i++) {
+				const item = control.value[i];
+
+				if (!item) {
+					continue;
+				}
+
+				const keyValue = item[keyColumn];
+
+				if (hashSet[keyValue]) {
+					unique = false;
+					break;
+				}
+
+				hashSet[keyValue] = true;
+			}
+
+		}
+
+		return unique ? null : { 'uniqueArray': true };
+	};
 }
 
 export function matchToControlValidator(toControlId: string, errorMessage:string): ValidatorFn {

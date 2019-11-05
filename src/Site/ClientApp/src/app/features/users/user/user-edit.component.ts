@@ -228,8 +228,10 @@ export class UserEditComponent implements OnInit {
 											label: 'Филиалы',
 											hint: 'Филиалы пользователя',
 											displayColumns: ['branchTitle'],
+											keyColumn: 'branchId',
 											validators: {
 												required: false,
+												unique:true,
 											},
 											source: {
 												kind: 'remote',
