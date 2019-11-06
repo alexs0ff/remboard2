@@ -45,9 +45,9 @@ namespace Remboard
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
+	    public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
-            Configuration = configuration;
+	        Configuration = configuration;
             Environment = environment;
         }
 

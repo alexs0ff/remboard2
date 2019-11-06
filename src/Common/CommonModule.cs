@@ -11,6 +11,7 @@ using Common.Features.ResourcePoints.Crud.Messaging;
 using Common.Features.Tenant;
 using Common.MessagingQueue;
 using Common.MessagingQueue.Consumers;
+using Common.MessagingQueue.Producers;
 using Common.Tenant;
 using FluentValidation.Validators;
 using Microsoft.EntityFrameworkCore;
@@ -24,8 +25,9 @@ namespace Common
             builder.RegisterType<PermissibleValuesControllerRegistry>();
             builder.RegisterType<ResourcePointControllerRegistry>();
             builder.RegisterType<EntityQueuesRegistry>();
+            builder.RegisterType<InMemoryQueueUriBuilder>().As<IQueueUriBuilder>().SingleInstance();
 
-            builder.RegisterGeneric(typeof(Common.Features.ResourcePoints.Filterable.EntityContextFilterOperation<,,>));
+			builder.RegisterGeneric(typeof(Common.Features.ResourcePoints.Filterable.EntityContextFilterOperation<,,>));
             builder.RegisterGeneric(typeof(Common.Features.ResourcePoints.Filterable.EntitySqlFilterOperation<,,>));
             builder.RegisterGeneric(typeof(Common.Features.ResourcePoints.Filterable.SqlFilterStatementParser<,,>));
             builder.RegisterGeneric(typeof(ReflectionPermissibleValuesProvider<,>));

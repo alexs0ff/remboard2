@@ -69,7 +69,7 @@ namespace Common.Features.ResourcePoints.Crud
 
 			foreach (var afterEntityCreatedCommand in _parameters.CrudCommandsProducerParameters.AfterEntityCreatedCommands)
 			{
-				var producerType = typeof(AfterCreateEntityCommandProducer<,>).MakeGenericType(typeof(TCreateEntityDto,afterEntityCreatedCommand.CommandType);
+				var producerType = typeof(AfterCreateEntityCommandProducer<,>).MakeGenericType(typeof(TCreateEntityDto),afterEntityCreatedCommand.CommandType);
 
 				var producer = (IAfterCreateEntityCommandProducer<TCreateEntityDto>)context.Resolve(producerType);
 				result.Add(producer);

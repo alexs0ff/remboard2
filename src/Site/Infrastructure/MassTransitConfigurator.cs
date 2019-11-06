@@ -5,44 +5,49 @@ using Common.MessagingQueue.Consumers;
 using Common.MessagingQueue.Producers;
 using MassTransit;
 using MassTransit.AspNetCoreIntegration;
+using MassTransit.Context;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Remboard.Infrastructure
 {
 	public static class MassTransitConfigurator
 	{
+
 		public static void Configure(IServiceCollection services)
 		{
 			services.AddSingleton<IQueueUriBuilder, InMemoryQueueUriBuilder>();
-
-			services.AddMassTransit(provider =>Bus.Factory.CreateUsingInMemory(cfg =>
+			
+			services.AddMassTransit(provider =>
 			{
-				var entityQueuesRegistry = provider.GetService<EntityQueuesRegistry>();
-
-				if (!entityQueuesRegistry.ReceiveEndpointDescriptors.Any())
+				var loggerFactory = provider.GetService<ILoggerFactory>();
+				LogContext.ConfigureCurrentLogContext(loggerFactory);
+				//the logging should be None, must check with new version
+				return Bus.Factory.CreateUsingInMemory(cfg =>
 				{
-					return;
-				}
+					var entityQueuesRegistry = provider.GetService<EntityQueuesRegistry>();
 
-				cfg.Host(hCfg =>
-				{
-					hCfg.TransportConcurrencyLimit = 10;
-				});
-
-				foreach (var receiveEndpointDescriptor in entityQueuesRegistry.ReceiveEndpointDescriptors)
-				{
-					cfg.ReceiveEndpoint(receiveEndpointDescriptor.QueueName, ep =>
+					if (!entityQueuesRegistry.ReceiveEndpointDescriptors.Any())
 					{
-						receiveEndpointDescriptor.Config?.Invoke(ep);
+						return;
+					}
 
-						foreach (var consumerDescriptor in receiveEndpointDescriptor.ConsumerDescriptors)
+					cfg.Host(hCfg => { hCfg.TransportConcurrencyLimit = 10; });
+
+					foreach (var receiveEndpointDescriptor in entityQueuesRegistry.ReceiveEndpointDescriptors)
+					{
+						cfg.ReceiveEndpoint(receiveEndpointDescriptor.QueueName, ep =>
 						{
-							ep.ConfigureConsumer(provider,consumerDescriptor.ConsumerType);
-						}
+							receiveEndpointDescriptor.Config?.Invoke(ep);
 
-					});
-				}
-			}));
+							foreach (var consumerDescriptor in receiveEndpointDescriptor.ConsumerDescriptors)
+							{
+								ep.ConfigureConsumer(provider, consumerDescriptor.ConsumerType);
+							}
+						});
+					}
+				});
+			});
 		}
 	}
 }
