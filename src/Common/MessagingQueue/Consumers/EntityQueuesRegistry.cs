@@ -6,12 +6,12 @@ namespace Common.MessagingQueue.Consumers
 {
 	public class EntityQueuesRegistry
 	{
-		public IReadOnlyList<IReceiveEndpointDescriptor> ReceiveEndpointDescriptors { get;}
+		public IReadOnlyList<ReceiveEndpointDescriptor> ReceiveEndpointDescriptors { get;}
 
 		/// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
-		public EntityQueuesRegistry(IEnumerable<IReceiveEndpointDescriptor> receiveEndpointDescriptors)
+		public EntityQueuesRegistry(IEnumerable<ReceiveEndpointDescriptor> receiveEndpointDescriptors)
 		{
-			ReceiveEndpointDescriptors = new List<IReceiveEndpointDescriptor>(receiveEndpointDescriptors).AsReadOnly();
+			ReceiveEndpointDescriptors = new List<ReceiveEndpointDescriptor>(receiveEndpointDescriptors).AsReadOnly();
 		}
 	}
 }

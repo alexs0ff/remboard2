@@ -17,7 +17,7 @@ namespace Common.MessagingQueue.Producers
 		}
 
 		public async Task Publish<TEvent>(TEvent eventMessage)
-			where TEvent: class, IMessageQueueBase
+			where TEvent: class, IQueueMessageBase
 		{
 			await _publishEndpoint.Publish<TEvent>(eventMessage);
 		}

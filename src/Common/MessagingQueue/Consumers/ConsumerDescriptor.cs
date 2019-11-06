@@ -4,8 +4,8 @@ using System.Text;
 
 namespace Common.MessagingQueue.Consumers
 {
-	public interface IConsumerDescriptor
+	public class ConsumerDescriptor
 	{
-		Type ConsumerType{ get; set; }
+		public Type ConsumerType{ get; set; }
 	}
 }

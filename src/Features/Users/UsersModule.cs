@@ -7,6 +7,7 @@ using Common.Features;
 using Common.Features.ResourcePoints;
 using Common.Features.ResourcePoints.Crud;
 using Common.Features.ResourcePoints.Filterable;
+using Common.MessagingQueue.Consumers;
 using Entities;
 using Entities.Dto;
 using Microsoft.EntityFrameworkCore;
@@ -51,5 +52,13 @@ namespace Users
 						parameters.AddSortFieldsMapping(nameof(UserCreateDto.ProjectRoleTitle), nameof(User.ProjectRole) + "." + nameof(User.ProjectRole.Name));
 					});
 		}
+
+        protected override IEnumerable<IMessageConsumerConfigurator> RegisterMessageConsumers()
+        {
+	        yield return new CrudResourceConsumerConfigurator()
+		        .AddEndpoint("createdUsers")
+		        .AddConsumer<CreateUserRegistrationConsumer, CreateUserRegistrationCommand>()
+		        .CompleteEndpoint();
+        }
     }
 }

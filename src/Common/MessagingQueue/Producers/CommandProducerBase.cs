@@ -19,7 +19,7 @@ namespace Common.MessagingQueue.Producers
 		}
 
 		public async Task Send<TCommand>(string queueName,TCommand command)
-			where TCommand:IMessageQueueBase
+			where TCommand:IQueueMessageBase
 		{
 			var endPoint = await _sendEndpointProvider.GetSendEndpoint(_queueUriBuilder.Create(queueName));
 

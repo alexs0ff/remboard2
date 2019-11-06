@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Common.MessagingQueue
 {
-	public interface IMessageQueueBase
+	public interface IQueueMessageBase
 	{
 		Guid CorrelationId { get; set; }
 	}

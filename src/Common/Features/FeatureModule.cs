@@ -3,6 +3,7 @@ using System.Linq;
 using Autofac;
 using Common.Features.PermissibleValues;
 using Common.Features.ResourcePoints;
+using Common.MessagingQueue.Consumers;
 
 namespace Common.Features
 {
@@ -36,6 +37,11 @@ namespace Common.Features
         protected virtual IEnumerable<IResourcePointConfigurator> RegisterResourcePoints()
         {
 	        return Enumerable.Empty<IResourcePointConfigurator>();
+        }
+
+        protected virtual IEnumerable<IMessageConsumerConfigurator> RegisterMessageConsumers()
+        {
+	        return Enumerable.Empty<IMessageConsumerConfigurator>();
         }
 		
 		protected virtual IEnumerable<IPermissibleValuesControllerConfigurator> RegisterPermissibleValuesControllers()
