@@ -7,6 +7,7 @@ using Common.Extensions;
 using Common.FeatureEntities;
 using Common.Features.BaseEntity;
 using Common.Features.ResourcePoints.Crud;
+using Common.Features.ResourcePoints.Crud.Messaging;
 using Common.Features.ResourcePoints.Schema;
 using Common.Features.Tenant;
 using Entities;
@@ -34,6 +35,8 @@ namespace Common.Features.ResourcePoints
 		private Type _entityEditSchemaProviderType = null;
 
 		private CrudOperationParameters _crudOperationParameters;
+
+		private CrudCommandsProducerParameters _crudCommandsProducerParameters= new CrudCommandsProducerParameters();
 
 		/// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
 		public CrudResourcePointConfigurator()
@@ -95,6 +98,13 @@ namespace Common.Features.ResourcePoints
 			return this;
 		}
 
+		public CrudResourcePointConfigurator<TEntity, TCreateEntityDto, TEditEntityDto, TFilterableEntity, TKey> AddAfterCreateCrudCommand<TAfterEntityCreatedCommand>(string queueName)
+			where TAfterEntityCreatedCommand: class,IAfterEntityCreatedCommand<TCreateEntityDto>
+		{
+			_crudCommandsProducerParameters.AfterEntityCreatedCommands.Add(new CrudCommandParameters{CommandType = typeof(TAfterEntityCreatedCommand),QueueName = queueName});;
+			return this;
+		}
+
 		protected override Type GetResourcePointFactoryType(List<Type> listBaseTypes)
 		{
 			listBaseTypes.Add(typeof(ResourcePointControllerFactory<TEntity, TFilterableEntity, TKey>));
@@ -120,6 +130,7 @@ namespace Common.Features.ResourcePoints
 			
 			typedParameters.CrudOperationType = _crudOperation;
 			typedParameters.CrudOperationParameters = _crudOperationParameters;
+			typedParameters.CrudCommandsProducerParameters = _crudCommandsProducerParameters;
 
 			typedParameters.EntityFormSchemaProviderType = _entityEditSchemaProviderType;
 			typedParameters.AccessRuleMap = new AccessRuleMap(_readRoles.ToArray(),_modifyRoles.ToArray());
@@ -140,6 +151,11 @@ namespace Common.Features.ResourcePoints
 			if (_entityEditSchemaProviderType!=null)
 			{
 				builder.RegisterType(_entityEditSchemaProviderType).AsSelf().SingleInstance();
+			}
+
+			foreach (var afterEntityCreatedCommand in _crudCommandsProducerParameters.AfterEntityCreatedCommands)
+			{
+				builder.RegisterType(afterEntityCreatedCommand.CommandType).AsSelf();
 			}
 		}
 	}

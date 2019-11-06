@@ -8,6 +8,7 @@ using Common.Features.Auth;
 using Entities;
 using Common.Features.ErrorFlow;
 using Common.Features.ResourcePoints.Crud;
+using Common.Features.ResourcePoints.Crud.Messaging;
 using Common.Features.ResourcePoints.Schema;
 using Common.Infrastructure;
 using FluentValidation;
@@ -88,6 +89,8 @@ namespace Common.Features.ResourcePoints
 				var correctors = controllerFactory.GetCorrectors();
 				var saved = await operation.Post(entityDto, context, correctors);
 
+				var producers = controllerFactory.GetAfterCreateEntityCommandProducersOrNull();
+				await producers.SendToAll(entityDto);
 
 				return Ok(saved);
 			}

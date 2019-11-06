@@ -113,7 +113,9 @@ namespace Remboard
                     ap.FeatureProviders.Add(temporaryContainer.Resolve<GenericControllerFeatureProvider>());
                 });
 
-            services.AddHttpContextAccessor();
+            MassTransitConfigurator.Configure(services);
+
+			services.AddHttpContextAccessor();
 
             services.AddAuthorization(options =>
             {

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Autofac;
+using Common.Features.ResourcePoints.Crud.Messaging;
 using Entities;
 using Common.Features.ResourcePoints.Schema;
 using FluentValidation;
@@ -54,6 +56,26 @@ namespace Common.Features.ResourcePoints.Crud
 		public IEntityFormSchemaProvider<TCreateEntityDto, TEditEntityDto> GetEntityFormSchemaProvider()
 		{
 			return (IEntityFormSchemaProvider<TCreateEntityDto, TEditEntityDto>)context.Resolve(_parameters.EntityFormSchemaProviderType);
+		}
+
+		public List<IAfterCreateEntityCommandProducer<TCreateEntityDto>> GetAfterCreateEntityCommandProducersOrNull()
+		{
+			if (!_parameters.CrudCommandsProducerParameters.AfterEntityCreatedCommands.Any())
+			{
+				return null;
+			}
+
+			var result = new List<IAfterCreateEntityCommandProducer<TCreateEntityDto>>();
+
+			foreach (var afterEntityCreatedCommand in _parameters.CrudCommandsProducerParameters.AfterEntityCreatedCommands)
+			{
+				var producerType = typeof(AfterCreateEntityCommandProducer<,>).MakeGenericType(typeof(TCreateEntityDto,afterEntityCreatedCommand.CommandType);
+
+				var producer = (IAfterCreateEntityCommandProducer<TCreateEntityDto>)context.Resolve(producerType);
+				result.Add(producer);
+			}
+
+			return result;
 		}
 	}
 }

@@ -36,6 +36,7 @@ namespace Users
 			yield return new CrudResourcePointConfigurator<User, UserCreateDto, UserEditDto, UserEditDto, Guid>()
 				.AddModifyRoles()
 				.UseValidators<UserCreateDtoValidator, UserEditDtoValidator>()
+				.AddAfterCreateCrudCommand<CreateUserRegistrationCommand>("createdUsers")
 				.UseEntityContextCrudOperation<EntityContextCrudOperation<User, UserCreateDto, UserEditDto, Guid>>(p =>
 					{
 						p.IncludeProperties = userIncludeProperties;

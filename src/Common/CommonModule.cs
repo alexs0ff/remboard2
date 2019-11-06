@@ -7,7 +7,10 @@ using Common.Features;
 using Common.Features.BaseEntity;
 using Common.Features.PermissibleValues;
 using Common.Features.ResourcePoints;
+using Common.Features.ResourcePoints.Crud.Messaging;
 using Common.Features.Tenant;
+using Common.MessagingQueue;
+using Common.MessagingQueue.Consumers;
 using Common.Tenant;
 using FluentValidation.Validators;
 using Microsoft.EntityFrameworkCore;
@@ -20,16 +23,20 @@ namespace Common
         {
             builder.RegisterType<PermissibleValuesControllerRegistry>();
             builder.RegisterType<ResourcePointControllerRegistry>();
+            builder.RegisterType<EntityQueuesRegistry>();
 
             builder.RegisterGeneric(typeof(Common.Features.ResourcePoints.Filterable.EntityContextFilterOperation<,,>));
             builder.RegisterGeneric(typeof(Common.Features.ResourcePoints.Filterable.EntitySqlFilterOperation<,,>));
             builder.RegisterGeneric(typeof(Common.Features.ResourcePoints.Filterable.SqlFilterStatementParser<,,>));
             builder.RegisterGeneric(typeof(ReflectionPermissibleValuesProvider<,>));
+            
             builder.RegisterType<TenantInfoProvider>().As<ITenantInfoProvider>();
+			
+            builder.RegisterGeneric(typeof(AfterCreateEntityCommandProducer<,>));
 
 
-            //specifications
-            builder.RegisterGeneric(typeof(OnlyTenantEntitiesSpecification<,>));
+			//specifications
+			builder.RegisterGeneric(typeof(OnlyTenantEntitiesSpecification<,>));
             builder.RegisterGeneric(typeof(IsNotDeletedSpecification<,>));
 
             //common validators
