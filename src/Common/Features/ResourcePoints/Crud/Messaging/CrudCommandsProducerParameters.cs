@@ -11,8 +11,10 @@ namespace Common.Features.ResourcePoints.Crud.Messaging
 		public CrudCommandsProducerParameters()
 		{
 			AfterEntityCreatedCommands = new List<CrudCommandParameters>();
+			AfterEntityEditCommands = new List<CrudCommandParameters>();
 		}
 
 		public List<CrudCommandParameters> AfterEntityCreatedCommands { get; }
+		public List<CrudCommandParameters> AfterEntityEditCommands { get; }
 	}
 }

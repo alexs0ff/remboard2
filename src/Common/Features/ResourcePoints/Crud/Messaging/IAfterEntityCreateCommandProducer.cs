@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 
 namespace Common.Features.ResourcePoints.Crud.Messaging
 {
-	public interface IAfterCreateEntityCommandProducer<TCreateEntityDto>
+	public interface IAfterEntityCreateCommandProducer<TCreateEntityDto,TKey>
 		where TCreateEntityDto : class
+		where TKey:struct
 	{
-		Task Send(TCreateEntityDto entityDto);
+		Task Send(TCreateEntityDto entityDto,TKey id);
 	}
 }

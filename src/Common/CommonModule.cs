@@ -22,9 +22,10 @@ namespace Common
     {
         protected override void RegisterServices(ContainerBuilder builder)
         {
-            builder.RegisterType<PermissibleValuesControllerRegistry>();
-            builder.RegisterType<ResourcePointControllerRegistry>();
-            builder.RegisterType<EntityQueuesRegistry>();
+            builder.RegisterType<PermissibleValuesControllerRegistry>().AsSelf();
+            builder.RegisterType<ResourcePointControllerRegistry>().AsSelf();
+            builder.RegisterType<EntityQueuesRegistry>().AsSelf();
+            builder.RegisterType<CommandProducerBase>().AsSelf();
             builder.RegisterType<InMemoryQueueUriBuilder>().As<IQueueUriBuilder>().SingleInstance();
 
 			builder.RegisterGeneric(typeof(Common.Features.ResourcePoints.Filterable.EntityContextFilterOperation<,,>));
@@ -34,7 +35,8 @@ namespace Common
             
             builder.RegisterType<TenantInfoProvider>().As<ITenantInfoProvider>();
 			
-            builder.RegisterGeneric(typeof(AfterCreateEntityCommandProducer<,>));
+            builder.RegisterGeneric(typeof(AfterEntityCreateCommandProducer<,,>));
+            builder.RegisterGeneric(typeof(AfterEntityEditCommandProducer<,,>));
 
 
 			//specifications

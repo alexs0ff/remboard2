@@ -20,9 +20,14 @@ namespace Remboard.Infrastructure
 			
 			services.AddMassTransit(provider =>
 			{
-				var loggerFactory = provider.GetService<ILoggerFactory>();
+				//TODO: the logging should be None, must check with new version
+				//var loggerFactory = provider.GetService<ILoggerFactory>();
+				var loggerFactory = LoggerFactory.Create(loggingBuilder =>
+				{
+					loggingBuilder.SetMinimumLevel(LogLevel.None);
+				});
+
 				LogContext.ConfigureCurrentLogContext(loggerFactory);
-				//the logging should be None, must check with new version
 				return Bus.Factory.CreateUsingInMemory(cfg =>
 				{
 					var entityQueuesRegistry = provider.GetService<EntityQueuesRegistry>();

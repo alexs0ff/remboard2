@@ -8,6 +8,7 @@ using Common.FeatureEntities;
 using Common.Features.BaseEntity;
 using Common.Features.ResourcePoints.Crud;
 using Common.Features.ResourcePoints.Crud.Messaging;
+using Common.Features.ResourcePoints.Crud.Messaging.Commands;
 using Common.Features.ResourcePoints.Schema;
 using Common.Features.Tenant;
 using Entities;
@@ -98,10 +99,17 @@ namespace Common.Features.ResourcePoints
 			return this;
 		}
 
-		public CrudResourcePointConfigurator<TEntity, TCreateEntityDto, TEditEntityDto, TFilterableEntity, TKey> AddAfterCreateCrudCommand<TAfterEntityCreatedCommand>(string queueName)
-			where TAfterEntityCreatedCommand: class,IAfterEntityCreatedCommand<TCreateEntityDto>
+		public CrudResourcePointConfigurator<TEntity, TCreateEntityDto, TEditEntityDto, TFilterableEntity, TKey> AddAfterEntityCreateCommand<TAfterEntityCreateCommand>(string queueName)
+			where TAfterEntityCreateCommand : class,IAfterEntityCreateCommand<TCreateEntityDto,TKey>
 		{
-			_crudCommandsProducerParameters.AfterEntityCreatedCommands.Add(new CrudCommandParameters{CommandType = typeof(TAfterEntityCreatedCommand),QueueName = queueName});;
+			_crudCommandsProducerParameters.AfterEntityCreatedCommands.Add(new CrudCommandParameters{CommandType = typeof(TAfterEntityCreateCommand),QueueName = queueName});;
+			return this;
+		}
+
+		public CrudResourcePointConfigurator<TEntity, TCreateEntityDto, TEditEntityDto, TFilterableEntity, TKey> AddAfterEntityEditCommand<TAfterEntityEditCommand>(string queueName)
+			where TAfterEntityEditCommand : class, IAfterEntityEditCommand<TEditEntityDto,TKey>
+		{
+			_crudCommandsProducerParameters.AfterEntityEditCommands.Add(new CrudCommandParameters { CommandType = typeof(TAfterEntityEditCommand), QueueName = queueName }); ;
 			return this;
 		}
 

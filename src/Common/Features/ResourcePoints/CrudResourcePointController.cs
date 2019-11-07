@@ -9,6 +9,7 @@ using Entities;
 using Common.Features.ErrorFlow;
 using Common.Features.ResourcePoints.Crud;
 using Common.Features.ResourcePoints.Crud.Messaging;
+using Common.Features.ResourcePoints.Filterable;
 using Common.Features.ResourcePoints.Schema;
 using Common.Infrastructure;
 using FluentValidation;
@@ -89,10 +90,11 @@ namespace Common.Features.ResourcePoints
 				var correctors = controllerFactory.GetCorrectors();
 				var saved = await operation.Post(entityDto, context, correctors);
 
-				var producers = controllerFactory.GetAfterCreateEntityCommandProducersOrNull();
-				await producers.SendToAll(entityDto);
+				var producers = controllerFactory.GetAfterEntityCreateCommandProducersOrNull();
 
-				return Ok(saved);
+				await producers.SendToAll(entityDto, saved.entity.Id);
+
+				return Ok(saved.entityDto);
 			}
 
 			var errorResponse = new EntityResponse
@@ -129,8 +131,12 @@ namespace Common.Features.ResourcePoints
 				var correctors = controllerFactory.GetCorrectors();
 				try
 				{
-					var entity = await operation.Put(id, entityDto, context, predicates, correctors);
-					return Ok(entity);
+					var saved = await operation.Put(id, entityDto, context, predicates, correctors);
+
+					var producers = controllerFactory.GetAfterEntityEditCommandProducersOrNull();
+					await producers.SendToAll(entityDto, saved.entity.Id);
+
+					return Ok(saved.entityDto);
 				}
 				catch (WrongIdValueException)
 				{

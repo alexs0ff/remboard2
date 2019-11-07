@@ -37,7 +37,8 @@ namespace Users
 			yield return new CrudResourcePointConfigurator<User, UserCreateDto, UserEditDto, UserEditDto, Guid>()
 				.AddModifyRoles()
 				.UseValidators<UserCreateDtoValidator, UserEditDtoValidator>()
-				.AddAfterCreateCrudCommand<CreateUserRegistrationCommand>("createdUsers")
+				.AddAfterEntityCreateCommand<CreateUserRegistrationCommand>("createdUsers")
+				.AddAfterEntityEditCommand<CheckUserChangesCommand>("editUsers")
 				.UseEntityContextCrudOperation<EntityContextCrudOperation<User, UserCreateDto, UserEditDto, Guid>>(p =>
 					{
 						p.IncludeProperties = userIncludeProperties;
@@ -58,6 +59,9 @@ namespace Users
 	        yield return new CrudResourceConsumerConfigurator()
 		        .AddEndpoint("createdUsers")
 		        .AddConsumer<CreateUserRegistrationConsumer, CreateUserRegistrationCommand>()
+		        .CompleteEndpoint()
+		        .AddEndpoint("editUsers")
+		        .AddConsumer<CheckUserChangesConsumer, CheckUserChangesCommand>()
 		        .CompleteEndpoint();
         }
     }

@@ -85,7 +85,7 @@ namespace Common.Features.ResourcePoints.Crud
 			return idRaw;
 		}
 
-		public async Task<TEditEntityDto> Post(TCreateEntityDto entityDto, DbContext context, List<IEntityCorrector<TEntity,TCreateEntityDto,TEditEntityDto, TKey>> correctors)
+		public async Task<(TEditEntityDto entityDto, TEntity entity)> Post(TCreateEntityDto entityDto, DbContext context, List<IEntityCorrector<TEntity,TCreateEntityDto,TEditEntityDto, TKey>> correctors)
 		{
 			var entity = _mapper.Map<TEntity>(entityDto);
 
@@ -103,10 +103,10 @@ namespace Common.Features.ResourcePoints.Crud
 
 			await correctors.CorrectEditEntityDtoAsync(correctorContext, savedDto, entity);
 
-			return savedDto;
+			return (savedDto,entity);
 		}
 
-		public async Task<TEditEntityDto> Put(string id, TEditEntityDto entityDto, DbContext context, IResourceMandatoryPredicateFactory<TEntity, TKey> mandatoryPredicateFactory,List<IEntityCorrector<TEntity, TCreateEntityDto, TEditEntityDto, TKey>> correctors)
+		public async Task<(TEditEntityDto entityDto, TEntity entity)> Put(string id, TEditEntityDto entityDto, DbContext context, IResourceMandatoryPredicateFactory<TEntity, TKey> mandatoryPredicateFactory,List<IEntityCorrector<TEntity, TCreateEntityDto, TEditEntityDto, TKey>> correctors)
 		{
 			var foundEntity = await GetById(id, context, mandatoryPredicateFactory.GetMandatoryPredicates());
 
@@ -132,7 +132,7 @@ namespace Common.Features.ResourcePoints.Crud
 	
 			await correctors.CorrectEditEntityDtoAsync(correctorContext, entityDto, foundEntity);
 
-			return entityDto;
+			return (entityDto, foundEntity);
 		}
 
 		public async Task Delete(string id, DbContext context, IResourceMandatoryPredicateFactory<TEntity, TKey> mandatoryPredicateFactory)

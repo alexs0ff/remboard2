@@ -58,20 +58,40 @@ namespace Common.Features.ResourcePoints.Crud
 			return (IEntityFormSchemaProvider<TCreateEntityDto, TEditEntityDto>)context.Resolve(_parameters.EntityFormSchemaProviderType);
 		}
 
-		public List<IAfterCreateEntityCommandProducer<TCreateEntityDto>> GetAfterCreateEntityCommandProducersOrNull()
+		public List<IAfterEntityCreateCommandProducer<TCreateEntityDto,TKey>> GetAfterEntityCreateCommandProducersOrNull()
 		{
 			if (!_parameters.CrudCommandsProducerParameters.AfterEntityCreatedCommands.Any())
 			{
 				return null;
 			}
 
-			var result = new List<IAfterCreateEntityCommandProducer<TCreateEntityDto>>();
+			var result = new List<IAfterEntityCreateCommandProducer<TCreateEntityDto, TKey>>();
 
 			foreach (var afterEntityCreatedCommand in _parameters.CrudCommandsProducerParameters.AfterEntityCreatedCommands)
 			{
-				var producerType = typeof(AfterCreateEntityCommandProducer<,>).MakeGenericType(typeof(TCreateEntityDto),afterEntityCreatedCommand.CommandType);
+				var producerType = typeof(AfterEntityCreateCommandProducer<,,>).MakeGenericType(typeof(TCreateEntityDto),afterEntityCreatedCommand.CommandType,typeof(TKey));
 
-				var producer = (IAfterCreateEntityCommandProducer<TCreateEntityDto>)context.Resolve(producerType);
+				var producer = (IAfterEntityCreateCommandProducer<TCreateEntityDto, TKey>)context.Resolve(producerType,new NamedParameter("parameters", afterEntityCreatedCommand));
+				result.Add(producer);
+			}
+
+			return result;
+		}
+
+		public List<IAfterEntityEditCommandProducer<TEditEntityDto,TKey>> GetAfterEntityEditCommandProducersOrNull()
+		{
+			if (!_parameters.CrudCommandsProducerParameters.AfterEntityEditCommands.Any())
+			{
+				return null;
+			}
+
+			var result = new List<IAfterEntityEditCommandProducer<TEditEntityDto,TKey>>();
+
+			foreach (var afterEntityEditCommand in _parameters.CrudCommandsProducerParameters.AfterEntityEditCommands)
+			{
+				var producerType = typeof(AfterEntityEditCommandProducer<,,>).MakeGenericType(typeof(TEditEntityDto), afterEntityEditCommand.CommandType, typeof(TKey));
+
+				var producer = (IAfterEntityEditCommandProducer<TEditEntityDto, TKey>)context.Resolve(producerType, new NamedParameter("parameters", afterEntityEditCommand));
 				result.Add(producer);
 			}
 
