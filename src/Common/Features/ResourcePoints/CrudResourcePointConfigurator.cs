@@ -161,9 +161,11 @@ namespace Common.Features.ResourcePoints
 				builder.RegisterType(_entityEditSchemaProviderType).AsSelf().SingleInstance();
 			}
 
-			foreach (var afterEntityCreatedCommand in _crudCommandsProducerParameters.AfterEntityCreatedCommands)
+			foreach (var command in _crudCommandsProducerParameters.AfterEntityCreatedCommands
+				.Union(_crudCommandsProducerParameters.AfterEntityEditCommands)
+			)
 			{
-				builder.RegisterType(afterEntityCreatedCommand.CommandType).AsSelf();
+				builder.RegisterType(command.CommandType).AsSelf();
 			}
 		}
 	}

@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Autofac;
 using Common.MessagingQueue;
 using Common.MessagingQueue.Consumers;
@@ -8,14 +9,17 @@ using MassTransit.AspNetCoreIntegration;
 using MassTransit.Context;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MassTransit.ExtensionsDependencyInjectionIntegration;
 
 namespace Remboard.Infrastructure
 {
 	public static class MassTransitConfigurator
 	{
 
-		public static void Configure(IServiceCollection services)
+		public static void Configure(IServiceCollection services,IContainer temporaryContainer)
 		{
+			var entityQueuesRegistry = temporaryContainer.Resolve<EntityQueuesRegistry>();
+
 			services.AddSingleton<IQueueUriBuilder, InMemoryQueueUriBuilder>();
 			
 			services.AddMassTransit(provider =>
@@ -28,15 +32,16 @@ namespace Remboard.Infrastructure
 				});
 
 				LogContext.ConfigureCurrentLogContext(loggerFactory);
+				
 				return Bus.Factory.CreateUsingInMemory(cfg =>
 				{
-					var entityQueuesRegistry = provider.GetService<EntityQueuesRegistry>();
+					
 
 					if (!entityQueuesRegistry.ReceiveEndpointDescriptors.Any())
 					{
 						return;
 					}
-
+					
 					cfg.Host(hCfg => { hCfg.TransportConcurrencyLimit = 10; });
 
 					foreach (var receiveEndpointDescriptor in entityQueuesRegistry.ReceiveEndpointDescriptors)
@@ -52,6 +57,12 @@ namespace Remboard.Infrastructure
 						});
 					}
 				});
+			}, configurator =>
+			{
+				foreach (var consumerDescriptor in entityQueuesRegistry.ReceiveEndpointDescriptors.SelectMany(i=>i.ConsumerDescriptors))
+				{
+					configurator.AddConsumer(consumerDescriptor.ConsumerType);
+				}
 			});
 		}
 	}

@@ -19,6 +19,7 @@
     <PackageReference Include="MassTransit" Version="6.0.0-develop.2244" />
     <PackageReference Include="MassTransit.AspNetCore" Version="6.0.0-develop.2244" />
     <PackageReference Include="MassTransit.Autofac" Version="6.0.0-develop.2244" />
+    <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="6.0.0-develop.2244" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.0.0" />

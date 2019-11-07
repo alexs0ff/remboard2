@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Autofac;
+using MassTransit;
 
 namespace Common.MessagingQueue.Consumers
 {
@@ -20,7 +21,7 @@ namespace Common.MessagingQueue.Consumers
 		{
 			foreach (var receiveEndpointDescriptor in _receiveEndpointDescriptors)
 			{
-				builder.RegisterInstance(receiveEndpointDescriptor).As<ReceiveEndpointDescriptor>();
+				builder.RegisterInstance(receiveEndpointDescriptor).AsSelf();
 			}
 		}
 	}

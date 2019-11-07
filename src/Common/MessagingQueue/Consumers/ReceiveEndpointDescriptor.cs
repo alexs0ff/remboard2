@@ -9,7 +9,7 @@ namespace Common.MessagingQueue.Consumers
 	{
 		public string QueueName { get; set; }
 
-		public List<ConsumerDescriptor> ConsumerDescriptors { get; set; }
+		public List<ConsumerDescriptor> ConsumerDescriptors { get; set; } = new List<ConsumerDescriptor>();
 
 		public Action<IReceiveEndpointConfigurator> Config { get; set; }
 	}
