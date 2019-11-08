@@ -128,6 +128,8 @@ namespace Common.Features.ResourcePoints.Crud
 			
 			await context.SaveChangesAsync();
 
+			foundEntity = await GetById(id, context, mandatoryPredicateFactory.GetMandatoryPredicates());
+
 			entityDto = _mapper.Map<TEditEntityDto>(foundEntity);
 	
 			await correctors.CorrectEditEntityDtoAsync(correctorContext, entityDto, foundEntity);

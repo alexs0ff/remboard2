@@ -30,7 +30,8 @@ export class UserEditComponent implements OnInit {
 			},
 			controlMasks: {
 				masks: {
-					 "email": emailMask
+					"email": emailMask,
+					"phone": ['+', /\d/,' ','(',/[1-9]/,/\d/,/\d/,')',' ',/\d/,/\d/,/\d/,'-',/\d/,/\d/,/\d/,/\d/]
 				}
 			}
 		}
@@ -203,12 +204,17 @@ export class UserEditComponent implements OnInit {
 										flexExpression: flexExpressions.twoItemsExpressions,
 										control: {
 											id: "phone",
-											kind: 'textbox',
+											kind: 'maskbox',
 											label: 'Телефон',
 											hint: "Телефон пользователя",
 											valueKind: 'string',
+											floatLabel:'always',
 											validators: {
 												required: true
+											},
+											textMask: {
+												maskId: 'phone',
+												conformToMask: true
 											}
 										}
 									},
@@ -219,6 +225,7 @@ export class UserEditComponent implements OnInit {
 											kind: 'maskbox',
 											label: 'Почта',
 											hint: "Эл почта пользователя",
+											floatLabel: 'auto',
 											valueKind: 'string',
 											validators: {
 												required: true,

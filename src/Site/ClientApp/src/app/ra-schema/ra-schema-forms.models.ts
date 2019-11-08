@@ -33,6 +33,7 @@ export interface RaMaskBox {
 	id: string;
 	label: string;
 	validators: RaValidators;
+	floatLabel:'always'|'never'|'auto';
 	textMask: {
 		mask?: Array<string | RegExp>;
 		maskId?: string;

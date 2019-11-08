@@ -18,6 +18,7 @@ import { RaSelectboxComponent } from './forms-composition/ra-selectbox/ra-select
 import { RaControlComponent } from './forms-composition/ra-control/ra-control.component';
 import { RaFormComponent } from './forms-composition/ra-form/ra-form.component'
 import { MatTableModule } from '@angular/material/table';
+import { A11yModule } from '@angular/cdk/a11y';
 import { RaServerdataGridComponent } from './list-composition/ra-serverdata-grid/ra-serverdata-grid.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { RaEntityEditComponent } from './forms-composition/ra-entity-edit/ra-entity-edit.component';
@@ -64,7 +65,8 @@ const commonUi = [
 	MatAutocompleteModule,
 	MatSelectModule,
 	MatChipsModule,
-	TextMaskModule
+	TextMaskModule,
+	A11yModule
 ];
 
 

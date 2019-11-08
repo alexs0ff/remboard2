@@ -13,11 +13,12 @@ import { conformToMask } from 'angular2-text-mask';
 	selector: 'ra-maskbox',
 	template: `
 <div [formGroup]="form">
-  <mat-form-field class="ra-mat-field">
-	<input matInput class="input-invisible" name="{{model.id}}" [formControlName]="model.id" [errorStateMatcher]="matcher"/>
+  <mat-form-field class="ra-mat-field" [floatLabel]="model.floatLabel">
+	<input #hiddenValueContainer matInput class="input-invisible" name="{{model.id}}" [formControlName]="model.id" [errorStateMatcher]="matcher"/>
 	<mat-label>{{model.label}}</mat-label>
     <mat-hint>{{model.hint}}</mat-hint>
-	<input matInput [textMask]="{mask: currentMask,guide:guide,keepCharPositions:keepCharPositions,showMask:showMask}" placeholder="{{model.label}}" [formControl]="maskBoxCtrl"/>
+	<input matInput [textMask]="{mask: currentMask,guide:guide,keepCharPositions:keepCharPositions,showMask:showMask}" [placeholder]="model.label"
+	[formControl]="maskBoxCtrl"/>
     <mat-error  *ngIf="form.controls[model.id].invalid">
       {{formErrorService.getErrorMessage(form,model.id)}}
     </mat-error>

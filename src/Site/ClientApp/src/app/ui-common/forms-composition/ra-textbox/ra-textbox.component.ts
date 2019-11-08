@@ -9,7 +9,7 @@ import { FormErrorService } from "../form-error-service";
   template: `
 <div [formGroup]="form">
   <mat-form-field class="ra-mat-field">
-    <input matInput placeholder="{{model.label}}" name="{{model.id}}" [formControlName]="model.id">
+    <input matInput [placeholder]="model.label" name="{{model.id}}" [formControlName]="model.id">
     <mat-hint>{{model.hint}}</mat-hint>
     <mat-error  *ngIf="form.controls[model.id].invalid">
       {{formErrorService.getErrorMessage(form,model.id)}}
