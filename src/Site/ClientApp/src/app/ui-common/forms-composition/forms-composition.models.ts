@@ -13,7 +13,9 @@ export interface ControlMasks {
 	masks: {
 		 [key: string]: Array<string | RegExp>
 	};
-
+	sanitizeFunctions?: {
+		[key: string]: (value:string)=>string|number;
+	}
 }
 
 export interface ExtensionParts {

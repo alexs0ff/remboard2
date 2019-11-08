@@ -106,7 +106,28 @@ export class RaMaskboxComponent implements OnInit, OnDestroy {
 
 	private onMaskBoxChanged(value: string) {
 		const path = {};
-		path[this.model.id] = value;
+		let rawValue: string | number = value;
+
+		if (value && this.model.textMask.sanitizeId && this.model.textMask.sanitizeId.length) {
+
+			if (!this.customMasks.sanitizeFunctions) {
+				throw new Error("the instance of sanitize functions for control ''" + this.model.id + "'' should be defined");
+			}
+
+			const functionToSanitize = this.customMasks.sanitizeFunctions[this.model.textMask.sanitizeId];
+
+			if (typeof  functionToSanitize!='function') {
+				throw new Error("the sanitize function ''" + this.model.textMask.sanitizeId + "'' for control ''" + this.model.id + "'' should be defined");
+			}
+
+			rawValue = functionToSanitize(value);
+
+			if (this.model.valueKind === "number" && typeof rawValue =='string') {
+				rawValue = parseInt(rawValue, 10);
+			}
+		}
+		//console.log("new mask value", { rawValue: rawValue,value:value });
+		path[this.model.id] = rawValue;
 		this.form.patchValue(path);
 	}
 
@@ -126,14 +147,14 @@ export class RaMaskboxComponent implements OnInit, OnDestroy {
 			const conformedResult = conformToMask(
 				modelValue,
 				mask,
-				{ guide: false }
+				{ guide: this.guide, keepCharPositions:this.keepCharPositions }
 			);
 
 			conformedValue = conformedResult.conformedValue;
 		}
 
-		console.log("set new value", conformedValue);
-		console.log("set current value", currentMaskedValue);
+		//console.log("set new value", conformedValue);
+		//console.log("set current value", currentMaskedValue);
 
 		if (currentMaskedValue!=conformedValue) {
 			this.maskBoxCtrl.setValue(conformedValue);

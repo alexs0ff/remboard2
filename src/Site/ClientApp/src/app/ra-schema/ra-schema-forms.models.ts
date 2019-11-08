@@ -39,6 +39,7 @@ export interface RaMaskBox {
 		maskId?: string;
 		conformToMask:boolean;
 		guide?: boolean;
+		sanitizeId?: string;
 		keepCharPositions?: boolean;
 		showMask?: boolean;
 	}

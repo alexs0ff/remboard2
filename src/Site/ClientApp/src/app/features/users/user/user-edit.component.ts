@@ -32,12 +32,19 @@ export class UserEditComponent implements OnInit {
 				masks: {
 					"email": emailMask,
 					"phone": ['+', /\d/,' ','(',/[1-9]/,/\d/,/\d/,')',' ',/\d/,/\d/,/\d/,'-',/\d/,/\d/,/\d/,/\d/]
+				},
+				sanitizeFunctions: {
+					"sanitizePhone":this.phoneToRaw
 				}
 			}
 		}
 	}
 
 	ngOnInit() {
+	}
+
+	private phoneToRaw(maskedData: string):string {
+		return maskedData.replace(/[^0-9_]/g, '');
 	}
 
 	onSchemaFetch(event: SchemaFetchEvent) {
@@ -214,7 +221,9 @@ export class UserEditComponent implements OnInit {
 											},
 											textMask: {
 												maskId: 'phone',
-												conformToMask: true
+												conformToMask: true,
+												sanitizeId: "sanitizePhone",
+												keepCharPositions:true,
 											}
 										}
 									},
@@ -233,7 +242,8 @@ export class UserEditComponent implements OnInit {
 											},
 											textMask: {
 												maskId: 'email',
-												conformToMask:false
+												conformToMask: false
+
 											}
 										}
 									},
