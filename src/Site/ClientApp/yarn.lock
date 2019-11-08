@@ -337,6 +337,11 @@
   resolved "https://registry.yarnpkg.com/@ngrx/effects/-/effects-8.2.0.tgz#6aec4920d2b363c2c2b093c482e0bd2bb7ecdba2"
   integrity sha512-eVho/YNHFDL3fo0Pb24GduU2OUHIEaUQjBBP/WlXO66QdqM9gXPJeEviWzA9RaC1tEu4sAZ0OYP1pP++CCn6Uw==
 
+"@ngrx/entity@^8.2.0":
+  version "8.5.0"
+  resolved "https://registry.yarnpkg.com/@ngrx/entity/-/entity-8.5.0.tgz#8e42ef02362939dd3d5b904767f47083d0efb754"
+  integrity sha512-3s/ULg43C8TPTTHPVwF2RS4/1xngZM9NbwfNARnS1jF/DN1EKh0R0z4OEq42016WsQm/qjGS7k4kq8OrJt6KIA==
+
 "@ngrx/store-devtools@^8.2.0":
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/@ngrx/store-devtools/-/store-devtools-8.2.0.tgz#32a29f20ee53da64bead63a84cf27b5d12d2d9a1"
@@ -707,6 +712,13 @@ amdefine@>=0.0.4:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
   integrity sha1-SlKCrBZHKek2Gbz9OtFR+BfOkfU=
+
+angular2-text-mask@9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/angular2-text-mask/-/angular2-text-mask-9.0.0.tgz#70490170a8096241fc3ce9482ed6a758ddbce8ea"
+  integrity sha512-iALcnhJPS1zvX48d86rgUgDe/crX6XfhZrXC4Gdlo2/YwZW7u7KJZY6/b3ieSCIWVq/E6p+wDCzeo3E6leRjDA==
+  dependencies:
+    text-mask-core "^5.0.0"
 
 ansi-colors@4.1.1:
   version "4.1.1"
@@ -6830,6 +6842,16 @@ terser@^4.0.0, terser@^4.1.2:
     source-map "~0.6.1"
     source-map-support "~0.5.12"
 
+text-mask-addons@^3.8.0:
+  version "3.8.0"
+  resolved "https://registry.yarnpkg.com/text-mask-addons/-/text-mask-addons-3.8.0.tgz#17b61ef665a4f36811f2ea1f01a223b4be61ab26"
+  integrity sha1-F7Ye9mWk82gR8uofAaIjtL5hqyY=
+
+text-mask-core@^5.0.0:
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/text-mask-core/-/text-mask-core-5.1.2.tgz#80dd5ebe04825757e46619e691407a9f8b3c1b6f"
+  integrity sha1-gN1evgSCV1fkZhnmkUB6n4s8G28=
+
 through2@^2.0.0:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/through2/-/through2-2.0.5.tgz#01c1e39eb31d07cb7d03a96a70823260b23132cd"
@@ -7180,6 +7202,11 @@ uuid@^3.0.0, uuid@^3.0.1, uuid@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
   integrity sha512-yXJmeNaw3DnnKAOKJE51sL/ZaYfWJRl1pK9dr19YFCu0ObS231AB1/LbqTKRAQ5kw8A90rA6fr4riOUpTZvQZA==
+
+uuid@^3.3.3:
+  version "3.3.3"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.3.tgz#4568f0216e78760ee1dbf3a4d2cf53e224112866"
+  integrity sha512-pW0No1RGHgzlpHJO1nsVrHKpOEIxkGg1xB+v0ZmdNH5OAeAwzAVrCnI2/6Mtx+Uys6iaylxa+D3g4j63IKKjSQ==
 
 validate-npm-package-license@^3.0.1:
   version "3.0.4"

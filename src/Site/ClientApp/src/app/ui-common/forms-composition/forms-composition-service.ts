@@ -4,7 +4,8 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { KeyValue } from "../../app.models";
 import {
 	RaControls, RaFormLayout, RaFormLayoutRowContent, RaFormLayoutItems, RaFormLayoutHiddenItems, RaTextBox, ControlValueType, RaSelectBox,LayoutGroups,RaMultiselect,
-	ControlUpdateOnEvent
+	ControlUpdateOnEvent,
+	RaMaskBox
 } from "../../ra-schema/ra-schema.module";
 import { notEmptyArrayValidator, uniqueArrayValidator } from "../custom.validators";
 import { ExtensionParts } from "./forms-composition.models";
@@ -49,7 +50,7 @@ export class FormsCompositionService {
 			validators.push(Validators.required);
 		}
 
-		if (this.isRaTextBox(raControl)) {
+		if (this.isRaTextBox(raControl) || this.isRaMaskBox(raControl)) {
 			if (raControl.updateOn) {
 				updateOn = raControl.updateOn;
 			}
@@ -152,6 +153,10 @@ export class FormsCompositionService {
 
 	private isRaTextBox(raControl: RaControls): raControl is RaTextBox {
 		return raControl.kind === 'textbox' || raControl.kind === 'textarea' || raControl.kind === 'password';
+	}
+
+	private isRaMaskBox(raControl: RaControls): raControl is RaMaskBox {
+		return raControl.kind === 'maskbox';
 	}
 
 	private isRaSelectBox(raControl: RaControls): raControl is RaSelectBox {

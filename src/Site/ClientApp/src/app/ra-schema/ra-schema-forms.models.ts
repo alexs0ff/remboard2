@@ -26,6 +26,28 @@ export interface RaTextBox {
 }
 
 
+
+export interface RaMaskBox {
+	kind: 'maskbox';
+	valueKind: ControlValueType;
+	id: string;
+	label: string;
+	validators: RaValidators;
+	textMask: {
+		mask?: Array<string | RegExp>;
+		maskId?: string;
+		conformToMask:boolean;
+		guide?: boolean;
+		keepCharPositions?: boolean;
+		showMask?: boolean;
+	}
+	disabled?: boolean;
+	value?: any | null;
+	hint?: string | null;
+	updateOn?: ControlUpdateOnEvent;
+}
+
+
 export interface RaSelectBoxRemoteSource {
 	kind: 'remote',
 	url: string;
@@ -96,7 +118,7 @@ export interface RaMultiselect {
 	hint?: string | null;
 }
 
-export type RaControls = RaTextBox | RaSelectBox | RaAutocompleteBox | RaMultiselect;
+export type RaControls = RaTextBox | RaSelectBox | RaAutocompleteBox | RaMultiselect | RaMaskBox;
 
 export interface RaFormItemFlexExpression {
 	fxFlexCommonExpression: string;

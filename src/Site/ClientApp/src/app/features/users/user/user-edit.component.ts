@@ -5,6 +5,7 @@ import { SchemaFetchEvent, matchToControlValidator } from "../../../ui-common/ui
 import { ExtensionParts } from "../../../ui-common/forms-composition/forms-composition.models";
 import { UniqueUserLoginAsyncValidator, passwordFormatValidator } from "../../registration/registration.module";
 import { UserLoginValidator } from "../../registration/user-login.validator";
+import emailMask from 'text-mask-addons/dist/emailMask'
 
 @Component({
 	selector: 'user-edit',
@@ -26,6 +27,11 @@ export class UserEditComponent implements OnInit {
 				"userLogin": userLoginValidator.validate.bind(userLoginValidator),
 				"passwordMatch": matchToControlValidator("password","passwordMismatch"),
 				"passwordFormat": passwordFormatValidator("passwordFormat"),
+			},
+			controlMasks: {
+				masks: {
+					 "email": emailMask
+				}
 			}
 		}
 	}
@@ -210,13 +216,17 @@ export class UserEditComponent implements OnInit {
 										flexExpression: flexExpressions.twoItemsExpressions,
 										control: {
 											id: "email",
-											kind: 'textbox',
+											kind: 'maskbox',
 											label: 'Почта',
 											hint: "Эл почта пользователя",
 											valueKind: 'string',
 											validators: {
 												required: true,
 												email: true
+											},
+											textMask: {
+												maskId: 'email',
+												conformToMask:false
 											}
 										}
 									},

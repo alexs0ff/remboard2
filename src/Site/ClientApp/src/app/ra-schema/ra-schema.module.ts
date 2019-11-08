@@ -27,7 +27,8 @@ import {
 	RaMultiselectSources,
 	RaMultiselectRemoteSource,
 	ControlUpdateOnEvent,
-	RaTextBoxKind
+	RaTextBoxKind,
+	RaMaskBox
 
 
 
@@ -87,6 +88,8 @@ export {
 	RaMultiselectRemoteSource,
 	ControlUpdateOnEvent,
 	RaTextBoxKind,
+	RaMaskBox,
+
 
 	GridContentOptions,
 	GridControlPanel,

@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Common.Data;
 using Entities;
+using Entities.Dto;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Users.Api;
@@ -17,10 +19,13 @@ namespace Users
 
         private readonly ILogger<UserService> _logger;
 
-        public UserService(RemboardContext context, ILogger<UserService> logger)
+        private readonly UserManager<IdentityUser> _userManager;
+
+		public UserService(RemboardContext context, ILogger<UserService> logger, UserManager<IdentityUser> userManager)
         {
             _context = context;
             _logger = logger;
+            _userManager = userManager;
         }
 
         public async Task<User> GetUserByLogin(string login)
@@ -43,5 +48,26 @@ namespace Users
 			return await _context.Set<User>().FirstOrDefaultAsync(u => u.IsDeleted == false && u.Email.ToUpper() == normEmail);
 		}
 
+		public async Task CreateUser(UserCreateDto userCreateDto)
+		{
+			_logger.LogInformation($"Start create user {userCreateDto.LoginName}");
+
+			try
+			{
+				var user = new IdentityUser
+				{
+					UserName = userCreateDto.LoginName,
+					Email = userCreateDto.Email,
+					PhoneNumber = userCreateDto.Phone
+				};
+				await _userManager.CreateAsync(user, userCreateDto.Password);
+			}
+			catch (Exception e)
+			{
+				_logger.LogError($"Failed create user {userCreateDto.LoginName}",e);
+				throw;
+			}
+			
+		}
     }
 }

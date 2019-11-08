@@ -17,7 +17,7 @@
 			</mat-list-item>
 		</mat-list>
 	</div>
-	<ra-form  *ngFor="let layoutName of layouts$ | async" [layout]="editModel.layouts[layoutName]" [form]="form"></ra-form>
+	<ra-form  *ngFor="let layoutName of layouts$ | async" [layout]="editModel.layouts[layoutName]" [form]="form" [extensionParts]="extensionParts"></ra-form>
 	<div fxLayout="row" fxLayoutAlign="end center" class="manage-controls">
 		<button mat-raised-button matTooltip="Удалить" (click)="deleteItem(editModel)" color="warn" *ngIf="!isNewEntity" [class.spinner]="isLoading$ | async" [disabled]="isLoading$ | async"><mat-icon>remove_circle</mat-icon> Удалить</button>
 		<button mat-raised-button matTooltip="Сохранить" (click)="saveItem()" color="primary" [class.spinner]="isLoading$ | async" [disabled]="isLoading$ | async">

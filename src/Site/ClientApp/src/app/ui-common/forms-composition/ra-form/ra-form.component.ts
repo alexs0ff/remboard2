@@ -2,10 +2,11 @@ import { Component, OnInit,Input } from '@angular/core';
 import { FormsCompositionService } from "../forms-composition-service";
 import { FormGroup } from '@angular/forms';
 import { RaFormLayout } from "../../../ra-schema/ra-schema.module";
+import { ExtensionParts } from "../../ui-common.module";
 
 @Component({
-  selector: 'ra-form',
-  template: `
+	selector: 'ra-form',
+	template: `
 <form [formGroup]="form">
   <div *ngFor="let row of layout.rows">
     <div [ngSwitch]="row.content.kind">  
@@ -24,27 +25,33 @@ import { RaFormLayout } from "../../../ra-schema/ra-schema.module";
           [fxFlex.lt-md]="item.flexExpression.fxFlexLtmdExpression"
           [fxFlex.lt-sm]="item.flexExpression.fxFlexLtsmExpression"
           >
-          <ra-control [control]="item.control" [form]="form"></ra-control>
+          <ra-control [control]="item.control" [form]="form" [extensionParts]="extensionParts"></ra-control>
         </div>        
       </div>
     </div>
   </div>
 </form>
   `,
-  styles: [],
-  providers: []
+	styles: [],
+	providers: []
 })
 export class RaFormComponent implements OnInit {
-  @Input() layout: RaFormLayout;
+	@Input()
+	layout: RaFormLayout;
 
-  @Input()
-  form: FormGroup;
-  constructor() { }
-  ngOnInit() {
-    
-  }
+	@Input()
+	form: FormGroup;
 
-  onSubmit() {
-   
-  }
+	@Input()
+	extensionParts: ExtensionParts;
+
+	constructor() {}
+
+	ngOnInit() {
+
+	}
+
+	onSubmit() {
+
+	}
 }

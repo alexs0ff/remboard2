@@ -37,6 +37,8 @@ import { SchemaFetchEvent, ExtensionParts } from "./forms-composition/forms-comp
 import { notEmptyArrayValidator, matchToControlValidator } from "./custom.validators";
 import { RaPasswordComponent } from "./forms-composition/ra-password/ra-password.component";
 
+import { TextMaskModule } from 'angular2-text-mask';
+import { RaMaskboxComponent } from "./forms-composition/ra-maskbox/ra-maskbox.component";
 
 const commonUi = [
 	MatToolbarModule,
@@ -61,8 +63,10 @@ const commonUi = [
 	MatTooltipModule,
 	MatAutocompleteModule,
 	MatSelectModule,
-	MatChipsModule
+	MatChipsModule,
+	TextMaskModule
 ];
+
 
 const commonUiImport = [...commonUi];
 const commonUiExport = [...commonUi, RaServerdataGridComponent, RaFormComponent, RaEntityEditComponent];
@@ -74,13 +78,15 @@ const commonUiExport = [...commonUi, RaServerdataGridComponent, RaFormComponent,
 		RaControlComponent,
 		RaTextareaComponent,
 		RaPasswordComponent,
+		RaMaskboxComponent,
 		RaMultiselectComponent,
 		RaAutocompleteboxComponent,
 		RaSelectboxComponent,
 		RaTextboxComponent,
 		RaEntityEditComponent,
 		RaEntityEditRemoveDialog,
-		RaGridFilterComponent],
+		RaGridFilterComponent
+		],
   imports: commonUiImport,
   exports: commonUiExport,
 	providers: [FormsCompositionService, FormErrorService, GridModelComposer]

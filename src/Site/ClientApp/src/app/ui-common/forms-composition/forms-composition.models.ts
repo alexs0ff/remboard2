@@ -9,6 +9,13 @@ export interface SchemaFetchEvent {
 	}
 }
 
+export interface ControlMasks {
+	masks: {
+		 [key: string]: Array<string | RegExp>
+	};
+
+}
+
 export interface ExtensionParts {
 	validators?: {
 		[key: string]: ValidatorFn
@@ -16,4 +23,6 @@ export interface ExtensionParts {
 	asyncValidators?: {
 		[key: string]: AsyncValidatorFn
 	};
+
+	controlMasks?: ControlMasks;
 }

@@ -45,6 +45,13 @@ pre {
   margin-bottom:10px;
 }
 
+.input-invisible {
+	display: block;
+	visibility: hidden;
+	height: 0;
+	width: 0;
+}
+
 @keyframes spinner {
   to {
     transform: rotate(360deg);

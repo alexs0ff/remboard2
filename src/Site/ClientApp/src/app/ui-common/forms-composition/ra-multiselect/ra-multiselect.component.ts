@@ -21,7 +21,7 @@ import { HiddenErrorStateMatcher } from "../forms-composition-service";
 	template: `
 <div [formGroup]="form">
   <mat-form-field class="ra-mat-field">
-	<input matInput class="invisible" name="{{model.id}}" [formControlName]="model.id" [errorStateMatcher]="matcher"/>
+	<input matInput class="input-invisible" name="{{model.id}}" [formControlName]="model.id" [errorStateMatcher]="matcher"/>
     <mat-label>{{model.label}}</mat-label>
 	<mat-chip-list #chipList [attr.aria-label]="model.label">
 		<mat-chip
@@ -58,12 +58,7 @@ import { HiddenErrorStateMatcher } from "../forms-composition-service";
 </div>
   `,
 	styles: [`
-.invisible{
-	display: block;
-	visibility: hidden;
-	height: 0;
-	width: 0;
-}
+
 `]
 })
 export class RaMultiselectComponent implements OnInit{
